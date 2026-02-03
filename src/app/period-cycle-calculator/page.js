@@ -12,6 +12,7 @@ export default function PeriodCycleCalculatorPage() {
   const [showSidebar, setShowSidebar] = useState(true);
   const [activeFAQ, setActiveFAQ] = useState(null);
   const [cycleHistory, setCycleHistory] = useState([]);
+  const [showShareMenu, setShowShareMenu] = useState(false);
 
   // Styles
   const containerStyle = {
@@ -217,11 +218,16 @@ export default function PeriodCycleCalculatorPage() {
   };
 
   const sidebarAdStyle = {
-    height: '300px',
+    height: '250px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    background: '#f8f9fa',
+    border: '2px dashed #ddd',
+    borderRadius: '10px',
+    color: '#7f8c8d',
+    padding: '15px'
   };
 
   const stickyAdStyle = {
@@ -230,11 +236,12 @@ export default function PeriodCycleCalculatorPage() {
     background: '#f3e6f8',
     border: '2px solid #9b59b6',
     boxShadow: '0 4px 12px rgba(155, 89, 182, 0.15)',
-    height: '300px',
+    height: '250px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: '15px',
     zIndex: '10'
   };
 
@@ -252,7 +259,7 @@ export default function PeriodCycleCalculatorPage() {
     textAlign: 'center',
     color: '#7f8c8d',
     border: '1px dashed #ddd',
-    height: '300px',
+    height: '250px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -370,6 +377,72 @@ export default function PeriodCycleCalculatorPage() {
     gap: '10px'
   };
 
+  // Share and Download Styles
+  const actionButtonsStyle = {
+    display: 'flex',
+    gap: '10px',
+    marginTop: '20px',
+    flexWrap: 'wrap'
+  };
+
+  const shareButtonStyle = {
+    padding: '12px 20px',
+    background: '#3498db',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: '0.3s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  };
+
+  const downloadButtonStyle = {
+    padding: '12px 20px',
+    background: '#27ae60',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: '0.3s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  };
+
+  const shareMenuStyle = {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    background: 'white',
+    borderRadius: '10px',
+    boxShadow: '0 5px 20px rgba(0,0,0,0.15)',
+    padding: '15px',
+    zIndex: 1000,
+    minWidth: '200px',
+    marginTop: '10px'
+  };
+
+  const sharePlatformButtonStyle = {
+    width: '100%',
+    padding: '10px 15px',
+    marginBottom: '8px',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+    fontWeight: '500',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    transition: '0.2s'
+  };
+
   // Sample data for demo
   useEffect(() => {
     const today = new Date();
@@ -405,6 +478,20 @@ export default function PeriodCycleCalculatorPage() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Handle click outside share menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showShareMenu && !event.target.closest('.share-button-container')) {
+        setShowShareMenu(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showShareMenu]);
 
   const calculatePeriodCycle = () => {
     // Validate inputs
@@ -561,8 +648,347 @@ export default function PeriodCycleCalculatorPage() {
       averagePeriodDuration: averagePeriodDuration,
       cycleLength: cycleLengthVal,
       cycleDuration: cycleDurationVal,
-      isFertileToday: currentCycleDay >= (ovulationDay - 5) && currentCycleDay <= (ovulationDay + 1)
+      isFertileToday: currentCycleDay >= (ovulationDay - 5) && currentCycleDay <= (ovulationDay + 1),
+      lastPeriodDate: lastPeriodDate
     });
+  };
+
+  // Share function
+  const shareResults = (platform) => {
+    if (!results) {
+      alert('Please calculate period cycle first before sharing.');
+      return;
+    }
+
+    const shareText = `My next period is predicted for ${results.nextPeriodDate} - Check your menstrual cycle predictions using this calculator!`;
+    const shareUrl = window.location.href;
+    const hashtags = 'PeriodTracker,MenstrualHealth,Fertility,WomenHealth';
+
+    let shareUrlFull = '';
+    
+    switch(platform) {
+      case 'facebook':
+        shareUrlFull = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
+        break;
+      case 'twitter':
+        shareUrlFull = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}&hashtags=${hashtags}`;
+        break;
+      case 'linkedin':
+        shareUrlFull = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+        break;
+      case 'whatsapp':
+        shareUrlFull = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+        break;
+      case 'telegram':
+        shareUrlFull = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+        break;
+      case 'reddit':
+        shareUrlFull = `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`;
+        break;
+      case 'pinterest':
+        shareUrlFull = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&description=${encodeURIComponent(shareText)}`;
+        break;
+      case 'email':
+        shareUrlFull = `mailto:?subject=My Period Cycle Predictions&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`;
+        break;
+      default:
+        // Web Share API for modern browsers
+        if (navigator.share) {
+          navigator.share({
+            title: 'My Period Cycle Predictions',
+            text: shareText,
+            url: shareUrl,
+          });
+          return;
+        } else {
+          // Fallback: copy to clipboard
+          navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+          alert('Results copied to clipboard!');
+          return;
+        }
+    }
+
+    window.open(shareUrlFull, '_blank', 'noopener,noreferrer');
+    setShowShareMenu(false);
+  };
+
+  // Download as HTML file
+  const downloadHTML = () => {
+    if (!results) {
+      alert('Please calculate period cycle first before downloading.');
+      return;
+    }
+
+    const date = new Date().toLocaleDateString();
+    const time = new Date().toLocaleTimeString();
+    
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Period Cycle Calculator Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #9b59b6;
+        }
+        
+        .report-header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .report-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            border-top: 5px solid;
+        }
+        
+        .card-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            font-size: 1.2rem;
+        }
+        
+        .next-period {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 15px 0;
+            text-align: center;
+            color: #9b59b6;
+        }
+        
+        .fertility-status {
+            padding: 15px;
+            background: ${results.isFertileToday ? '#f8d7da' : '#d4edda'};
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid ${results.isFertileToday ? '#e74c3c' : '#27ae60'};
+        }
+        
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .prediction-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .prediction-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .prediction-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .prediction-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .cycle-phase {
+            padding: 15px;
+            background: #f3e6f8;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #9b59b6;
+        }
+        
+        .disclaimer {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #f39c12;
+            margin-top: 30px;
+        }
+        
+        .disclaimer h4 {
+            color: #e67e22;
+            margin-bottom: 15px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 10px;
+            }
+            
+            .result-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="report-header">
+            <h1><i class="fas fa-calendar-alt"></i> Period Cycle Calculator Results</h1>
+            <p>Generated on ${date} at ${time}</p>
+        </div>
+        
+        <div class="results-grid">
+            <!-- Main Results Card -->
+            <div class="result-card" style="border-top-color: #9b59b6;">
+                <h3 class="card-title"><i class="fas fa-calendar-check" style="color: #9b59b6;"></i> Next Period Prediction</h3>
+                <div class="next-period">${results.nextPeriodDate}</div>
+                <div style="text-align: center; margin-bottom: 15px; font-size: 1.2rem; color: #666;">
+                    Expected Start Date
+                </div>
+                <div class="fertility-status">
+                    <strong><i class="fas ${results.isFertileToday ? 'fa-heartbeat' : 'fa-user-check'}"></i> Fertility Status:</strong><br>
+                    ${results.isFertileToday ? 'Currently in Fertile Window' : 'Not Currently in Fertile Window'}
+                </div>
+            </div>
+            
+            <!-- Fertility & Ovulation Card -->
+            <div class="result-card" style="border-top-color: #e74c3c;">
+                <h3 class="card-title"><i class="fas fa-egg" style="color: #e74c3c;"></i> Fertility & Ovulation Details</h3>
+                <div class="prediction-grid">
+                    <div class="prediction-item">
+                        <div class="prediction-value">${results.ovulationDate}</div>
+                        <div class="prediction-label">Predicted Ovulation Date</div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-value">${results.fertileWindowStart}</div>
+                        <div class="prediction-label">Fertile Window Start</div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-value">${results.fertileWindowEnd}</div>
+                        <div class="prediction-label">Fertile Window End</div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-value">${results.lastPeriodDate}</div>
+                        <div class="prediction-label">Last Period Start</div>
+                    </div>
+                </div>
+                <div class="cycle-phase">
+                    <strong><i class="fas fa-sync-alt"></i> Current Cycle Phase:</strong><br>
+                    ${results.cyclePhase} (Day ${results.currentCycleDay} of ${results.cycleLength})<br>
+                    ${results.phaseDescription}
+                </div>
+            </div>
+            
+            <!-- Cycle Statistics Card -->
+            <div class="result-card" style="border-top-color: #3498db;">
+                <h3 class="card-title"><i class="fas fa-chart-bar" style="color: #3498db;"></i> Cycle Statistics</h3>
+                <div class="prediction-grid">
+                    <div class="prediction-item">
+                        <div class="prediction-value" style="color: #9b59b6;">${results.averageCycleLength} days</div>
+                        <div class="prediction-label">Average Cycle Length</div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-value" style="color: #e74c3c;">${results.averagePeriodDuration} days</div>
+                        <div class="prediction-label">Average Period Duration</div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-value" style="color: ${results.regularityColor};">${results.regularityAssessment.split(' - ')[0]}</div>
+                        <div class="prediction-label">Cycle Regularity</div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-value" style="color: #2ecc71;">14 days</div>
+                        <div class="prediction-label">Standard Luteal Phase</div>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <p><strong>Cycle Information:</strong></p>
+                    <p>Cycle Length: ${results.cycleLength} days</p>
+                    <p>Period Duration: ${results.cycleDuration} days</p>
+                    <p>Cycle Day: ${results.currentCycleDay} of ${results.cycleLength}</p>
+                    <p>Regularity: ${results.regularityAssessment}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="disclaimer">
+            <h4><i class="fas fa-exclamation-circle"></i> Important Medical Disclaimer</h4>
+            <p>This period cycle calculation is for informational purposes only. Cycle predictions have varying accuracy rates (60-95% depending on cycle regularity). This calculator should NOT be used as a primary method for contraception, fertility treatment timing, or medical decision-making. Always consult with healthcare professionals for personalized reproductive health advice.</p>
+        </div>
+        
+        <div class="footer">
+            <p>Generated by Period Cycle Calculator • ${window.location.href}</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">This report was generated on ${date} at ${time}</p>
+        </div>
+    </div>
+</body>
+</html>`;
+
+    // Create blob and download
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `period-cycle-predictions-${new Date().toISOString().split('T')[0]}.html`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   };
 
   const toggleFAQ = (index) => {
@@ -596,20 +1022,44 @@ export default function PeriodCycleCalculatorPage() {
     }
   ];
 
+  // Health calculators with SEO ranking
   const healthCalculators = [
-    { name: "Safe Period Calculator", link: "/safe-period-calculator" },
-    { name: "Ovulation Calculator", link: "/ovulation-calculator" },
-    { name: "Due Date Calculator", link: "/due-date-calculator" },
-    { name: "Fertile Window Calculator", link: "/fertile-window-calculator" },
-    { name: "Pregnancy Due Date", link: "/pregnancy-due-date" },
-    { name: "BMI Calculator", link: "/bmi-calculator" },
-    { name: "Menstrual Health Assessment", link: "/menstrual-health" },
-    { name: "Hormonal Balance Check", link: "/hormonal-balance" },
-    { name: "Contraception Effectiveness", link: "/contraception-calculator" },
-    { name: "Reproductive Age Calculator", link: "/reproductive-age" },
-    { name: "Period Symptom Tracker", link: "/period-symptoms" },
-    { name: "Cycle Regularity Analyzer", link: "/cycle-regularity" }
+    { name: "BMI Calculator", link: "/bmi-calculator", relevance: 10 },
+    { name: "Body Fat Calculator", link: "/body-fat-calculator", relevance: 10 },
+    { name: "IBW Calculator", link: "/ibw-calculator", relevance: 9 },
+    { name: "Waist Hip Ratio", link: "/waist-hip-ratio", relevance: 9 },
+    { name: "BSA Calculator", link: "/bsa-calculator", relevance: 8 },
+    { name: "Calorie Calculator", link: "/calorie-calculator", relevance: 8 },
+    { name: "TDEE Calculator", link: "/tdee-calculator", relevance: 8 },
+    { name: "BMR Calculator", link: "/bmr-calculator", relevance: 8 },
+    { name: "LBM Calculator", link: "/lbm-calculator", relevance: 7 },
+    { name: "Heart Rate Calculator", link: "/heart-rate-calculator", relevance: 7 },
+    { name: "Water Intake Calculator", link: "/water-intake-calculator", relevance: 7 },
+    { name: "Ovulation Tracker", link: "/ovulation-tracker", relevance: 9 },
+    { name: "Pregnancy Due Date Calculator", link: "/pregnancy-due-date-calculator", relevance: 9 },
+    { name: "GFR Calculator", link: "/gfr-calculator", relevance: 6 },
+    { name: "Creatinine Clearance", link: "/creatinine-clearance", relevance: 6 },
+    { name: "Fluid Requirement", link: "/fluid-requirement", relevance: 6 },
+    { name: "Medication Dosage", link: "/medication-dosage", relevance: 6 },
+    { name: "Electrolyte Correction", link: "/electrolyte-correction", relevance: 5 },
+    { name: "Nutritional Needs", link: "/nutritional-needs", relevance: 7 },
+    { name: "Cardiac Index Calculator", link: "/cardiac-index-calculator", relevance: 5 },
+    { name: "Pregnancy Weight Gain Calculator", link: "/pregnancy-weight-gain-calculator", relevance: 8 },
+    { name: "Fertile Window Calculator", link: "/fertile-window-calculator", relevance: 9 },
+    { name: "Safe Period Calculator", link: "/safe-period-calculator", relevance: 9 },
+    { name: "Period Cycle Calculator", link: "/period-cycle-calculator", relevance: 10 },
+    { name: "Blood Pressure Category Calculator", link: "/blood-pressure-category-calculator", relevance: 7 },
+    { name: "Diabetes Risk Calculator", link: "/diabetes-risk-calculator", relevance: 7 },
+    { name: "Heart Disease Risk Calculator", link: "/heart-disease-risk-calculator", relevance: 7 },
+    { name: "Carbohydrate Intake Calculator", link: "/carbohydrate-intake-calculator", relevance: 6 },
+    { name: "Fat Intake Calculator", link: "/fat-intake-calculator", relevance: 6 },
+    { name: "Anion Gap Calculator", link: "/anion-gap-calculator", relevance: 5 },
+    { name: "Pregnancy Test", link: "/pregnancy-test", relevance: 8 },
+    { name: "Blood Pressure Tracker", link: "/blood-pressure-tracker", relevance: 7 }
   ];
+
+  // Sort by relevance
+  const sortedCalculators = [...healthCalculators].sort((a, b) => b.relevance - a.relevance);
 
   return (
     <main style={containerStyle}>
@@ -715,135 +1165,319 @@ export default function PeriodCycleCalculatorPage() {
           <i className="fas fa-calculator"></i> Calculate Period Cycle Predictions
         </button>
 
-        {/* Results Display */}
+        {/* Results Display with Share/Download Buttons */}
         {results && (
-          <div style={resultsContainerStyle}>
-            <div style={{ ...resultCardStyle, ...nextPeriodCardStyle }}>
-              <h4 style={sectionTitleStyle}><i className="fas fa-calendar-check"></i> Next Period Prediction</h4>
-              <div style={{ margin: '20px 0' }}>
-                <div style={resultValueStyle}>
-                  {results.nextPeriodDate}
+          <>
+            <div style={resultsContainerStyle}>
+              <div style={{ ...resultCardStyle, ...nextPeriodCardStyle }}>
+                <h4 style={sectionTitleStyle}><i className="fas fa-calendar-check"></i> Next Period Prediction</h4>
+                <div style={{ margin: '20px 0' }}>
+                  <div style={resultValueStyle}>
+                    {results.nextPeriodDate}
+                  </div>
+                  <div style={{ fontSize: '1.2rem', color: '#666', marginBottom: '15px' }}>
+                    Expected Start Date
+                  </div>
+                  <div style={{ 
+                    padding: '10px', 
+                    background: results.isFertileToday ? '#f8d7da' : '#d4edda',
+                    borderRadius: '8px',
+                    color: results.isFertileToday ? '#721c24' : '#155724',
+                    fontWeight: '600'
+                  }}>
+                    {results.isFertileToday ? 'Currently in Fertile Window' : 'Not Currently Fertile'}
+                  </div>
                 </div>
-                <div style={{ fontSize: '1.2rem', color: '#666', marginBottom: '15px' }}>
-                  Expected Start Date
+                <div style={{ fontSize: '0.9rem', color: '#666' }}>
+                  <div>Cycle Day: {results.currentCycleDay} of {results.cycleLength}</div>
+                  <div>Phase: {results.cyclePhase}</div>
+                  <div>Predicted Duration: {results.cycleDuration} days</div>
+                  <div>Regularity: <span style={{ color: results.regularityColor }}>{results.regularityAssessment}</span></div>
+                </div>
+              </div>
+
+              <div style={{ ...resultCardStyle, ...ovulationCardStyle }}>
+                <h4 style={sectionTitleStyle}><i className="fas fa-egg"></i> Ovulation & Fertility</h4>
+                <div style={{ margin: '20px 0' }}>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#e74c3c', marginBottom: '10px' }}>
+                    {results.ovulationDate}
+                  </div>
+                  <div style={{ fontSize: '1rem', color: '#666', marginBottom: '15px' }}>
+                    Predicted Ovulation Date
+                  </div>
+                  <div style={{ background: '#f8f9fa', padding: '15px', borderRadius: '8px' }}>
+                    <div style={{ fontSize: '0.9rem', marginBottom: '5px' }}><strong>Fertile Window:</strong></div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#3498db' }}>
+                      {results.fertileWindowStart} - {results.fertileWindowEnd}
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '5px' }}>
+                      Best chances for conception
+                    </div>
+                  </div>
+                </div>
+                <div style={{ fontSize: '0.9rem', color: '#666' }}>
+                  <div>Average Cycle: {results.averageCycleLength} days</div>
+                  <div>Phase: {results.phaseDescription}</div>
+                  <div>Cycle Regularity: {results.regularityAssessment}</div>
+                </div>
+              </div>
+
+              <div style={{ ...resultCardStyle, ...fertileWindowCardStyle }}>
+                <h4 style={sectionTitleStyle}><i className="fas fa-calendar-week"></i> Cycle Predictions</h4>
+                <div style={{ margin: '20px 0' }}>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: '1fr', 
+                    gap: '10px',
+                    maxHeight: 'none',
+                    overflow: 'visible'
+                  }}>
+                    {results.predictedCycles.map((cycle, index) => (
+                      <div key={index} style={{
+                        padding: '12px',
+                        background: index === 0 ? '#e3f2fd' : '#f8f9fa',
+                        borderRadius: '8px',
+                        borderLeft: index === 0 ? '4px solid #3498db' : '2px solid #e0e0e0'
+                      }}>
+                        <div style={{ 
+                          display: 'grid',
+                          gridTemplateColumns: 'auto 1fr',
+                          gap: '10px',
+                          alignItems: 'center'
+                        }}>
+                          <div style={{
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            background: index === 0 ? '#3498db' : '#95a5a6',
+                            color: 'white',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                            fontSize: '0.9rem'
+                          }}>
+                            {cycle.cycleNumber}
+                          </div>
+                          <div>
+                            <div style={{ fontWeight: 'bold', color: '#2c3e50', fontSize: '0.95rem' }}>
+                              {cycle.periodStart}
+                            </div>
+                            <div style={{ 
+                              display: 'grid', 
+                              gridTemplateColumns: 'repeat(2, 1fr)', 
+                              gap: '5px',
+                              marginTop: '5px',
+                              fontSize: '0.8rem',
+                              color: '#666'
+                            }}>
+                              <div>
+                                <i className="fas fa-tint" style={{ marginRight: '5px', color: '#e74c3c' }}></i>
+                                Period: {cycle.periodStart.split(',')[0]}
+                              </div>
+                              <div>
+                                <i className="fas fa-egg" style={{ marginRight: '5px', color: '#9b59b6' }}></i>
+                                Ovulation: {cycle.ovulationDate.split(',')[0]}
+                              </div>
+                            </div>
+                            <div style={{ 
+                              fontSize: '0.75rem', 
+                              color: '#3498db', 
+                              marginTop: '5px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '5px'
+                            }}>
+                              <i className="fas fa-heart"></i>
+                              Fertile: {cycle.fertileWindow}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 <div style={{ 
-                  padding: '10px', 
-                  background: results.isFertileToday ? '#f8d7da' : '#d4edda',
+                  fontSize: '0.9rem', 
+                  color: '#666',
+                  padding: '15px',
+                  background: '#f8f9fa',
                   borderRadius: '8px',
-                  color: results.isFertileToday ? '#721c24' : '#155724',
-                  fontWeight: '600'
+                  marginTop: '15px'
                 }}>
-                  {results.isFertileToday ? 'Currently in Fertile Window' : 'Not Currently Fertile'}
+                  <div style={{ marginBottom: '8px' }}><strong>Predictions based on:</strong></div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+                    <div>
+                      <i className="fas fa-calendar-alt" style={{ color: '#9b59b6', marginRight: '8px' }}></i>
+                      {results.predictionMonths} month projection
+                    </div>
+                    <div>
+                      <i className="fas fa-chart-line" style={{ color: results.regularityColor, marginRight: '8px' }}></i>
+                      {cycleRegularity.replace('_', ' ')} cycle pattern
+                    </div>
+                    <div>
+                      <i className="fas fa-clock" style={{ color: '#3498db', marginRight: '8px' }}></i>
+                      Standard 14-day luteal phase
+                    </div>
+                    <div>
+                      <i className="fas fa-history" style={{ color: '#27ae60', marginRight: '8px' }}></i>
+                      {results.averageCycleLength}-day average cycle
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                <div>Cycle Day: {results.currentCycleDay} of {results.cycleLength}</div>
-                <div>Phase: {results.cyclePhase}</div>
-                <div>Predicted Duration: {results.cycleDuration} days</div>
-                <div>Regularity: <span style={{ color: results.regularityColor }}>{results.regularityAssessment}</span></div>
+
+              <div style={{ ...resultCardStyle, ...cycleHistoryCardStyle }}>
+                <h4 style={sectionTitleStyle}><i className="fas fa-history"></i> Cycle Statistics</h4>
+                <div style={{ margin: '20px 0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#9b59b6' }}>{results.averageCycleLength}</div>
+                      <div style={{ fontSize: '0.8rem', color: '#666' }}>Avg Cycle Days</div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#e74c3c' }}>{results.averagePeriodDuration}</div>
+                      <div style={{ fontSize: '0.8rem', color: '#666' }}>Avg Period Days</div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3498db' }}>14</div>
+                      <div style={{ fontSize: '0.8rem', color: '#666' }}>Luteal Phase</div>
+                    </div>
+                  </div>
+                  <div style={{ background: '#f8f9fa', padding: '15px', borderRadius: '8px' }}>
+                    <div style={{ fontSize: '0.9rem', marginBottom: '10px' }}><strong>Cycle History (Sample):</strong></div>
+                    {cycleHistory.map((cycle, index) => (
+                      <div key={index} style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        padding: '5px 0',
+                        borderBottom: index < cycleHistory.length - 1 ? '1px solid #eee' : 'none'
+                      }}>
+                        <span style={{ fontSize: '0.85rem' }}>{cycle.date}</span>
+                        <span style={{ fontSize: '0.85rem', color: '#666' }}>
+                          {cycle.length}d cycle, {cycleDuration}d period
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ fontSize: '0.9rem', color: '#666' }}>
+                  <div><strong>Tracking Recommendations:</strong></div>
+                  <div>• Record cycle start dates consistently</div>
+                  <div>• Note symptoms and flow changes</div>
+                  <div>• Update calculations monthly</div>
+                </div>
               </div>
             </div>
 
-            <div style={{ ...resultCardStyle, ...ovulationCardStyle }}>
-              <h4 style={sectionTitleStyle}><i className="fas fa-egg"></i> Ovulation & Fertility</h4>
-              <div style={{ margin: '20px 0' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#e74c3c', marginBottom: '10px' }}>
-                  {results.ovulationDate}
-                </div>
-                <div style={{ fontSize: '1rem', color: '#666', marginBottom: '15px' }}>
-                  Predicted Ovulation Date
-                </div>
-                <div style={{ background: '#f8f9fa', padding: '15px', borderRadius: '8px' }}>
-                  <div style={{ fontSize: '0.9rem', marginBottom: '5px' }}><strong>Fertile Window:</strong></div>
-                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#3498db' }}>
-                    {results.fertileWindowStart} - {results.fertileWindowEnd}
+            {/* Share and Download Buttons */}
+            <div style={actionButtonsStyle}>
+              <div style={{ position: 'relative' }} className="share-button-container">
+                <button
+                  style={shareButtonStyle}
+                  onClick={() => setShowShareMenu(!showShareMenu)}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#2980b9'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = '#3498db'}
+                >
+                  <i className="fas fa-share-alt"></i> Share Results
+                </button>
+                
+                {showShareMenu && (
+                  <div style={shareMenuStyle}>
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#4267B2', color: 'white' }}
+                      onClick={() => shareResults('facebook')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-facebook-f"></i> Facebook
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#1DA1F2', color: 'white' }}
+                      onClick={() => shareResults('twitter')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-twitter"></i> Twitter
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#0077B5', color: 'white' }}
+                      onClick={() => shareResults('linkedin')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-linkedin-in"></i> LinkedIn
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#25D366', color: 'white' }}
+                      onClick={() => shareResults('whatsapp')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-whatsapp"></i> WhatsApp
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#0088CC', color: 'white' }}
+                      onClick={() => shareResults('telegram')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-telegram"></i> Telegram
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#FF4500', color: 'white' }}
+                      onClick={() => shareResults('reddit')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-reddit-alien"></i> Reddit
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#E60023', color: 'white' }}
+                      onClick={() => shareResults('pinterest')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-pinterest-p"></i> Pinterest
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#666', color: 'white' }}
+                      onClick={() => shareResults('email')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fas fa-envelope"></i> Email
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#f8f9fa', color: '#333', border: '1px solid #ddd' }}
+                      onClick={() => shareResults('copy')}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#e9ecef'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = '#f8f9fa'}
+                    >
+                      <i className="fas fa-copy"></i> Copy to Clipboard
+                    </button>
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '5px' }}>
-                    Best chances for conception
-                  </div>
-                </div>
+                )}
               </div>
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                <div>Average Cycle: {results.averageCycleLength} days</div>
-                <div>Phase: {results.phaseDescription}</div>
-                <div>Cycle Regularity: {results.regularityAssessment}</div>
-              </div>
+              
+              <button
+                style={downloadButtonStyle}
+                onClick={downloadHTML}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#219150'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#27ae60'}
+              >
+                <i className="fas fa-file-code"></i> Download HTML Report
+              </button>
             </div>
-
-            <div style={{ ...resultCardStyle, ...fertileWindowCardStyle }}>
-              <h4 style={sectionTitleStyle}><i className="fas fa-calendar-week"></i> Cycle Predictions</h4>
-              <div style={{ margin: '20px 0', maxHeight: '200px', overflowY: 'auto' }}>
-                {results.predictedCycles.map((cycle, index) => (
-                  <div key={index} style={{
-                    padding: '10px',
-                    background: index === 0 ? '#e3f2fd' : '#f8f9fa',
-                    borderRadius: '6px',
-                    marginBottom: '8px',
-                    borderLeft: index === 0 ? '4px solid #3498db' : 'none'
-                  }}>
-                    <div style={{ fontWeight: 'bold', color: '#2c3e50' }}>
-                      Cycle {cycle.cycleNumber}: {cycle.periodStart}
-                    </div>
-                    <div style={{ fontSize: '0.8rem', color: '#666' }}>
-                      Period: {cycle.periodStart} - {cycle.periodEnd} | Ovulation: {cycle.ovulationDate}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#888', marginTop: '2px' }}>
-                      Fertile: {cycle.fertileWindow}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                <div><strong>Predictions based on:</strong></div>
-                <div>• {results.predictionMonths} month projection</div>
-                <div>• {results.cycleRegularity} cycle pattern</div>
-                <div>• Standard 14-day luteal phase</div>
-              </div>
-            </div>
-
-            <div style={{ ...resultCardStyle, ...cycleHistoryCardStyle }}>
-              <h4 style={sectionTitleStyle}><i className="fas fa-history"></i> Cycle Statistics</h4>
-              <div style={{ margin: '20px 0' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#9b59b6' }}>{results.averageCycleLength}</div>
-                    <div style={{ fontSize: '0.8rem', color: '#666' }}>Avg Cycle Days</div>
-                  </div>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#e74c3c' }}>{results.averagePeriodDuration}</div>
-                    <div style={{ fontSize: '0.8rem', color: '#666' }}>Avg Period Days</div>
-                  </div>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3498db' }}>14</div>
-                    <div style={{ fontSize: '0.8rem', color: '#666' }}>Luteal Phase</div>
-                  </div>
-                </div>
-                <div style={{ background: '#f8f9fa', padding: '15px', borderRadius: '8px' }}>
-                  <div style={{ fontSize: '0.9rem', marginBottom: '10px' }}><strong>Cycle History (Sample):</strong></div>
-                  {cycleHistory.map((cycle, index) => (
-                    <div key={index} style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      padding: '5px 0',
-                      borderBottom: index < cycleHistory.length - 1 ? '1px solid #eee' : 'none'
-                    }}>
-                      <span style={{ fontSize: '0.85rem' }}>{cycle.date}</span>
-                      <span style={{ fontSize: '0.85rem', color: '#666' }}>
-                        {cycle.length}d cycle, {cycleDuration}d period
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                <div><strong>Tracking Recommendations:</strong></div>
-                <div>• Record cycle start dates consistently</div>
-                <div>• Note symptoms and flow changes</div>
-                <div>• Update calculations monthly</div>
-              </div>
-            </div>
-          </div>
+          </>
         )}
 
         <div
@@ -950,6 +1584,15 @@ export default function PeriodCycleCalculatorPage() {
 
           <h3 style={sectionTitleStyle}><i className="fas fa-clipboard-check"></i> Quality Assurance and Protocol Standardization Implementation</h3>
           <p style={paragraphStyle}>Implementation of <strong>rigorous quality assurance protocols</strong> ensures <strong>consistent menstrual health management practices</strong> across diverse healthcare settings. These protocols encompass <strong>calculation standardization methodologies, monitoring technique verification procedures, and clinical outcome measurement requirements</strong> that directly impact <strong>reproductive health outcomes and family planning effectiveness</strong>. Professional organizations should develop <strong>standardized training materials, competency assessment tools, and practice guideline documents</strong> to guarantee consistent clinical application quality across diverse healthcare delivery settings and specialty practice areas, ensuring optimal patient outcomes through evidence-based menstrual health management approaches.</p>
+
+          <h3 style={sectionTitleStyle}><i className="fas fa-heartbeat"></i> Menstrual Cycle and Overall Health Correlation - Comprehensive Wellness Integration</h3>
+          <p style={paragraphStyle}>The <strong>menstrual cycle serves as a vital health indicator</strong> reflecting <strong>systemic physiological function, hormonal balance status, and overall wellness patterns</strong>. Regular menstrual cycles typically indicate <strong>proper hypothalamic-pituitary-ovarian axis function, adequate nutritional status, appropriate energy availability, and balanced lifestyle factors</strong>. Conversely, <strong>menstrual irregularities often signal underlying health concerns</strong> requiring comprehensive evaluation. Tracking menstrual cycle patterns provides valuable insights into <strong>reproductive health status, metabolic function, stress adaptation capacity, and systemic wellness indicators</strong>. This integration of <strong>menstrual health monitoring with comprehensive wellness assessment</strong> enables early detection of potential health issues and supports proactive health management strategies for optimal <strong>reproductive lifespan optimization and quality of life enhancement</strong>.</p>
+
+          <h3 style={sectionTitleStyle}><i className="fas fa-globe"></i> Global Perspectives on Menstrual Health - Cultural Considerations and Accessibility Challenges</h3>
+          <p style={paragraphStyle}>Menstrual health management varies significantly across <strong>cultural contexts, socioeconomic backgrounds, and geographic locations</strong> worldwide. While <strong>advanced menstrual cycle tracking technologies</strong> have revolutionized reproductive health management in developed regions, many areas still face <strong>significant accessibility challenges, educational gaps, and cultural barriers</strong> to comprehensive menstrual health care. Addressing these disparities requires <strong>culturally sensitive educational programs, accessible menstrual health resources, and inclusive reproductive health policies</strong> that respect diverse beliefs and practices while promoting evidence-based menstrual health management. The integration of <strong>traditional menstrual health knowledge with modern scientific understanding</strong> creates opportunities for <strong>culturally appropriate menstrual health interventions</strong> that improve reproductive outcomes while respecting cultural diversity and individual preferences in menstrual health management approaches.</p>
+
+          <h3 style={sectionTitleStyle}><i className="fas fa-database"></i> Data Privacy and Ethical Considerations in Menstrual Cycle Tracking</h3>
+          <p style={paragraphStyle}>The increasing use of <strong>digital menstrual cycle tracking applications</strong> raises important <strong>data privacy concerns, ethical considerations, and information security challenges</strong>. Menstrual cycle data represents <strong>highly sensitive personal health information</strong> requiring robust protection measures. Users should consider <strong>data encryption standards, privacy policy transparency, data sharing practices, and third-party access limitations</strong> when selecting menstrual tracking tools. Additionally, ethical considerations include <strong>informed consent requirements, data ownership clarity, research participation options, and commercial use limitations</strong> for menstrual health data. Developing and implementing <strong>comprehensive data governance frameworks</strong> that prioritize user privacy while enabling beneficial health research represents a critical challenge in the evolving landscape of <strong>digital menstrual health management and reproductive technology innovation</strong>.</p>
         </div>
 
         {/* Q&A Dropdown Section */}
@@ -983,31 +1626,6 @@ export default function PeriodCycleCalculatorPage() {
           ))}
         </div>
 
-        {/* Health Calculators Section */}
-        <div style={infoSectionStyle}>
-          <h3 style={sectionTitleStyle}><i className="fas fa-calculator"></i> Related Reproductive & Health Calculators</h3>
-          <p style={paragraphStyle}>Explore our comprehensive collection of <strong>reproductive health calculation tools and wellness monitoring calculators</strong> for family planning and health management:</p>
-          <div style={calculatorsGridStyle}>
-            {healthCalculators.map((calculator, index) => (
-              <a
-                key={index}
-                href={calculator.link}
-                style={calculatorCardStyle}
-                onMouseEnter={(e) => Object.assign(e.currentTarget.style, hoverCalculatorCardStyle)}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = calculatorCardStyle.background;
-                  e.currentTarget.style.color = calculatorCardStyle.color;
-                  e.currentTarget.style.transform = 'none';
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.borderColor = calculatorCardStyle.borderColor;
-                }}
-              >
-                <i className="fas fa-calculator"></i> {calculator.name}
-              </a>
-            ))}
-          </div>
-        </div>
-
         {/* Medical Disclaimer */}
         <div style={medicalDisclaimerStyle}>
           <h4 style={disclaimerTitleStyle}><i className="fas fa-exclamation-triangle"></i> Important Medical Disclaimer</h4>
@@ -1017,35 +1635,108 @@ export default function PeriodCycleCalculatorPage() {
           <p style={paragraphStyle}><strong>Medical Consultation Required:</strong> Always seek the advice of your obstetrician-gynecologist, reproductive endocrinologist, or other qualified healthcare provider with any questions regarding menstrual cycles, fertility, or reproductive health. Do not disregard professional medical advice or delay seeking it because of information provided by this calculator.</p>
           <p style={paragraphStyle}><strong>Cycle Irregularity Concerns:</strong> Consistently irregular cycles (variation &gt;7 days), cycles shorter than 21 days or longer than 35 days, or absence of periods for 3+ months require medical evaluation. These patterns may indicate underlying conditions such as PCOS, thyroid disorders, or other health concerns needing professional diagnosis and treatment.</p>
           <p style={paragraphStyle}><strong>Emergency Situations:</strong> If you experience severe menstrual pain, unusually heavy bleeding (soaking through a pad/tampon every hour), bleeding between periods, or any concerning symptoms, seek immediate medical attention regardless of cycle predictions.</p>
+          <p style={paragraphStyle}><strong>Contraception Caution:</strong> This calculator should NOT be used as a primary method of contraception. Calendar-based methods have higher failure rates than other contraceptive methods. Always use reliable contraception if pregnancy prevention is desired.</p>
+          <p style={paragraphStyle}><strong>Reproductive Health Conditions:</strong> Women with conditions such as PCOS, endometriosis, thyroid disorders, or other reproductive health concerns should rely on medical guidance rather than calendar predictions for cycle management and fertility planning.</p>
         </div>
       </section>
 
-      {/* Sidebar with 3 Ads (3rd one sticky) */}
+      {/* Sidebar with 3 Ads (3rd one sticky) + Related Calculators */}
       {showSidebar && (
         <aside style={sidebarStyle}>
           <div style={sidebarContentStyle}>
-            <div style={{ ...adSlotStyle, ...sidebarAdStyle }}>
+            {/* Advertisement 1 */}
+            <div style={sidebarAdStyle}>
               <p><i className="fas fa-ad"></i> Advertisement 1</p>
               <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Sponsored Content</p>
               <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Advanced menstrual cycle tracking app</p>
               <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px height ad slot</p>
+              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
             </div>
             
-            <div style={{ ...adSlotStyle, ...sidebarAdStyle }}>
+            {/* Advertisement 2 */}
+            <div style={sidebarAdStyle}>
               <p><i className="fas fa-ad"></i> Advertisement 2</p>
               <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Featured Product</p>
               <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Premium ovulation prediction kits</p>
               <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px height ad slot</p>
+              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
             </div>
             
-            <div style={{ ...adSlotStyle, ...stickyAdStyle }}>
+            {/* Sticky Advertisement 3 */}
+            <div style={stickyAdStyle}>
               <p><i className="fas fa-thumbtack"></i> Sticky Advertisement</p>
               <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Premium Content - Stays visible</p>
               <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Comprehensive reproductive health guide</p>
               <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px sticky ad</p>
+              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px sticky ad</p>
+            </div>
+            
+            {/* Related Calculators Sidebar Section - Sorted by SEO Relevance */}
+            <div style={{ 
+              padding: '20px', 
+              background: 'white', 
+              borderRadius: '10px', 
+              boxShadow: '0 3px 10px rgba(0,0,0,0.05)' 
+            }}>
+              <h4 style={{ 
+                marginBottom: '15px', 
+                color: '#2c3e50', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '8px' 
+              }}>
+                <i className="fas fa-calculator"></i> Related Health Calculators
+              </h4>
+              <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '15px' }}>
+                Explore our comprehensive collection sorted by relevance:
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {sortedCalculators.map((calculator, index) => (
+                  <a
+                    key={index}
+                    href={calculator.link}
+                    style={{
+                      padding: '12px',
+                      background: '#f8f9fa',
+                      borderRadius: '8px',
+                      textDecoration: 'none',
+                      color: '#2c3e50',
+                      fontSize: '0.9rem',
+                      transition: 'all 0.3s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      border: '2px solid transparent'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = '#9b59b6';
+                      e.currentTarget.style.color = 'white';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 3px 10px rgba(155, 89, 182, 0.2)';
+                      e.currentTarget.style.borderColor = '#9b59b6';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = '#f8f9fa';
+                      e.currentTarget.style.color = '#2c3e50';
+                      e.currentTarget.style.transform = 'none';
+                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.borderColor = 'transparent';
+                    }}
+                  >
+                    <i className="fas fa-calculator"></i> {calculator.name}
+                    <span style={{ 
+                      marginLeft: 'auto',
+                      fontSize: '0.7rem',
+                      background: calculator.relevance >= 9 ? '#9b59b6' : calculator.relevance >= 8 ? '#3498db' : calculator.relevance >= 7 ? '#27ae60' : '#f39c12',
+                      color: 'white',
+                      padding: '2px 6px',
+                      borderRadius: '4px'
+                    }}>
+                      {calculator.relevance}/10
+                    </span>
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </aside>

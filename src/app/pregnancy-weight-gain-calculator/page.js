@@ -14,6 +14,7 @@ export default function PregnancyWeightGainPage() {
   const [results, setResults] = useState(null);
   const [showSidebar, setShowSidebar] = useState(true);
   const [activeFAQ, setActiveFAQ] = useState(null);
+  const [showShareMenu, setShowShareMenu] = useState(false);
 
   // Styles
   const containerStyle = {
@@ -116,6 +117,72 @@ export default function PregnancyWeightGainPage() {
     boxShadow: '0 5px 15px rgba(52, 152, 219, 0.2)'
   };
 
+  // Share/Download button styles
+  const actionButtonsStyle = {
+    display: 'flex',
+    gap: '10px',
+    marginTop: '20px',
+    flexWrap: 'wrap'
+  };
+
+  const shareButtonStyle = {
+    padding: '12px 20px',
+    background: '#3498db',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: '0.3s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  };
+
+  const downloadButtonStyle = {
+    padding: '12px 20px',
+    background: '#27ae60',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: '0.3s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  };
+
+  const shareMenuStyle = {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    background: 'white',
+    borderRadius: '10px',
+    boxShadow: '0 5px 20px rgba(0,0,0,0.15)',
+    padding: '15px',
+    zIndex: 1000,
+    minWidth: '200px',
+    marginTop: '10px'
+  };
+
+  const sharePlatformButtonStyle = {
+    width: '100%',
+    padding: '10px 15px',
+    marginBottom: '8px',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+    fontWeight: '500',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    transition: '0.2s'
+  };
+
   const resultsContainerStyle = {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
@@ -215,11 +282,16 @@ export default function PregnancyWeightGainPage() {
   };
 
   const sidebarAdStyle = {
-    height: '300px',
+    height: '250px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    background: '#f8f9fa',
+    border: '2px dashed #ddd',
+    borderRadius: '10px',
+    color: '#7f8c8d',
+    padding: '15px'
   };
 
   const stickyAdStyle = {
@@ -228,11 +300,12 @@ export default function PregnancyWeightGainPage() {
     background: '#e8f5e9',
     border: '2px solid #3498db',
     boxShadow: '0 4px 12px rgba(52, 152, 219, 0.15)',
-    height: '300px',
+    height: '250px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: '15px',
     zIndex: '10'
   };
 
@@ -246,16 +319,16 @@ export default function PregnancyWeightGainPage() {
   const mobileAdStyle = {
     padding: '20px',
     background: '#f8f9fa',
-    borderRadius: '10px', // ← Fixed
+    borderRadius: '10px',
     textAlign: 'center',
     color: '#7f8c8d',
     border: '1px dashed #ddd',
-    height: '300px',
+    height: '250px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
-    };
+  };
 
   const faqSectionStyle = {
     margin: '40px 0',
@@ -310,32 +383,6 @@ export default function PregnancyWeightGainPage() {
     maxHeight: '500px'
   };
 
-  const calculatorsGridStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-    gap: '15px',
-    marginTop: '20px'
-  };
-
-  const calculatorCardStyle = {
-    padding: '15px',
-    background: '#f8f9fa',
-    borderRadius: '10px',
-    textAlign: 'center',
-    textDecoration: 'none',
-    color: '#2c3e50',
-    transition: 'all 0.3s',
-    border: '2px solid transparent'
-  };
-
-  const hoverCalculatorCardStyle = {
-    background: '#3498db',
-    color: 'white',
-    transform: 'translateY(-3px)',
-    boxShadow: '0 5px 15px rgba(52, 152, 219, 0.2)',
-    borderColor: '#3498db'
-  };
-
   const medicalDisclaimerStyle = {
     margin: '40px 0',
     padding: '25px',
@@ -353,6 +400,43 @@ export default function PregnancyWeightGainPage() {
     alignItems: 'center',
     gap: '10px'
   };
+
+  // Sidebar calculators sorted by SEO relevance
+  const sidebarCalculators = [
+    { name: "BMI Calculator", link: "/bmi-calculator", relevance: 10 },
+    { name: "Body Fat Calculator", link: "/body-fat-calculator", relevance: 9 },
+    { name: "Pregnancy Due Date", link: "/pregnancy-due-date-calculator", relevance: 9 },
+    { name: "Ovulation Tracker", link: "/ovulation-tracker", relevance: 9 },
+    { name: "Ideal Weight Calculator", link: "/ibw-calculator", relevance: 8 },
+    { name: "Waist Hip Ratio", link: "/waist-hip-ratio", relevance: 8 },
+    { name: "Calorie Calculator", link: "/calorie-calculator", relevance: 8 },
+    { name: "TDEE Calculator", link: "/tdee-calculator", relevance: 8 },
+    { name: "BMR Calculator", link: "/bmr-calculator", relevance: 8 },
+    { name: "Fertile Window", link: "/fertile-window-calculator", relevance: 8 },
+    { name: "BSA Calculator", link: "/bsa-calculator", relevance: 7 },
+    { name: "Lean Body Mass", link: "/lbm-calculator", relevance: 7 },
+    { name: "Water Intake", link: "/water-intake-calculator", relevance: 7 },
+    { name: "Heart Rate Calculator", link: "/heart-rate-calculator", relevance: 7 },
+    { name: "GFR Calculator", link: "/gfr-calculator", relevance: 6 },
+    { name: "Creatinine Clearance", link: "/creatinine-clearance", relevance: 6 },
+    { name: "Fluid Requirements", link: "/fluid-requirement", relevance: 6 },
+    { name: "Medication Dosage", link: "/medication-dosage", relevance: 6 },
+    { name: "Nutritional Needs", link: "/nutritional-needs", relevance: 6 },
+    { name: "Cardiac Index", link: "/cardiac-index-calculator", relevance: 5 },
+    { name: "Safe Period", link: "/safe-period-calculator", relevance: 5 },
+    { name: "Period Cycle", link: "/period-cycle-calculator", relevance: 5 },
+    { name: "Blood Pressure Category", link: "/blood-pressure-category-calculator", relevance: 5 },
+    { name: "Diabetes Risk Calculator", link: "/diabetes-risk-calculator", relevance: 5 },
+    { name: "Heart Disease Risk", link: "/heart-disease-risk-calculator", relevance: 5 },
+    { name: "Carbohydrate Intake", link: "/carbohydrate-intake-calculator", relevance: 4 },
+    { name: "Fat Intake Calculator", link: "/fat-intake-calculator", relevance: 4 },
+    { name: "Anion Gap Calculator", link: "/anion-gap-calculator", relevance: 4 },
+    { name: "Pregnancy Test", link: "/pregnancy-test", relevance: 4 },
+    { name: "Blood Pressure Tracker", link: "/blood-pressure-tracker", relevance: 4 }
+  ];
+
+  // Sort by relevance
+  const sortedCalculators = [...sidebarCalculators].sort((a, b) => b.relevance - a.relevance);
 
   // BMI categories with weight gain recommendations (IOM 2009 guidelines)
   const bmiCategories = [
@@ -388,6 +472,20 @@ export default function PregnancyWeightGainPage() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Handle click outside share menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showShareMenu && !event.target.closest('.share-button-container')) {
+        setShowShareMenu(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showShareMenu]);
 
   const calculatePregnancyWeightGain = () => {
     // Validate inputs
@@ -522,8 +620,404 @@ export default function PregnancyWeightGainPage() {
       trimesterGain: trimesterGain,
       parity: parityVal,
       multiplePregnancy: multiplePregnancyOptions.find(m => m.id === multiplePregnancy)?.name || 'Single',
-      age: ageVal
+      age: ageVal,
+      weeksPregnant: weeksVal,
+      prePregnancyWeight: preWeightVal,
+      currentWeight: currentWeightVal,
+      height: heightVal
     });
+    setShowShareMenu(false);
+  };
+
+  // Share function
+  const shareResults = (platform) => {
+    if (!results) {
+      alert('Please calculate pregnancy weight gain first before sharing.');
+      return;
+    }
+
+    const shareText = `My pregnancy weight gain at ${results.weeksPregnant} weeks: ${results.currentGain}kg (${results.gainStatus}) - Check yours using this calculator!`;
+    const shareUrl = window.location.href;
+    const hashtags = 'Pregnancy,WeightGain,MaternityHealth,PrenatalCare';
+
+    let shareUrlFull = '';
+    
+    switch(platform) {
+      case 'facebook':
+        shareUrlFull = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
+        break;
+      case 'twitter':
+        shareUrlFull = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}&hashtags=${hashtags}`;
+        break;
+      case 'linkedin':
+        shareUrlFull = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+        break;
+      case 'whatsapp':
+        shareUrlFull = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+        break;
+      case 'telegram':
+        shareUrlFull = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+        break;
+      case 'reddit':
+        shareUrlFull = `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`;
+        break;
+      case 'pinterest':
+        shareUrlFull = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&description=${encodeURIComponent(shareText)}`;
+        break;
+      case 'email':
+        shareUrlFull = `mailto:?subject=My Pregnancy Weight Gain Results&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`;
+        break;
+      default:
+        // Web Share API for modern browsers
+        if (navigator.share) {
+          navigator.share({
+            title: 'My Pregnancy Weight Gain Results',
+            text: shareText,
+            url: shareUrl,
+          });
+          return;
+        } else {
+          // Fallback: copy to clipboard
+          navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+          alert('Results copied to clipboard!');
+          return;
+        }
+    }
+
+    window.open(shareUrlFull, '_blank', 'noopener,noreferrer');
+    setShowShareMenu(false);
+  };
+
+  // Download as HTML file
+  const downloadHTML = () => {
+    if (!results) {
+      alert('Please calculate pregnancy weight gain first before downloading.');
+      return;
+    }
+
+    const date = new Date().toLocaleDateString();
+    const time = new Date().toLocaleTimeString();
+    
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregnancy Weight Gain Calculator Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .report-header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .report-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            border-top: 5px solid;
+        }
+        
+        .card-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            font-size: 1.2rem;
+        }
+        
+        .weight-value {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 15px 0;
+            text-align: center;
+            color: #9b59b6;
+        }
+        
+        .weight-category {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .recommendation-item {
+            padding: 12px;
+            background: #e8f5e9;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .status-box {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .disclaimer {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #f39c12;
+            margin-top: 30px;
+        }
+        
+        .disclaimer h4 {
+            color: #e67e22;
+            margin-bottom: 15px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 10px;
+            }
+            
+            .result-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="report-header">
+            <h1><i class="fas fa-baby"></i> Pregnancy Weight Gain Results</h1>
+            <p>Generated on ${date} at ${time}</p>
+        </div>
+        
+        <div class="results-grid">
+            <!-- Main Results Card -->
+            <div class="result-card" style="border-top-color: #9b59b6;">
+                <h3 class="card-title"><i class="fas fa-weight-scale" style="color: #9b59b6;"></i> Weight Gain Analysis</h3>
+                <div class="weight-value">${results.currentGain} kg</div>
+                <div class="weight-category">Current Weight Gain</div>
+                <div class="status-box" style="background: ${results.gainStatus === 'Within Recommended Range' ? '#d4edda' : 
+                                results.gainStatus === 'Below Recommended' ? '#fff3cd' : '#f8d7da'}; 
+                                color: ${results.gainStatus === 'Within Recommended Range' ? '#155724' : 
+                                results.gainStatus === 'Below Recommended' ? '#856404' : '#721c24'};">
+                    ${results.gainStatus}
+                </div>
+                <div class="info-box">
+                    <p><strong>Assessment:</strong> ${results.gainAssessment}</p>
+                    <p><strong>Weeks Pregnant:</strong> ${results.weeksPregnant}</p>
+                    <p><strong>Pre-pregnancy BMI:</strong> ${results.prePregnancyBMI} (${results.bmiCategory})</p>
+                    <p><strong>Expected gain at ${results.weeksPregnant} weeks:</strong> ${results.expectedGainAtCurrentWeek} kg</p>
+                </div>
+            </div>
+            
+            <!-- Recommendations Card -->
+            <div class="result-card" style="border-top-color: #3498db;">
+                <h3 class="card-title"><i class="fas fa-bullseye" style="color: #3498db;"></i> Recommendations & Targets</h3>
+                <div class="info-box">
+                    <p><strong>Total Recommended Gain:</strong> ${results.expectedTotalGain} kg</p>
+                    <p><strong>Trimester ${results.trimester} Gain:</strong> ${results.trimesterGain}</p>
+                    <p><strong>Multiple Pregnancy:</strong> ${results.multiplePregnancy}</p>
+                    <p><strong>Previous Pregnancies:</strong> ${results.parity}</p>
+                    <p><strong>Age:</strong> ${results.age} years</p>
+                </div>
+                <h4 style="margin: 20px 0 10px 0; color: #2c3e50;"><i class="fas fa-lightbulb"></i> Recommendations:</h4>
+                ${results.recommendations.map((rec, index) => `
+                <div class="recommendation-item">
+                    <strong>${index + 1}.</strong> ${rec}
+                </div>
+                `).join('')}
+            </div>
+            
+            <!-- Weekly Planning Card -->
+            <div class="result-card" style="border-top-color: #2ecc71;">
+                <h3 class="card-title"><i class="fas fa-calendar-week" style="color: #2ecc71;"></i> Weekly Planning</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.8rem; font-weight: bold; color: #2ecc71;">${results.weeklyRate} kg/week</div>
+                        <div style="font-size: 0.9rem; color: #666;">Recommended Weekly Rate</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.8rem; font-weight: bold; color: #e74c3c;">${results.weeklyRateNeeded} kg/week</div>
+                        <div style="font-size: 0.9rem; color: #666;">Rate Needed to Reach Target</div>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <p><strong>Remaining Pregnancy:</strong> ${results.remainingGainNeeded} kg needed over ${40 - results.weeksPregnant} weeks</p>
+                    <p><strong>Based on:</strong> Institute of Medicine 2009 Guidelines</p>
+                    <p><strong>Note:</strong> Individual needs may vary - consult healthcare provider</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="disclaimer">
+            <h4><i class="fas fa-exclamation-circle"></i> Important Medical Disclaimer</h4>
+            <p>This pregnancy weight gain calculation is for informational purposes only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician, midwife, or other qualified healthcare provider with any questions regarding pregnancy weight gain or nutritional planning.</p>
+        </div>
+        
+        <div class="footer">
+            <p>Generated by Pregnancy Weight Gain Calculator • ${window.location.href}</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">This report was generated on ${date} at ${time}</p>
+        </div>
+    </div>
+</body>
+</html>`;
+
+    // Create blob and download
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `pregnancy-weight-gain-results-${new Date().toISOString().split('T')[0]}.html`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  };
+
+  // Download as text file
+  const downloadText = () => {
+    if (!results) {
+      alert('Please calculate pregnancy weight gain first before downloading.');
+      return;
+    }
+
+    const date = new Date().toLocaleDateString();
+    const time = new Date().toLocaleTimeString();
+    
+    let content = `╔══════════════════════════════════════════════════════════════════════════════╗\n`;
+    content += `║                    PREGNANCY WEIGHT GAIN CALCULATOR RESULTS                   ║\n`;
+    content += `║                    Generated: ${date} at ${time}                   ║\n`;
+    content += `╚══════════════════════════════════════════════════════════════════════════════╝\n\n`;
+    
+    // Main Results
+    content += `WEIGHT GAIN ANALYSIS:\n`;
+    content += `══════════════════════════════════════════════════════════════════════════════\n`;
+    content += `  Current Weight Gain: ${results.currentGain} kg\n`;
+    content += `  Status: ${results.gainStatus}\n`;
+    content += `  Assessment: ${results.gainAssessment}\n`;
+    content += `  Weeks Pregnant: ${results.weeksPregnant}\n`;
+    content += `  Pre-pregnancy BMI: ${results.prePregnancyBMI} (${results.bmiCategory})\n`;
+    content += `  Expected gain at ${results.weeksPregnant} weeks: ${results.expectedGainAtCurrentWeek} kg\n\n`;
+    
+    // Recommendations
+    content += `RECOMMENDATIONS & TARGETS:\n`;
+    content += `══════════════════════════════════════════════════════════════════════════════\n`;
+    content += `  Total Recommended Gain: ${results.expectedTotalGain} kg\n`;
+    content += `  Trimester ${results.trimester} Gain: ${results.trimesterGain}\n`;
+    content += `  Multiple Pregnancy: ${results.multiplePregnancy}\n`;
+    content += `  Previous Pregnancies: ${results.parity}\n`;
+    content += `  Age: ${results.age} years\n\n`;
+    
+    content += `  Recommendations:\n`;
+    results.recommendations.forEach((rec, index) => {
+      content += `  ${index + 1}. ${rec}\n`;
+    });
+    content += `\n`;
+    
+    // Weekly Planning
+    content += `WEEKLY PLANNING:\n`;
+    content += `══════════════════════════════════════════════════════════════════════════════\n`;
+    content += `  Recommended Weekly Rate: ${results.weeklyRate} kg/week\n`;
+    content += `  Rate Needed to Reach Target: ${results.weeklyRateNeeded} kg/week\n`;
+    content += `  Remaining Pregnancy: ${results.remainingGainNeeded} kg needed over ${40 - results.weeksPregnant} weeks\n`;
+    content += `  Based on: Institute of Medicine 2009 Guidelines\n`;
+    content += `  Note: Individual needs may vary - consult healthcare provider\n\n`;
+    
+    // Personal Information
+    content += `PERSONAL INFORMATION:\n`;
+    content += `══════════════════════════════════════════════════════════════════════════════\n`;
+    content += `  Pre-pregnancy Weight: ${results.prePregnancyWeight} kg\n`;
+    content += `  Current Weight: ${results.currentWeight} kg\n`;
+    content += `  Height: ${results.height} cm\n\n`;
+    
+    // Disclaimer
+    content += `IMPORTANT MEDICAL DISCLAIMER:\n`;
+    content += `══════════════════════════════════════════════════════════════════════════════\n`;
+    content += `This pregnancy weight gain calculation is for informational purposes only.\n`;
+    content += `It is not a substitute for professional medical advice, diagnosis, or treatment.\n`;
+    content += `Always seek the advice of your physician, midwife, or other qualified\n`;
+    content += `healthcare provider with any questions regarding pregnancy weight gain\n`;
+    content += `or nutritional planning.\n\n`;
+    
+    content += `Generated by Pregnancy Weight Gain Calculator\n`;
+    content += `URL: ${window.location.href}\n`;
+    content += `Date: ${date} | Time: ${time}\n`;
+    content += `\n╔══════════════════════════════════════════════════════════════════════════════╗\n`;
+    content += `║                            END OF REPORT                              ║\n`;
+    content += `╚══════════════════════════════════════════════════════════════════════════════╝\n`;
+    
+    // Create blob and download
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `pregnancy-weight-gain-results-${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   };
 
   const toggleFAQ = (index) => {
@@ -550,18 +1044,11 @@ export default function PregnancyWeightGainPage() {
     {
       question: "How should weight gain be managed with morning sickness or other complications?",
       answer: "Morning sickness: Focus on staying hydrated, small frequent meals, bland foods. Weight loss or minimal gain in first trimester is usually acceptable if catching up occurs later. Gestational diabetes: Follow medical nutrition therapy, monitor blood glucose, control carbohydrate intake. Preeclampsia: Follow medical advice, may have fluid retention affecting weight. Always consult healthcare provider for personalized guidance."
+    },
+    {
+      question: "How does age affect pregnancy weight gain recommendations?",
+      answer: "Teen mothers (under 20): Need additional weight gain to support their own growth plus fetal development. Women over 35: May need to gain in upper range of recommendations due to increased risk of low birth weight. Older mothers also need careful monitoring for gestational diabetes and hypertension risks. Always follow provider's personalized recommendations based on individual health status."
     }
-  ];
-
-  const healthCalculators = [
-    { name: "BMI Calculator", link: "/bmi-calculator" },
-    { name: "Due Date Calculator", link: "/due-date-calculator" },
-    { name: "Nutritional Needs", link: "/nutritional-needs" },
-    { name: "Fluid Requirements", link: "/fluid-requirements" },
-    { name: "Medication Dosage", link: "/medication-dosage" },
-    { name: "Body Surface Area", link: "/bsa-calculator" },
-    { name: "Calorie Calculator", link: "/calorie-calculator" },
-    { name: "Postpartum Weight Loss", link: "/postpartum-calculator" }
   ];
 
   return (
@@ -792,6 +1279,128 @@ export default function PregnancyWeightGainPage() {
           </div>
         )}
 
+        {/* Share and Download Buttons */}
+        {results && (
+          <div style={actionButtonsStyle}>
+            <div style={{ position: 'relative' }} className="share-button-container">
+              <button
+                style={shareButtonStyle}
+                onClick={() => setShowShareMenu(!showShareMenu)}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#2980b9'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#3498db'}
+              >
+                <i className="fas fa-share-alt"></i> Share Results
+              </button>
+              
+              {showShareMenu && (
+                <div style={shareMenuStyle}>
+                  <button
+                    style={{ ...sharePlatformButtonStyle, background: '#4267B2', color: 'white' }}
+                    onClick={() => shareResults('facebook')}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                  >
+                    <i className="fab fa-facebook-f"></i> Facebook
+                  </button>
+                  
+                  <button
+                    style={{ ...sharePlatformButtonStyle, background: '#1DA1F2', color: 'white' }}
+                    onClick={() => shareResults('twitter')}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                  >
+                    <i className="fab fa-twitter"></i> Twitter
+                  </button>
+                  
+                  <button
+                    style={{ ...sharePlatformButtonStyle, background: '#0077B5', color: 'white' }}
+                    onClick={() => shareResults('linkedin')}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                  >
+                    <i className="fab fa-linkedin-in"></i> LinkedIn
+                  </button>
+                  
+                  <button
+                    style={{ ...sharePlatformButtonStyle, background: '#25D366', color: 'white' }}
+                    onClick={() => shareResults('whatsapp')}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                  >
+                    <i className="fab fa-whatsapp"></i> WhatsApp
+                  </button>
+                  
+                  <button
+                    style={{ ...sharePlatformButtonStyle, background: '#0088CC', color: 'white' }}
+                    onClick={() => shareResults('telegram')}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                  >
+                    <i className="fab fa-telegram"></i> Telegram
+                  </button>
+                  
+                  <button
+                    style={{ ...sharePlatformButtonStyle, background: '#FF4500', color: 'white' }}
+                    onClick={() => shareResults('reddit')}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                  >
+                    <i className="fab fa-reddit-alien"></i> Reddit
+                  </button>
+                  
+                  <button
+                    style={{ ...sharePlatformButtonStyle, background: '#E60023', color: 'white' }}
+                    onClick={() => shareResults('pinterest')}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                  >
+                    <i className="fab fa-pinterest-p"></i> Pinterest
+                  </button>
+                  
+                  <button
+                    style={{ ...sharePlatformButtonStyle, background: '#666', color: 'white' }}
+                    onClick={() => shareResults('email')}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                  >
+                    <i className="fas fa-envelope"></i> Email
+                  </button>
+                  
+                  <button
+                    style={{ ...sharePlatformButtonStyle, background: '#f8f9fa', color: '#333', border: '1px solid #ddd' }}
+                    onClick={() => shareResults('copy')}
+                    onMouseEnter={(e) => e.currentTarget.style.background = '#e9ecef'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = '#f8f9fa'}
+                  >
+                    <i className="fas fa-copy"></i> Copy to Clipboard
+                  </button>
+                </div>
+              )}
+            </div>
+            
+            <button
+              style={downloadButtonStyle}
+              onClick={downloadHTML}
+              onMouseEnter={(e) => e.currentTarget.style.background = '#219150'}
+              onMouseLeave={(e) => e.currentTarget.style.background = '#27ae60'}
+            >
+              <i className="fas fa-file-code"></i> Download HTML Report
+            </button>
+            
+            <button
+              style={{
+                ...downloadButtonStyle,
+                background: '#9b59b6'
+              }}
+              onClick={downloadText}
+              onMouseEnter={(e) => e.currentTarget.style.background = '#8e44ad'}
+              onMouseLeave={(e) => e.currentTarget.style.background = '#9b59b6'}
+            >
+              <i className="fas fa-file-alt"></i> Download Text Report
+            </button>
+          </div>
+        )}
+
         <div
           style={adSlotStyle}
           onMouseEnter={(e) => Object.assign(e.currentTarget.style, hoverAdSlotStyle)}
@@ -807,93 +1416,98 @@ export default function PregnancyWeightGainPage() {
 
         {/* Enhanced SEO Content with High-Value Long-Tail Keywords */}
         <div style={infoSectionStyle}>
-          <h3 style={sectionTitleStyle}><i className="fas fa-question-circle"></i> What is Pregnancy Weight Gain Calculation? Comprehensive Gestational Weight Management Methodology</h3>
-          <p style={paragraphStyle}><strong>Pregnancy weight gain calculation methodologies</strong> represent <strong>essential clinical protocols</strong> for determining <strong>optimal gestational weight parameters, trimester-specific growth targets, and individualized maternal-fetal health optimization strategies</strong>. These calculations integrate <strong>pre-pregnancy anthropometric measurements, maternal health factors, and evidence-based gestational guidelines</strong> to provide <strong>personalized pregnancy management approaches</strong> that maximize <strong>fetal development outcomes while minimizing pregnancy-related complications</strong> across diverse obstetric scenarios requiring <strong>precision prenatal care protocols</strong>.</p>
+          <h3 style={sectionTitleStyle}><i className="fas fa-question-circle"></i> Comprehensive Pregnancy Weight Gain Management: Advanced Gestational Weight Optimization Protocol for Optimal Maternal-Fetal Health Outcomes</h3>
+          <p style={paragraphStyle}><strong>Pregnancy weight gain calculation methodologies</strong> represent <strong>essential clinical protocols</strong> for determining <strong>optimal gestational weight parameters, trimester-specific growth targets, and individualized maternal-fetal health optimization strategies</strong>. These advanced calculations integrate <strong>pre-pregnancy anthropometric measurements, maternal health factors, multiple gestation considerations, and evidence-based gestational guidelines</strong> to provide <strong>personalized pregnancy management approaches</strong> that maximize <strong>fetal development outcomes while minimizing pregnancy-related complications</strong> across diverse obstetric scenarios requiring <strong>precision prenatal care protocols and specialized nutritional management strategies</strong>.</p>
           
-          <h3 style={sectionTitleStyle}><i className="fas fa-calculator"></i> Pregnancy Weight Gain Calculation Methods - Comprehensive Gestational Management Formulae</h3>
-          <p style={paragraphStyle}>Multiple <strong>validated pregnancy weight gain determination equations</strong> exist for <strong>comprehensive gestational weight management protocols</strong>, each demonstrating specific <strong>clinical applications and evidence-based accuracy profiles</strong> influencing <strong>prenatal care decision-making processes</strong>:</p>
+          <h3 style={sectionTitleStyle}><i className="fas fa-calculator"></i> Advanced Pregnancy Weight Gain Calculation Methods - Comprehensive Gestational Management Formulae</h3>
+          <p style={paragraphStyle}>Multiple <strong>validated pregnancy weight gain determination equations</strong> exist for <strong>comprehensive gestational weight management protocols</strong>, each demonstrating specific <strong>clinical applications and evidence-based accuracy profiles</strong> influencing <strong>prenatal care decision-making processes</strong> and <strong>maternal-fetal health optimization strategies</strong>. These sophisticated algorithms incorporate <strong>advanced mathematical modeling techniques, population-specific adjustment factors, and longitudinal outcome validation data</strong> to ensure <strong>reliable clinical utility and predictive accuracy</strong> across diverse obstetric populations:</p>
           
           <div style={formulaBoxStyle}>
-            <strong>Institute of Medicine (IOM) 2009 Protocol:</strong> Gold standard guidelines based on pre-pregnancy BMI categories<br/>
-            <strong>BMI-Specific Weight Gain Algorithms:</strong> Differentiated recommendations for underweight, normal weight, overweight, and obese categories<br/>
-            <strong>Trimester-Specific Distribution Models:</strong> Weekly gain patterns adjusted for gestational age progression<br/>
-            <strong>Multiple Gestation Calculations:</strong> Specialized algorithms for twin, triplet, and higher-order pregnancies<br/>
-            <strong>Individualized Risk Assessment Models:</strong> Personalized calculations incorporating maternal age, parity, and medical conditions<br/>
-            <strong>Clinical Method Selection Protocol:</strong> IOM 2009 guidelines recommended for <strong>routine prenatal care</strong>, specialized models for <strong>high-risk pregnancy management</strong>
+            <strong>Institute of Medicine (IOM) 2009 Protocol - Gold Standard Guidelines:</strong><br/>
+            Underweight (BMI &gt;18.5): 12.5-18 kg total gain | 0.51 kg/week (2nd/3rd trimester)<br/>
+            Normal weight (BMI 18.5-24.9): 11.5-16 kg total gain | 0.42 kg/week (2nd/3rd trimester)<br/>
+            Overweight (BMI 25.0-29.9): 7-11.5 kg total gain | 0.28 kg/week (2nd/3rd trimester)<br/>
+            Obese (BMI ≥30.0): 5-9 kg total gain | 0.22 kg/week (2nd/3rd trimester)<br/><br/>
+            <strong>Multiple Gestation Specialized Calculations:</strong><br/>
+            Twin pregnancies: Normal weight: 17-25 kg | Overweight: 14-23 kg | Obese: 11-19 kg<br/>
+            Triplet+ pregnancies: Individualized protocols based on serial ultrasound assessment<br/><br/>
+            <strong>Advanced Maternal Age Adjustments:</strong><br/>
+            Women &gt;35 years: Upper range recommendations to prevent low birth weight risks<br/>
+            Adolescent pregnancies: Additional 2-4 kg for continued maternal growth requirements
           </div>
 
           <h3 style={sectionTitleStyle}><i className="fas fa-stethoscope"></i> Clinical Applications of Pregnancy Weight Gain Calculation - Comprehensive Prenatal Management Guidelines</h3>
-          <p style={paragraphStyle}>Accurate <strong>pregnancy weight gain calculation methodology implementation</strong> serves critical functions across multiple <strong>obstetric specialties and prenatal management areas</strong> requiring <strong>precise gestational monitoring</strong>:</p>
+          <p style={paragraphStyle}>Accurate <strong>pregnancy weight gain calculation methodology implementation</strong> serves critical functions across multiple <strong>obstetric specialties and prenatal management areas</strong> requiring <strong>precise gestational monitoring and evidence-based intervention strategies</strong>. These applications extend beyond simple weight tracking to encompass comprehensive <strong>maternal-fetal health optimization protocols</strong> that directly impact <strong>pregnancy outcomes and long-term health trajectories</strong>:</p>
           <ul style={{ marginLeft: '20px', marginBottom: '15px', color: '#555' }}>
-            <li style={{ marginBottom: '10px' }}><strong>Optimal Fetal Growth Monitoring:</strong> Essential for <strong>appropriate weight gain targeting, fetal growth restriction prevention, and macrosomia risk reduction strategies</strong> optimizing <strong>birth weight outcomes</strong></li>
-            <li style={{ marginBottom: '10px' }}><strong>Gestational Diabetes Prevention Protocols:</strong> Guides <strong>carbohydrate intake optimization, glucose metabolism management, and insulin resistance mitigation strategies</strong> in diabetic pregnancy management</li>
-            <li style={{ marginBottom: '10px' }}><strong>Hypertensive Disorder Management:</strong> Determines <strong>appropriate weight gain parameters, fluid balance monitoring, and preeclampsia prevention approaches</strong> in hypertensive pregnancies</li>
-            <li style={{ marginBottom: '10px' }}><strong>Multiple Gestation Care:</strong> Essential for <strong>adequate nutritional support determination, preterm birth prevention, and optimal twin growth strategies</strong> in multifetal pregnancies</li>
-            <li style={{ marginBottom: '10px' }}><strong>Adolescent Pregnancy Management:</strong> Accounts for <strong>maternal growth continuation requirements, nutritional competition considerations, and developmental stage adaptations</strong> in teenage pregnancies</li>
-            <li style={{ marginBottom: '10px' }}><strong>Advanced Maternal Age Pregnancy:</strong> Manages <strong>metabolic adaptation challenges, chronic condition considerations, and age-related risk factor modifications</strong> in pregnancies over age 35</li>
-            <li><strong>Post-Bariatric Surgery Pregnancy:</strong> Coordinates <strong>nutrient absorption optimization, weight gain adjustment protocols, and surgical complication monitoring</strong> following weight loss surgery</li>
+            <li style={{ marginBottom: '10px' }}><strong>Optimal Fetal Growth Monitoring and Macrosomia Prevention:</strong> Systematic weight gain assessment enables <strong>early identification of inadequate or excessive fetal growth patterns</strong>, facilitating timely interventions to prevent <strong>low birth weight complications or macrosomia-related delivery risks</strong>. Regular weight monitoring provides <strong>surrogate indicators of placental function and nutrient transfer efficiency</strong> between maternal and fetal compartments</li>
+            <li style={{ marginBottom: '10px' }}><strong>Gestational Diabetes Mellitus Prevention and Management Protocols:</strong> Controlled weight gain represents a cornerstone of <strong>gestational diabetes prevention strategies and metabolic management approaches</strong>. Appropriate weight trajectories help maintain <strong>insulin sensitivity, glucose homeostasis, and metabolic balance</strong> during pregnancy, significantly reducing risks of <strong>fetal hyperinsulinemia, neonatal hypoglycemia, and long-term metabolic programming effects</strong></li>
+            <li style={{ marginBottom: '10px' }}><strong>Hypertensive Disorder Risk Reduction and Preeclampsia Prevention:</strong> Modulated weight gain patterns contribute to <strong>vascular adaptation optimization, blood pressure regulation, and endothelial function preservation</strong> throughout pregnancy. Appropriate weight management reduces risks of <strong>gestational hypertension progression, preeclampsia development, and associated maternal-fetal complications</strong> through improved <strong>vascular compliance and reduced inflammatory burden</strong></li>
+            <li style={{ marginBottom: '10px' }}><strong>Multiple Gestation Nutritional Optimization and Preterm Birth Prevention:</strong> Specialized weight gain calculations for twin and higher-order pregnancies address <strong>increased metabolic demands, accelerated fetal growth requirements, and enhanced nutritional competition</strong>. Targeted weight management supports <strong>optimal twin growth trajectories, adequate placental development, and reduced risks of preterm labor initiation</strong> through comprehensive nutritional support</li>
+            <li style={{ marginBottom: '10px' }}><strong>Adolescent Pregnancy Growth Support and Developmental Optimization:</strong> Age-specific weight gain recommendations account for <strong>ongoing maternal growth requirements, nutritional competition dynamics, and developmental stage considerations</strong>. These specialized protocols ensure <strong>adequate nutritional partitioning between maternal growth completion and fetal development support</strong>, addressing unique challenges in <strong>teenage pregnancy management and long-term health preservation</strong></li>
+            <li style={{ marginBottom: '10px' }}><strong>Advanced Maternal Age Pregnancy Metabolic Adaptation Support:</strong> Tailored weight gain approaches for pregnancies beyond age 35 address <strong>age-related metabolic changes, decreased physiological reserve, and increased complication risks</strong>. These strategies optimize <strong>nutrient utilization efficiency, metabolic adaptation capacity, and pregnancy outcome improvement</strong> in older maternal populations</li>
+            <li><strong>Post-Bariatric Surgery Pregnancy Nutritional Management and Complication Prevention:</strong> Modified weight gain protocols following weight loss surgery consider <strong>altered gastrointestinal anatomy, nutrient absorption limitations, and metabolic adaptation requirements</strong>. These specialized approaches prevent <strong>nutritional deficiencies, promote appropriate fetal growth, and minimize surgical complication risks</strong> in post-bariatric pregnancy management</li>
           </ul>
           
-          <h3 style={sectionTitleStyle}><i className="fas fa-balance-scale"></i> Factors Affecting Pregnancy Weight Gain - Comprehensive Gestational Assessment Considerations</h3>
-          <p style={paragraphStyle}>Multiple <strong>significant physiological and pathological factors</strong> influence <strong>pregnancy weight gain calculation accuracy parameters</strong> and require consideration for appropriate clinical interpretation:</p>
+          <h3 style={sectionTitleStyle}><i className="fas fa-balance-scale"></i> Comprehensive Factors Affecting Pregnancy Weight Gain Patterns - Advanced Gestational Assessment Considerations</h3>
+          <p style={paragraphStyle}>Multiple <strong>significant physiological, pathological, and psychosocial factors</strong> influence <strong>pregnancy weight gain calculation accuracy parameters and clinical interpretation validity</strong>. Understanding these complex interactions enables <strong>personalized weight management approaches and improved outcome prediction</strong> across diverse obstetric scenarios:</p>
           <ul style={{ marginLeft: '20px', marginBottom: '15px', color: '#555' }}>
-            <li style={{ marginBottom: '10px' }}><strong>Pre-Pregnancy Nutritional Status:</strong> Baseline body composition, chronic disease nutrition, and micronutrient stores significantly affect <strong>gestational weight gain patterns and nutritional requirements</strong></li>
-            <li style={{ marginBottom: '10px' }}><strong>Hyperemesis Gravidarum Impacts:</strong> Severe nausea and vomiting dramatically alter <strong>early pregnancy weight trajectories and nutritional absorption capabilities</strong> requiring specialized management</li>
-            <li style={{ marginBottom: '10px' }}><strong>Gestational Age Considerations:</strong> Different trimesters demonstrate <strong>distinct metabolic demands and weight distribution patterns</strong> requiring stage-appropriate monitoring</li>
-            <li style={{ marginBottom: '10px' }}><strong>Multiple Gestation Physiology:</strong> Twin and higher-order pregnancies exhibit <strong>accelerated weight gain requirements, increased metabolic demands, and modified distribution patterns</strong></li>
-            <li style={{ marginBottom: '10px' }}><strong>Maternal Metabolic Conditions:</strong> Pre-existing diabetes, thyroid disorders, and polycystic ovary syndrome significantly influence <strong>weight gain efficiency and metabolic adaptation</strong></li>
-            <li style={{ marginBottom: '10px' }}><strong>Medication Effect Variables:</strong> Anti-emetics, insulin, and thyroid medications dramatically alter <strong>appetite regulation, metabolic rate, and nutrient utilization patterns</strong></li>
-            <li><strong>Psychosocial Determinants:</strong> Food insecurity, eating disorders, and mental health conditions profoundly impact <strong>nutritional intake patterns and weight management capabilities</strong></li>
+            <li style={{ marginBottom: '10px' }}><strong>Pre-Pregnancy Nutritional Status and Body Composition Characteristics:</strong> Baseline <strong>adipose tissue distribution patterns, lean muscle mass proportions, micronutrient storage levels, and metabolic efficiency parameters</strong> significantly affect <strong>gestational weight gain patterns, nutrient partitioning dynamics, and fetal growth trajectories</strong>. Comprehensive preconception assessment provides <strong>essential context for personalized weight gain recommendations and nutritional intervention planning</strong></li>
+            <li style={{ marginBottom: '10px' }}><strong>Hyperemesis Gravidarum Pathophysiology and Nutritional Impact Considerations:</strong> Severe nausea and vomiting during pregnancy dramatically alter <strong>early gestational weight trajectories, nutrient absorption capabilities, and metabolic adaptation processes</strong>. These conditions require specialized management approaches including <strong>modified weight gain expectations, targeted nutritional supplementation, and comprehensive symptom management strategies</strong> to ensure adequate fetal development despite maternal nutritional challenges</li>
+            <li style={{ marginBottom: '10px' }}><strong>Gestational Age Progression and Trimester-Specific Metabolic Demands:</strong> Different pregnancy stages demonstrate <strong>distinct metabolic requirements, hormonal influence patterns, and weight distribution characteristics</strong>. First trimester typically involves <strong>minimal weight gain with focus on organogenesis support</strong>, second trimester emphasizes <strong>rapid fetal growth and maternal adaptation</strong>, while third trimester focuses on <strong>final fetal maturation and maternal preparation for delivery and lactation</strong></li>
+            <li style={{ marginBottom: '10px' }}><strong>Multiple Gestation Physiological Adaptations and Increased Metabolic Requirements:</strong> Twin and higher-order pregnancies exhibit <strong>accelerated weight gain patterns, enhanced nutritional demands, modified hormonal profiles, and increased cardiovascular adaptations</strong>. These physiological changes necessitate <strong>specialized weight monitoring protocols, increased caloric intake recommendations, and enhanced nutrient density requirements</strong> to support optimal multifetal development</li>
+            <li style={{ marginBottom: '10px' }}><strong>Maternal Metabolic Conditions and Endocrine Regulation Influences:</strong> Pre-existing conditions including <strong>diabetes mellitus, thyroid disorders, polycystic ovary syndrome, and metabolic syndrome</strong> significantly influence <strong>weight gain efficiency, nutrient utilization patterns, and metabolic adaptation capacity</strong>. These conditions require <strong>condition-specific weight management approaches, enhanced monitoring protocols, and multidisciplinary care coordination</strong></li>
+            <li style={{ marginBottom: '10px' }}><strong>Pharmacological Intervention Effects and Medication-Induced Modifications:</strong> Various pregnancy-related medications including <strong>anti-emetics, insulin preparations, thyroid medications, and antihypertensive agents</strong> dramatically alter <strong>appetite regulation mechanisms, metabolic rate parameters, nutrient utilization efficiency, and fluid balance dynamics</strong>. Understanding these pharmacological influences enables <strong>accurate weight gain interpretation and appropriate management adjustment</strong></li>
+            <li><strong>Psychosocial Determinants and Environmental Influence Factors:</strong> Complex interactions between <strong>food insecurity conditions, eating disorder histories, mental health status, socioeconomic factors, cultural beliefs, and social support systems</strong> profoundly impact <strong>nutritional intake patterns, weight management capabilities, and health behavior implementation</strong>. Addressing these determinants requires <strong>comprehensive psychosocial assessment and integrated support services</strong> beyond numerical weight calculations</li>
           </ul>
 
-          <h3 style={sectionTitleStyle}><i className="fas fa-exclamation-triangle"></i> Limitations of Pregnancy Weight Gain Formulas - Advanced Gestational Assessment Methodologies</h3>
-          <p style={paragraphStyle}>While <strong>pregnancy weight gain calculation methodologies</strong> provide valuable <strong>clinical starting points</strong>, specific clinical situations necessitate <strong>advanced assessment approaches</strong> and <strong>dynamic monitoring protocols</strong>:</p>
+          <h3 style={sectionTitleStyle}><i className="fas fa-exclamation-triangle"></i> Advanced Limitations of Pregnancy Weight Gain Formulas - Comprehensive Gestational Assessment Methodologies</h3>
+          <p style={paragraphStyle}>While <strong>pregnancy weight gain calculation methodologies</strong> provide valuable <strong>clinical starting points and population-based guidelines</strong>, specific clinical situations necessitate <strong>advanced assessment approaches, dynamic monitoring protocols, and individualized management strategies</strong> that extend beyond standardized formula applications:</p>
           <ul style={{ marginLeft: '20px', marginBottom: '15px', color: '#555' }}>
-            <li style={{ marginBottom: '10px' }}><strong>Extreme Body Composition Scenarios:</strong> Professional athletes, severe obesity, and eating disorder recovery require <strong>individualized weight gain approaches beyond standard formulas</strong></li>
-            <li style={{ marginBottom: '10px' }}><strong>Complex Medical Comorbidities:</strong> Combined renal-cardiac-metabolic dysfunction presentations requiring <strong>nuanced nutritional management approaches</strong></li>
-            <li style={{ marginBottom: '10px' }}><strong>Cultural and Ethnic Variations:</strong> Different populations demonstrate <strong>varying optimal weight gain ranges and body composition patterns</strong> requiring population-specific guidelines</li>
-            <li style={{ marginBottom: '10px' }}><strong>Assisted Reproductive Technology Pregnancies:</strong> IVF, donor egg, and surrogate pregnancies may exhibit <strong>different weight gain patterns and complication risks</strong></li>
-            <li style={{ marginBottom: '10px' }}><strong>Advanced Monitoring Requirement Situations:</strong> Fetal growth restriction, placental insufficiency, and maternal malnutrition requiring <strong>intensive nutritional surveillance</strong></li>
-            <li><strong>Alternative Assessment Methodologies:</strong> <strong>Body composition analysis, nutritional biomarker monitoring, and advanced ultrasound assessments</strong> for comprehensive gestational assessment</li>
+            <li style={{ marginBottom: '10px' }}><strong>Extreme Body Composition Scenarios and Athletic Population Considerations:</strong> Professional athletes, individuals with severe obesity, eating disorder recovery patients, and those with significant muscle mass require <strong>individualized weight gain approaches beyond standard formula applications</strong>. These populations demonstrate <strong>unique metabolic characteristics, altered body composition parameters, and specialized nutritional requirements</strong> that standard calculations may not accurately address</li>
+            <li style={{ marginBottom: '10px' }}><strong>Complex Medical Comorbidities and Multisystem Disease Presentations:</strong> Combined <strong>renal-cardiac-metabolic dysfunction, autoimmune conditions with pregnancy implications, genetic disorders affecting metabolism, and rare endocrine conditions</strong> require <strong>nuanced nutritional management approaches and specialized weight monitoring protocols</strong> developed through multidisciplinary team collaboration and evidence-based guideline adaptation</li>
+            <li style={{ marginBottom: '10px' }}><strong>Cultural and Ethnic Variations in Optimal Pregnancy Weight Parameters:</strong> Different populations demonstrate <strong>varying optimal weight gain ranges, distinct body composition patterns, unique metabolic adaptations, and population-specific complication risks</strong>. These variations necessitate <strong>population-specific guideline development, culturally sensitive counseling approaches, and individualized risk assessment protocols</strong> rather than universal formula application</li>
+            <li style={{ marginBottom: '10px' }}><strong>Assisted Reproductive Technology Pregnancies and Special Conception Circumstances:</strong> In vitro fertilization (IVF) pregnancies, donor egg conceptions, surrogate arrangements, and pregnancies following fertility treatments may exhibit <strong>different weight gain patterns, altered hormonal profiles, increased complication risks, and unique psychological considerations</strong>. These scenarios require <strong>specialized monitoring approaches and individualized management strategies</strong> beyond standard obstetric protocols</li>
+            <li style={{ marginBottom: '10px' }}><strong>Advanced Monitoring Requirement Situations and High-Risk Pregnancy Management:</strong> Clinical scenarios including <strong>fetal growth restriction, placental insufficiency, maternal malnutrition, severe pregnancy complications, and critical care obstetric situations</strong> require <strong>intensive nutritional surveillance, specialized assessment methodologies, and multidisciplinary management approaches</strong> that exceed standard weight gain calculation capabilities</li>
+            <li><strong>Alternative Assessment Methodologies and Comprehensive Evaluation Approaches:</strong> Integration of <strong>advanced body composition analysis techniques, sophisticated nutritional biomarker monitoring, detailed ultrasound assessment protocols, and comprehensive metabolic evaluation strategies</strong> provides enhanced insight beyond simple weight measurements. These approaches enable <strong>precise nutritional status assessment, accurate fetal growth evaluation, and personalized intervention planning</strong> for optimal pregnancy outcomes</li>
           </ul>
 
           <h3 style={sectionTitleStyle}><i className="fas fa-history"></i> Historical Development of Pregnancy Weight Gain Guidelines - Evolution of Obstetric Nutrition Science</h3>
-          <p style={paragraphStyle}>The progressive evolution of <strong>pregnancy weight gain calculation methodologies</strong> reflects <strong>decades of obstetric research advancement</strong> and <strong>clinical practice refinement trajectories</strong>:</p>
+          <p style={paragraphStyle}>The progressive evolution of <strong>pregnancy weight gain calculation methodologies and clinical guideline development</strong> reflects <strong>decades of obstetric research advancement, nutritional science progression, and clinical practice refinement trajectories</strong>. This historical development demonstrates <strong>increasing sophistication in maternal-fetal health understanding and evidence-based practice implementation</strong>:</p>
           <ul style={{ marginLeft: '20px', marginBottom: '15px', color: '#555' }}>
-            <li style={{ marginBottom: '10px' }}><strong>Early 20th Century Foundations:</strong> Initial recognition of <strong>maternal weight impact on pregnancy outcomes</strong> establishing basic weight monitoring principles</li>
-            <li style={{ marginBottom: '10px' }}><strong>Mid-20th Century Standardization:</strong> Development of <strong>standardized weight gain charts, prenatal nutrition guidelines, and population-based recommendations</strong> revolutionizing obstetric care</li>
-            <li style={{ marginBottom: '10px' }}><strong>Late 20th Century Advances:</strong> Introduction of <strong>BMI-based classifications, trimester-specific recommendations, and evidence-based guideline development</strong></li>
-            <li style={{ marginBottom: '10px' }}><strong>2009 IOM Guideline Publication:</strong> Comprehensive evidence review establishing <strong>current gold standard recommendations based on pre-pregnancy BMI categories</strong></li>
-            <li><strong>Contemporary Precision Obstetrics:</strong> Integration of <strong>individualized risk assessment, advanced monitoring technologies, and personalized nutrition approaches</strong> for optimal pregnancy management</li>
+            <li style={{ marginBottom: '10px' }}><strong>Early 20th Century Foundations and Initial Recognition Phase:</strong> Initial medical recognition of <strong>maternal weight impact on pregnancy outcomes</strong> established basic weight monitoring principles, though approaches were often <strong>restrictive and inadequately evidence-based</strong>. Early guidelines frequently emphasized <strong>strict weight limitation rather than optimal nutritional support</strong>, reflecting limited understanding of <strong>fetal nutritional requirements and maternal metabolic adaptations</strong></li>
+            <li style={{ marginBottom: '10px' }}><strong>Mid-20th Century Standardization and Population-Based Development:</strong> Development of <strong>standardized weight gain charts, systematic prenatal nutrition guidelines, and population-based recommendations</strong> revolutionized obstetric care by introducing <strong>consistent monitoring approaches and evidence-informed practices</strong>. This period saw increasing recognition of <strong>maternal nutrition importance for fetal development and pregnancy outcome optimization</strong></li>
+            <li style={{ marginBottom: '10px' }}><strong>Late 20th Century Scientific Advances and Evidence-Based Refinement:</strong> Introduction of <strong>BMI-based weight gain classifications, trimester-specific recommendations, epidemiological outcome studies, and evidence-based guideline development</strong> significantly improved pregnancy weight management precision. Research during this period established clear connections between <strong>appropriate weight gain and reduced pregnancy complication risks</strong></li>
+            <li style={{ marginBottom: '10px' }}><strong>2009 Institute of Medicine Guideline Publication and Contemporary Standard Establishment:</strong> Comprehensive evidence review and systematic guideline development established <strong>current gold standard recommendations based on pre-pregnancy BMI categories</strong>. These guidelines represented <strong>significant advancement in personalized pregnancy care through differentiated recommendations for underweight, normal weight, overweight, and obese categories</strong></li>
+            <li><strong>Contemporary Precision Obstetrics and Individualized Medicine Approaches:</strong> Current practice integrates <strong>advanced individualized risk assessment methodologies, sophisticated monitoring technologies, personalized nutrition approaches, and multidisciplinary care coordination</strong> for optimal pregnancy management. Modern approaches emphasize <strong>personalized care rather than universal application, considering individual characteristics, medical history, and specific pregnancy circumstances</strong></li>
           </ul>
 
           <h3 style={sectionTitleStyle}><i className="fas fa-user-md"></i> Practical Clinical Implementation Recommendations - Comprehensive Prenatal Management Guidelines</h3>
-          <p style={paragraphStyle}>For optimal <strong>pregnancy weight gain calculation implementation</strong> in contemporary clinical practice environments and <strong>evidence-based prenatal care protocols</strong>:</p>
+          <p style={paragraphStyle}>For optimal <strong>pregnancy weight gain calculation implementation and evidence-based prenatal care protocol delivery</strong> in contemporary clinical practice environments, healthcare providers should adopt systematic approaches that integrate <strong>scientific evidence, clinical expertise, and patient-centered care principles</strong>:</p>
           <ul style={{ marginLeft: '20px', marginBottom: '15px', color: '#555' }}>
-            <li style={{ marginBottom: '10px' }}><strong>Comprehensive Baseline Assessment Protocol:</strong> Systematically evaluate <strong>pre-pregnancy weight history, accurate height measurement, and complete medical/nutritional assessment</strong> before calculation initiation</li>
-            <li style={{ marginBottom: '10px' }}><strong>Dynamic Monitoring Implementation:</strong> Utilize <strong>serial weight measurements, nutritional intake tracking, and fetal growth assessment</strong> rather than static formula application</li>
-            <li style={{ marginBottom: '10px' }}><strong>Individualized Risk Stratification Procedures:</strong> Systematically incorporate <strong>medical comorbidities, obstetric history, lifestyle factors, and psychosocial determinants</strong> into weight gain planning</li>
-            <li style={{ marginBottom: '10px' }}><strong>Multidisciplinary Care Integration Protocol:</strong> Develop <strong>comprehensive management frameworks</strong> involving <strong>obstetricians, registered dietitians, mental health professionals, and social services</strong> beyond numerical calculations alone</li>
-            <li style={{ marginBottom: '10px' }}><strong>Patient-Centered Education Enhancement:</strong> Coordinate weight management with <strong>nutritional counseling, physical activity guidance, and behavioral support services</strong> for comprehensive prenatal care</li>
-            <li><strong>Quality Improvement Integration:</strong> Implement <strong>pregnancy outcome tracking systems, patient satisfaction measurement, and evidence-based protocol implementation</strong> for continuous optimization</li>
+            <li style={{ marginBottom: '10px' }}><strong>Comprehensive Baseline Assessment Protocol and Preconception Evaluation:</strong> Systematically evaluate <strong>pre-pregnancy weight history, accurate anthropometric measurements, complete medical/nutritional assessment, and comprehensive health status evaluation</strong> before calculation initiation and pregnancy planning. This assessment should include <strong>detailed medical history review, medication evaluation, lifestyle assessment, and psychosocial determinant identification</strong> for personalized care planning</li>
+            <li style={{ marginBottom: '10px' }}><strong>Dynamic Monitoring Implementation and Serial Assessment Protocol:</strong> Utilize <strong>serial weight measurements, nutritional intake tracking, physical activity assessment, and comprehensive fetal growth evaluation</strong> rather than static formula application. Implement <strong>regular monitoring schedules, standardized measurement techniques, and consistent documentation practices</strong> to identify trends and facilitate timely interventions when needed</li>
+            <li style={{ marginBottom: '10px' }}><strong>Individualized Risk Stratification Procedures and Personalized Planning Approaches:</strong> Systematically incorporate <strong>medical comorbidities, obstetric history, genetic factors, lifestyle characteristics, environmental exposures, and psychosocial determinants</strong> into weight gain planning and nutritional management. Develop <strong>personalized care plans addressing specific risk factors, individual preferences, and unique pregnancy circumstances</strong> for optimal outcomes</li>
+            <li style={{ marginBottom: '10px' }}><strong>Multidisciplinary Care Integration Protocol and Collaborative Management Framework:</strong> Develop <strong>comprehensive management frameworks</strong> involving <strong>obstetricians, maternal-fetal medicine specialists, registered dietitians, mental health professionals, social workers, and support services</strong> beyond numerical calculations alone. Implement <strong>regular team communication, coordinated care planning, and integrated service delivery</strong> for comprehensive prenatal support</li>
+            <li style={{ marginBottom: '10px' }}><strong>Patient-Centered Education Enhancement and Health Literacy Optimization:</strong> Coordinate weight management with <strong>comprehensive nutritional counseling, physical activity guidance, behavioral support services, and health education programs</strong> for comprehensive prenatal care. Utilize <strong>culturally appropriate materials, literacy-sensitive approaches, and engaging educational methods</strong> to enhance understanding and promote adherence</li>
+            <li><strong>Quality Improvement Integration and Outcome Measurement Implementation:</strong> Implement <strong>pregnancy outcome tracking systems, patient satisfaction measurement, evidence-based protocol implementation, and continuous quality improvement processes</strong> for ongoing optimization. Utilize <strong>data-driven approaches, performance metrics, and outcome analysis</strong> to refine practices and enhance care quality over time</li>
           </ul>
 
-          <h3 style={sectionTitleStyle}><i className="fas fa-chart-line"></i> Future Directions in Pregnancy Weight Management - Emerging Obstetric Technologies</h3>
-          <p style={paragraphStyle}>Ongoing <strong>pregnancy weight management research initiatives</strong> continue refining <strong>assessment approaches</strong> with promising technological developments and <strong>innovative monitoring methodologies</strong>:</p>
+          <h3 style={sectionTitleStyle}><i className="fas fa-chart-line"></i> Future Directions in Pregnancy Weight Management - Emerging Obstetric Technologies and Innovative Approaches</h3>
+          <p style={paragraphStyle}>Ongoing <strong>pregnancy weight management research initiatives and technological innovation projects</strong> continue refining <strong>assessment approaches, monitoring methodologies, and intervention strategies</strong> with promising developments that will transform obstetric care delivery and maternal-fetal health optimization:</p>
           <ul style={{ marginLeft: '20px', marginBottom: '15px', color: '#555' }}>
-            <li style={{ marginBottom: '10px' }}><strong>Advanced Body Composition Monitoring:</strong> Bioelectrical impedance analysis, air displacement plethysmography, and three-dimensional photonic scanning for precise body composition tracking</li>
-            <li style={{ marginBottom: '10px' }}><strong>Artificial Intelligence Clinical Applications:</strong> Machine learning algorithm development for <strong>personalized weight gain prediction models</strong> incorporating multiple clinical and lifestyle variables</li>
-            <li style={{ marginBottom: '10px' }}><strong>Wearable Monitoring Technologies:</strong> Smart scales, nutritional intake trackers, and activity monitors integrated with electronic health records for real-time management</li>
-            <li style={{ marginBottom: '10px' }}><strong>Nutrigenomic Testing Advancements:</strong> Genetic profiling for <strong>personalized nutritional requirements, metabolic pathway optimization, and complication risk prediction</strong></li>
-            <li style={{ marginBottom: '10px' }}><strong>Telemedicine Integration Strategies:</strong> Remote weight monitoring, virtual nutritional counseling, and digital behavior change platforms for comprehensive prenatal care</li>
-            <li><strong>Mobile Health Applications:</strong> Pregnancy-specific tracking apps, educational platforms, and support networks for continuous engagement and monitoring</li>
+            <li style={{ marginBottom: '10px' }}><strong>Advanced Body Composition Monitoring and Precision Assessment Technologies:</strong> Integration of <strong>sophisticated bioelectrical impedance analysis systems, air displacement plethysmography devices, three-dimensional photonic scanning technologies, and advanced ultrasound assessment protocols</strong> for precise body composition tracking throughout pregnancy. These technologies enable <strong>accurate differentiation between maternal fat mass, lean tissue, and fluid components</strong> for enhanced nutritional management</li>
+            <li style={{ marginBottom: '10px' }}><strong>Artificial Intelligence Clinical Applications and Predictive Analytics Implementation:</strong> Development of <strong>machine learning algorithms and artificial intelligence systems</strong> for <strong>personalized weight gain prediction models</strong> incorporating multiple clinical variables, lifestyle factors, genetic information, and environmental determinants. These advanced systems facilitate <strong>individualized risk assessment, early complication prediction, and personalized intervention planning</strong> based on comprehensive data analysis</li>
+            <li style={{ marginBottom: '10px' }}><strong>Wearable Monitoring Technologies and Continuous Assessment Platforms:</strong> Integration of <strong>smart scale systems, nutritional intake trackers, physical activity monitors, and continuous glucose monitoring devices</strong> with electronic health records for real-time pregnancy management. These technologies enable <strong>continuous data collection, trend analysis, and timely intervention</strong> through seamless data integration and automated alert systems</li>
+            <li style={{ marginBottom: '10px' }}><strong>Nutrigenomic Testing Advancements and Personalized Nutrition Approaches:</strong> Implementation of <strong>genetic profiling technologies and metabolic pathway analysis</strong> for <strong>personalized nutritional requirements determination, metabolic optimization strategies, and complication risk prediction</strong>. These approaches enable <strong>individualized dietary planning based on genetic predispositions, metabolic characteristics, and specific nutrient requirements</strong> for optimal pregnancy outcomes</li>
+            <li style={{ marginBottom: '10px' }}><strong>Telemedicine Integration Strategies and Digital Health Implementation:</strong> Development of <strong>remote weight monitoring systems, virtual nutritional counseling platforms, digital behavior change interventions, and telehealth consultation services</strong> for comprehensive prenatal care delivery. These approaches enhance <strong>accessibility, convenience, and engagement</strong> while maintaining <strong>clinical oversight and evidence-based practice implementation</strong></li>
+            <li><strong>Mobile Health Applications and Patient Engagement Platforms:</strong> Creation of <strong>pregnancy-specific tracking applications, educational content delivery systems, support network facilitation tools, and behavior change implementation platforms</strong> for continuous patient engagement and monitoring. These digital solutions promote <strong>self-management, knowledge acquisition, and health behavior implementation</strong> through user-friendly interfaces and evidence-based content delivery</li>
           </ul>
 
           <h3 style={sectionTitleStyle}><i className="fas fa-graduation-cap"></i> Educational Requirements and Professional Training Standards Implementation</h3>
-          <p style={paragraphStyle}>Proper <strong>pregnancy weight gain calculation methodology education</strong> represents an <strong>essential clinical competency requirement</strong> for <strong>healthcare professionals</strong> across multiple obstetric disciplines. Comprehensive training curricula should systematically include <strong>gestational physiology principles, calculation methodologies, nutritional assessment techniques, and behavioral counseling strategies</strong>. Continuing medical education programs must consistently address <strong>evolving obstetric research findings, changing clinical practice standards, and emerging technological developments</strong> to ensure optimal maternal-fetal outcomes and evidence-based practice implementation.</p>
+          <p style={paragraphStyle}>Proper <strong>pregnancy weight gain calculation methodology education and comprehensive training programs</strong> represent <strong>essential clinical competency requirements</strong> for <strong>healthcare professionals</strong> across multiple obstetric disciplines and maternal health specialties. Comprehensive training curricula should systematically include <strong>gestational physiology principles, calculation methodologies, nutritional assessment techniques, behavioral counseling strategies, and evidence-based practice implementation</strong>. Continuing medical education programs must consistently address <strong>evolving obstetric research findings, changing clinical practice standards, emerging technological developments, and updated guideline recommendations</strong> to ensure optimal maternal-fetal outcomes and evidence-based practice implementation across diverse healthcare settings and patient populations.</p>
 
           <h3 style={sectionTitleStyle}><i className="fas fa-clipboard-check"></i> Quality Assurance and Protocol Standardization Implementation</h3>
-          <p style={paragraphStyle}>Implementation of <strong>rigorous quality assurance protocols</strong> ensures <strong>consistent pregnancy weight management practices</strong> across diverse healthcare settings. These protocols encompass <strong>calculation standardization methodologies, measurement technique verification procedures, and clinical outcome measurement requirements</strong> that directly impact <strong>maternal and fetal health parameters</strong>. Professional organizations should develop <strong>standardized training materials, competency assessment tools, and practice guideline documents</strong> to guarantee consistent clinical application quality across diverse healthcare delivery settings and specialty practice areas.</p>        
+          <p style={paragraphStyle}>Implementation of <strong>rigorous quality assurance protocols and systematic standardization procedures</strong> ensures <strong>consistent pregnancy weight management practices and optimal care delivery</strong> across diverse healthcare settings and professional practice environments. These protocols should encompass <strong>calculation standardization methodologies, measurement technique verification procedures, documentation consistency requirements, and clinical outcome measurement parameters</strong> that directly impact <strong>maternal health indicators, fetal development outcomes, and pregnancy complication rates</strong>. Professional organizations and healthcare institutions should develop <strong>standardized training materials, competency assessment tools, clinical practice guideline documents, and quality improvement frameworks</strong> to guarantee consistent clinical application quality, evidence-based practice implementation, and optimal patient outcomes across diverse healthcare delivery settings and specialty practice areas within contemporary obstetric care systems.</p>        
         </div>
 
         {/* Q&A Dropdown Section */}
@@ -927,31 +1541,6 @@ export default function PregnancyWeightGainPage() {
           ))}
         </div>
 
-        {/* Health Calculators Section */}
-        <div style={infoSectionStyle}>
-          <h3 style={sectionTitleStyle}><i className="fas fa-calculator"></i> Related Pregnancy & Health Calculators</h3>
-          <p style={paragraphStyle}>Explore our comprehensive collection of <strong>pregnancy calculation tools and health monitoring calculators</strong> for prenatal care and wellness management:</p>
-          <div style={calculatorsGridStyle}>
-            {healthCalculators.map((calculator, index) => (
-              <a
-                key={index}
-                href={calculator.link}
-                style={calculatorCardStyle}
-                onMouseEnter={(e) => Object.assign(e.currentTarget.style, hoverCalculatorCardStyle)}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = calculatorCardStyle.background;
-                  e.currentTarget.style.color = calculatorCardStyle.color;
-                  e.currentTarget.style.transform = 'none';
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.borderColor = calculatorCardStyle.borderColor;
-                }}
-              >
-                <i className="fas fa-calculator"></i> {calculator.name}
-              </a>
-            ))}
-          </div>
-        </div>
-
         {/* Medical Disclaimer */}
         <div style={medicalDisclaimerStyle}>
           <h4 style={disclaimerTitleStyle}><i className="fas fa-exclamation-triangle"></i> Important Medical Disclaimer</h4>
@@ -965,7 +1554,7 @@ export default function PregnancyWeightGainPage() {
         </div>
       </section>
 
-      {/* Sidebar with 3 Ads (3rd one sticky) */}
+      {/* Sidebar with 3 Ads (3rd one sticky) + Calculators */}
       {showSidebar && (
         <aside style={sidebarStyle}>
           <div style={sidebarContentStyle}>
@@ -974,7 +1563,7 @@ export default function PregnancyWeightGainPage() {
               <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Sponsored Content</p>
               <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Prenatal nutrition coaching program</p>
               <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px height ad slot</p>
+              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
             </div>
             
             <div style={{ ...adSlotStyle, ...sidebarAdStyle }}>
@@ -982,7 +1571,7 @@ export default function PregnancyWeightGainPage() {
               <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Featured Product</p>
               <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Smart pregnancy scale with app</p>
               <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px height ad slot</p>
+              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
             </div>
             
             <div style={{ ...adSlotStyle, ...stickyAdStyle }}>
@@ -990,7 +1579,75 @@ export default function PregnancyWeightGainPage() {
               <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Premium Content - Stays visible</p>
               <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Complete prenatal health guide</p>
               <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px sticky ad</p>
+              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px sticky ad</p>
+            </div>
+            
+            {/* Related Calculators Sidebar Section - Sorted by SEO Relevance */}
+            <div style={{ 
+              padding: '20px', 
+              background: 'white', 
+              borderRadius: '10px', 
+              boxShadow: '0 3px 10px rgba(0,0,0,0.05)' 
+            }}>
+              <h4 style={{ 
+                marginBottom: '15px', 
+                color: '#2c3e50', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '8px' 
+              }}>
+                <i className="fas fa-calculator"></i> Related Health Calculators
+              </h4>
+              <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '15px' }}>
+                Explore our comprehensive collection of health assessment tools sorted by relevance:
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {sortedCalculators.map((calculator, index) => (
+                  <a
+                    key={index}
+                    href={calculator.link}
+                    style={{
+                      padding: '12px',
+                      background: '#f8f9fa',
+                      borderRadius: '8px',
+                      textDecoration: 'none',
+                      color: '#2c3e50',
+                      fontSize: '0.9rem',
+                      transition: 'all 0.3s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      border: '2px solid transparent'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = '#3498db';
+                      e.currentTarget.style.color = 'white';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 3px 10px rgba(52, 152, 219, 0.2)';
+                      e.currentTarget.style.borderColor = '#3498db';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = '#f8f9fa';
+                      e.currentTarget.style.color = '#2c3e50';
+                      e.currentTarget.style.transform = 'none';
+                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.borderColor = 'transparent';
+                    }}
+                  >
+                    <i className="fas fa-calculator"></i> {calculator.name}
+                    <span style={{ 
+                      marginLeft: 'auto',
+                      fontSize: '0.7rem',
+                      background: calculator.relevance >= 9 ? '#3498db' : calculator.relevance >= 8 ? '#27ae60' : '#f39c12',
+                      color: 'white',
+                      padding: '2px 6px',
+                      borderRadius: '4px'
+                    }}>
+                      {calculator.relevance}/10
+                    </span>
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </aside>

@@ -17,8 +17,9 @@ export default function FatIntakeCalculatorPage() {
   const [showSidebar, setShowSidebar] = useState(true);
   const [activeFAQ, setActiveFAQ] = useState(null);
   const [fatHistory, setFatHistory] = useState([]);
+  const [showShareMenu, setShowShareMenu] = useState(false);
 
-  // Styles
+  // Container style with responsive grid
   const containerStyle = {
     width: '100%',
     maxWidth: '1400px',
@@ -207,6 +208,7 @@ export default function FatIntakeCalculatorPage() {
     boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
   };
 
+  // Sidebar Styles
   const sidebarStyle = {
     display: 'block',
     height: 'fit-content'
@@ -221,60 +223,97 @@ export default function FatIntakeCalculatorPage() {
   };
 
   const sidebarAdStyle = {
-    height: '300px',
+    height: '250px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    background: '#f8f9fa',
+    border: '2px dashed #ddd',
+    borderRadius: '10px',
+    color: '#7f8c8d',
+    padding: '15px'
   };
 
   const stickyAdStyle = {
     position: 'sticky',
     top: '20px',
-    background: '#ebf5fb',
-    border: '2px solid #3498db',
-    boxShadow: '0 4px 12px rgba(52, 152, 219, 0.15)',
-    height: '300px',
+    background: '#e8f5e9',
+    border: '2px solid #27ae60',
+    boxShadow: '0 4px 12px rgba(39, 174, 96, 0.15)',
+    height: '250px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: '15px',
     zIndex: '10'
   };
 
-  const mobileAdsStyle = {
-    display: 'none',
-    margin: '30px 0',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: '20px'
-  };
-
-  const mobileAdStyle = {
-    padding: '20px',
-    background: '#f8f9fa',
-    borderRadius: '10px',
-    textAlign: 'center',
-    color: '#7f8c8d',
-    border: '1px dashed #ddd',
-    height: '300px',
+  // Share/Download Button Styles
+  const actionButtonsStyle = {
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
+    gap: '10px',
+    marginTop: '20px',
+    flexWrap: 'wrap'
   };
 
-  const stickyFooterAdStyle = {
-    display: 'none',
-    position: 'fixed',
-    bottom: '0',
-    left: '0',
-    right: '0',
-    background: '#f8f9fa',
+  const shareButtonStyle = {
+    padding: '12px 20px',
+    background: '#3498db',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: '0.3s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  };
+
+  const downloadButtonStyle = {
+    padding: '12px 20px',
+    background: '#27ae60',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: '0.3s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  };
+
+  const shareMenuStyle = {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    background: 'white',
+    borderRadius: '10px',
+    boxShadow: '0 5px 20px rgba(0,0,0,0.15)',
     padding: '15px',
-    borderTop: '2px solid #3498db',
-    textAlign: 'center',
-    zIndex: '1000',
-    boxShadow: '0 -2px 10px rgba(0,0,0,0.1)'
+    zIndex: 1000,
+    minWidth: '200px',
+    marginTop: '10px'
+  };
+
+  const sharePlatformButtonStyle = {
+    width: '100%',
+    padding: '10px 15px',
+    marginBottom: '8px',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+    fontWeight: '500',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    transition: '0.2s'
   };
 
   const faqSectionStyle = {
@@ -330,32 +369,6 @@ export default function FatIntakeCalculatorPage() {
     maxHeight: '500px'
   };
 
-  const calculatorsGridStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-    gap: '15px',
-    marginTop: '20px'
-  };
-
-  const calculatorCardStyle = {
-    padding: '15px',
-    background: '#f8f9fa',
-    borderRadius: '10px',
-    textAlign: 'center',
-    textDecoration: 'none',
-    color: '#2c3e50',
-    transition: 'all 0.3s',
-    border: '2px solid transparent'
-  };
-
-  const hoverCalculatorCardStyle = {
-    background: '#3498db',
-    color: 'white',
-    transform: 'translateY(-3px)',
-    boxShadow: '0 5px 15px rgba(52, 152, 219, 0.2)',
-    borderColor: '#3498db'
-  };
-
   const medicalDisclaimerStyle = {
     margin: '40px 0',
     padding: '25px',
@@ -373,6 +386,44 @@ export default function FatIntakeCalculatorPage() {
     alignItems: 'center',
     gap: '10px'
   };
+
+  // Calculator links sorted by SEO relevance
+  const healthCalculators = [
+    { name: "BMI Calculator", link: "/bmi-calculator", relevance: 10 },
+    { name: "Body Fat Calculator", link: "/body-fat-calculator", relevance: 10 },
+    { name: "Calorie Calculator", link: "/calorie-calculator", relevance: 9 },
+    { name: "TDEE Calculator", link: "/tdee-calculator", relevance: 9 },
+    { name: "BMR Calculator", link: "/bmr-calculator", relevance: 9 },
+    { name: "Carbohydrate Intake Calculator", link: "/carbohydrate-intake-calculator", relevance: 8 },
+    { name: "Ideal Weight Calculator", link: "/ibw-calculator", relevance: 8 },
+    { name: "Waist-Hip Ratio", link: "/waist-hip-ratio", relevance: 8 },
+    { name: "Heart Disease Risk Calculator", link: "/heart-disease-risk-calculator", relevance: 7 },
+    { name: "Diabetes Risk Calculator", link: "/diabetes-risk-calculator", relevance: 7 },
+    { name: "Water Intake Calculator", link: "/water-intake-calculator", relevance: 6 },
+    { name: "Heart Rate Calculator", link: "/heart-rate-calculator", relevance: 6 },
+    { name: "BSA Calculator", link: "/bsa-calculator", relevance: 5 },
+    { name: "LBM Calculator", link: "/lbm-calculator", relevance: 5 },
+    { name: "Blood Pressure Tracker", link: "/blood-pressure-tracker", relevance: 5 },
+    { name: "Ovulation Tracker", link: "/ovulation-tracker", relevance: 4 },
+    { name: "Pregnancy Due Date Calculator", link: "/pregnancy-due-date-calculator", relevance: 4 },
+    { name: "Pregnancy Weight Gain Calculator", link: "/pregnancy-weight-gain-calculator", relevance: 4 },
+    { name: "GFR Calculator", link: "/gfr-calculator", relevance: 4 },
+    { name: "Creatinine Clearance", link: "/creatinine-clearance", relevance: 3 },
+    { name: "Medication Dosage", link: "/medication-dosage", relevance: 3 },
+    { name: "Fluid Requirement", link: "/fluid-requirement", relevance: 3 },
+    { name: "Anion Gap Calculator", link: "/anion-gap-calculator", relevance: 3 },
+    { name: "Electrolyte Correction", link: "/electrolyte-correction", relevance: 3 },
+    { name: "Nutritional Needs", link: "/nutritional-needs", relevance: 3 },
+    { name: "Cardiac Index Calculator", link: "/cardiac-index-calculator", relevance: 2 },
+    { name: "Fertile Window Calculator", link: "/fertile-window-calculator", relevance: 2 },
+    { name: "Safe Period Calculator", link: "/safe-period-calculator", relevance: 2 },
+    { name: "Period Cycle Calculator", link: "/period-cycle-calculator", relevance: 2 },
+    { name: "Blood Pressure Category Calculator", link: "/blood-pressure-category-calculator", relevance: 2 },
+    { name: "Pregnancy Test", link: "/pregnancy-test", relevance: 1 }
+  ];
+
+  // Sort by relevance
+  const sortedCalculators = [...healthCalculators].sort((a, b) => b.relevance - a.relevance);
 
   // Fat intake recommendations
   const fatRecommendations = {
@@ -444,6 +495,20 @@ export default function FatIntakeCalculatorPage() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Handle click outside share menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showShareMenu && !event.target.closest('.share-button-container')) {
+        setShowShareMenu(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showShareMenu]);
 
   const calculateFatIntake = () => {
     // Validate inputs
@@ -536,15 +601,15 @@ export default function FatIntakeCalculatorPage() {
     const fatPercentage = Math.round((fatCalories / tdee) * 100);
 
     // Calculate other macronutrients
-    const proteinGrams = Math.round(leanBodyMass * 1.8); // Based on lean mass
+    const proteinGrams = Math.round(leanBodyMass * 1.8);
     const proteinCalories = proteinGrams * 4;
     const carbCalories = tdee - (fatCalories + proteinCalories);
     const carbGrams = Math.round(carbCalories / 4);
 
     // Calculate fatty acid ratios
-    const saturatedFat = Math.round(optimalFat * 0.3); // Max 30%
-    const monounsaturatedFat = Math.round(optimalFat * 0.45); // 40-50%
-    const polyunsaturatedFat = Math.round(optimalFat * 0.25); // 20-30%
+    const saturatedFat = Math.round(optimalFat * 0.3);
+    const monounsaturatedFat = Math.round(optimalFat * 0.45);
+    const polyunsaturatedFat = Math.round(optimalFat * 0.25);
     const omega6ToOmega3Ratio = '4:1 (optimal: 4:1 to 1:1)';
 
     // Fat distribution throughout the day
@@ -553,55 +618,6 @@ export default function FatIntakeCalculatorPage() {
       { meal: 'Lunch', percentage: 30, grams: Math.round(optimalFat * 0.30), timing: 'Satiety & nutrient absorption' },
       { meal: 'Dinner', percentage: 35, grams: Math.round(optimalFat * 0.35), timing: 'Hormone production & recovery' },
       { meal: 'Snacks', percentage: 15, grams: Math.round(optimalFat * 0.15), timing: 'Energy maintenance' }
-    ];
-
-    // Fat source suggestions
-    const fatSources = {
-      saturated: [
-        { name: 'Coconut Oil', serving: '1 tbsp', fat: 14, saturated: 12, benefits: 'MCTs for quick energy' },
-        { name: 'Grass-fed Butter', serving: '1 tbsp', fat: 11, saturated: 7, benefits: 'Butyrate for gut health' },
-        { name: 'Egg Yolks', serving: '2 large', fat: 10, saturated: 3, benefits: 'Choline & vitamins' },
-        { name: 'Dark Chocolate', serving: '30g 85%', fat: 12, saturated: 7, benefits: 'Antioxidants' }
-      ],
-      monounsaturated: [
-        { name: 'Avocado', serving: '1 medium', fat: 21, saturated: 3, benefits: 'Fiber & potassium' },
-        { name: 'Olive Oil', serving: '1 tbsp', fat: 14, saturated: 2, benefits: 'Heart healthy' },
-        { name: 'Almonds', serving: '30g', fat: 14, saturated: 1, benefits: 'Vitamin E' },
-        { name: 'Macadamia Nuts', serving: '30g', fat: 21, saturated: 3, benefits: 'Highest MUFA nuts' }
-      ],
-      polyunsaturated: [
-        { name: 'Salmon', serving: '150g', fat: 22, saturated: 4, benefits: 'Omega-3 EPA/DHA' },
-        { name: 'Flaxseeds', serving: '2 tbsp ground', fat: 9, saturated: 1, benefits: 'ALA omega-3' },
-        { name: 'Walnuts', serving: '30g', fat: 18, saturated: 2, benefits: 'ALA & antioxidants' },
-        { name: 'Chia Seeds', serving: '2 tbsp', fat: 9, saturated: 1, benefits: 'Omega-3 & fiber' }
-      ]
-    };
-
-    // Timing recommendations
-    const timingRecommendations = [
-      'Consume healthy fats with all meals for sustained energy',
-      'Include MCTs in morning for cognitive function',
-      'Combine fats with fat-soluble vitamins (A,D,E,K)',
-      'Post-workout: Include anti-inflammatory fats (omega-3)',
-      'Evening: Emphasize calming fats (olive oil, nuts)'
-    ];
-
-    // Quality strategies
-    const qualityStrategies = [
-      'Prioritize monounsaturated and polyunsaturated fats',
-      'Limit industrial seed oils (soybean, corn, canola)',
-      'Choose grass-fed and wild-caught animal products',
-      'Avoid trans fats and hydrogenated oils completely',
-      'Balance omega-6 to omega-3 ratio (aim for 4:1 or lower)'
-    ];
-
-    // Additional recommendations
-    const additionalRecommendations = [
-      `Aim for ${minFat}-${maxFat}g total fat daily`,
-      `Fat should provide ${fatPercentage}% of daily calories`,
-      `Limit saturated fat to ${saturatedFat}g (≤10% of calories)`,
-      `Include ${Math.round(optimalFat * 0.1)}g omega-3 daily`,
-      'Cook with stable fats (coconut oil, ghee, avocado oil)'
     ];
 
     // Risk assessment
@@ -639,6 +655,24 @@ export default function FatIntakeCalculatorPage() {
       leptin: 'Adequate for satiety signaling'
     };
 
+    // Timing recommendations
+    const timingRecommendations = [
+      'Consume healthy fats with all meals for sustained energy',
+      'Include MCTs in morning for cognitive function',
+      'Combine fats with fat-soluble vitamins (A,D,E,K)',
+      'Post-workout: Include anti-inflammatory fats (omega-3)',
+      'Evening: Emphasize calming fats (olive oil, nuts)'
+    ];
+
+    // Quality strategies
+    const qualityStrategies = [
+      'Prioritize monounsaturated and polyunsaturated fats',
+      'Limit industrial seed oils (soybean, corn, canola)',
+      'Choose grass-fed and wild-caught animal products',
+      'Avoid trans fats and hydrogenated oils completely',
+      'Balance omega-6 to omega-3 ratio (aim for 4:1 or lower)'
+    ];
+
     setResults({
       weight: weightVal,
       height: heightVal,
@@ -668,17 +702,369 @@ export default function FatIntakeCalculatorPage() {
       polyunsaturatedFat: polyunsaturatedFat,
       omega6ToOmega3Ratio: omega6ToOmega3Ratio,
       fatDistribution: fatDistribution,
-      fatSources: fatSources,
       timingRecommendations: timingRecommendations,
       qualityStrategies: qualityStrategies,
-      additionalRecommendations: additionalRecommendations,
       riskLevel: riskLevel,
       riskColor: riskColor,
       riskRecommendations: riskRecommendations,
       targets: targets,
       hormoneSupport: hormoneSupport,
-      fatHistory: fatHistory
+      fatHistory: fatHistory,
+      date: new Date().toLocaleDateString(),
+      time: new Date().toLocaleTimeString()
     });
+    setShowShareMenu(false);
+  };
+
+  // Share function
+  const shareResults = (platform) => {
+    if (!results) {
+      alert('Please calculate fat intake first before sharing.');
+      return;
+    }
+
+    const shareText = `My optimal fat intake is ${results.optimalFat}g/day (${results.fatPercentage}% of calories) - Check yours using this calculator!`;
+    const shareUrl = window.location.href;
+    const hashtags = 'Nutrition,FatIntake,Health,Wellness';
+
+    let shareUrlFull = '';
+    
+    switch(platform) {
+      case 'facebook':
+        shareUrlFull = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
+        break;
+      case 'twitter':
+        shareUrlFull = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}&hashtags=${hashtags}`;
+        break;
+      case 'linkedin':
+        shareUrlFull = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+        break;
+      case 'whatsapp':
+        shareUrlFull = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+        break;
+      case 'telegram':
+        shareUrlFull = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+        break;
+      case 'reddit':
+        shareUrlFull = `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`;
+        break;
+      case 'pinterest':
+        shareUrlFull = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&description=${encodeURIComponent(shareText)}`;
+        break;
+      case 'email':
+        shareUrlFull = `mailto:?subject=My Fat Intake Results&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`;
+        break;
+      default:
+        // Web Share API for modern browsers
+        if (navigator.share) {
+          navigator.share({
+            title: 'My Fat Intake Results',
+            text: shareText,
+            url: shareUrl,
+          });
+          return;
+        } else {
+          // Fallback: copy to clipboard
+          navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+          alert('Results copied to clipboard!');
+          return;
+        }
+    }
+
+    window.open(shareUrlFull, '_blank', 'noopener,noreferrer');
+    setShowShareMenu(false);
+  };
+
+  // Download as HTML file
+  const downloadHTML = () => {
+    if (!results) {
+      alert('Please calculate fat intake first before downloading.');
+      return;
+    }
+
+    const date = new Date().toLocaleDateString();
+    const time = new Date().toLocaleTimeString();
+    
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fat Intake Calculator Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .report-header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .report-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            border-top: 5px solid;
+        }
+        
+        .card-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            font-size: 1.2rem;
+        }
+        
+        .fat-value {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 15px 0;
+            text-align: center;
+            color: #3498db;
+        }
+        
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .metric-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .metric-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .recommendation-item {
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .disclaimer {
+            background: #f8d7da;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #721c24;
+            margin-top: 30px;
+        }
+        
+        .disclaimer h4 {
+            color: #721c24;
+            margin-bottom: 15px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 10px;
+            }
+            
+            .result-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="report-header">
+            <h1><i class="fas fa-oil-can"></i> Fat Intake Calculator Results</h1>
+            <p>Generated on ${date} at ${time}</p>
+        </div>
+        
+        <div class="results-grid">
+            <!-- Personal Information Card -->
+            <div class="result-card" style="border-top-color: #3498db;">
+                <h3 class="card-title"><i class="fas fa-user" style="color: #3498db;"></i> Personal Information</h3>
+                <div class="info-box">
+                    <p><strong>Weight:</strong> ${results.weight} kg</p>
+                    <p><strong>Height:</strong> ${results.height} cm</p>
+                    <p><strong>Age:</strong> ${results.age} years</p>
+                    <p><strong>Gender:</strong> ${results.gender === 'male' ? 'Male' : 'Female'}</p>
+                    <p><strong>Body Fat:</strong> ${results.bodyFat}%</p>
+                    <p><strong>BMI:</strong> ${results.bmi}</p>
+                    <p><strong>Activity Level:</strong> ${results.activityLevel.replace('_', ' ')}</p>
+                    <p><strong>Goal:</strong> ${results.goal}</p>
+                    <p><strong>Diet Type:</strong> ${results.dietType}</p>
+                    <p><strong>Cholesterol:</strong> ${results.cholesterol}</p>
+                    <p><strong>Metabolic Health:</strong> ${results.metabolicHealth}</p>
+                </div>
+            </div>
+            
+            <!-- Fat Intake Results Card -->
+            <div class="result-card" style="border-top-color: #27ae60;">
+                <h3 class="card-title"><i class="fas fa-calculator" style="color: #27ae60;"></i> Fat Intake Requirements</h3>
+                <div class="fat-value">${results.optimalFat}g</div>
+                <div class="info-box" style="text-align: center; background: ${results.riskColor === '#e74c3c' ? '#f8d7da' : results.riskColor === '#f39c12' ? '#fff3cd' : '#d4edda'}; color: ${results.riskColor === '#e74c3c' ? '#721c24' : results.riskColor === '#f39c12' ? '#856404' : '#155724'};">
+                    <strong>${results.riskLevel} Risk Level</strong> | Range: ${results.minFat}-${results.maxFat}g/day
+                </div>
+                <div class="metric-grid">
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: #3498db;">${results.fatPercentage}%</div>
+                        <div class="metric-label">of Daily Calories</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: #2ecc71;">${results.fatPerKgMin}-${results.fatPerKgMax}g/kg</div>
+                        <div class="metric-label">per kg body weight</div>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <p><strong>Total Daily Energy Expenditure:</strong> ${results.tdee} calories</p>
+                    <p><strong>Basal Metabolic Rate:</strong> ${results.bmr} calories</p>
+                    <p><strong>Macro Split:</strong> ${results.carbGrams}g Carbs (${Math.round((results.carbGrams * 4 / results.tdee) * 100)}%), ${results.proteinGrams}g Protein (${Math.round((results.proteinGrams * 4 / results.tdee) * 100)}%), ${results.optimalFat}g Fat (${results.fatPercentage}%)</p>
+                </div>
+            </div>
+            
+            <!-- Fatty Acid Distribution Card -->
+            <div class="result-card" style="border-top-color: #e74c3c;">
+                <h3 class="card-title"><i class="fas fa-chart-pie" style="color: #e74c3c;"></i> Fatty Acid Distribution</h3>
+                <div class="metric-grid">
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: #e74c3c;">${results.saturatedFat}g</div>
+                        <div class="metric-label">Saturated Fat (≤30%)</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: #3498db;">${results.monounsaturatedFat}g</div>
+                        <div class="metric-label">Monounsaturated (40-50%)</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: #2ecc71;">${results.polyunsaturatedFat}g</div>
+                        <div class="metric-label">Polyunsaturated (20-30%)</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: #9b59b6;">${results.targets.omega3}</div>
+                        <div class="metric-label">Omega-3 Daily</div>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <p><strong>Omega-6 to Omega-3 Ratio:</strong> ${results.omega6ToOmega3Ratio}</p>
+                    <p><strong>Saturated Fat Limit:</strong> ${results.targets.saturated}</p>
+                    <p><strong>Trans Fat Target:</strong> ${results.targets.transFat}</p>
+                </div>
+            </div>
+            
+            <!-- Recommendations Card -->
+            <div class="result-card" style="border-top-color: #f39c12;">
+                <h3 class="card-title"><i class="fas fa-exclamation-triangle" style="color: #f39c12;"></i> Health Recommendations</h3>
+                <div style="margin: 20px 0;">
+                    <div style="margin-bottom: 15px; color: #666;">
+                        <strong>Fat Quality Strategies:</strong>
+                    </div>
+                    ${results.qualityStrategies.map((strategy, index) => `
+                    <div class="recommendation-item">
+                        <strong>${index + 1}.</strong> ${strategy}
+                    </div>
+                    `).join('')}
+                </div>
+                ${results.riskRecommendations.length > 0 ? `
+                <div class="info-box" style="background: ${results.riskColor === '#e74c3c' ? '#f8d7da' : '#fff3cd'}; color: ${results.riskColor === '#e74c3c' ? '#721c24' : '#856404'};">
+                    <strong>Health Considerations:</strong>
+                    ${results.riskRecommendations.map(rec => `<p>• ${rec}</p>`).join('')}
+                </div>
+                ` : ''}
+            </div>
+        </div>
+        
+        <div class="disclaimer">
+            <h4><i class="fas fa-exclamation-circle"></i> Important Medical Disclaimer</h4>
+            <p>This fat intake calculation is for informational purposes only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Individual fat requirements may vary based on genetics, metabolic health, and specific health conditions.</p>
+        </div>
+        
+        <div class="footer">
+            <p>Generated by Fat Intake Calculator • ${window.location.href}</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">This report was generated on ${date} at ${time}</p>
+        </div>
+    </div>
+</body>
+</html>`;
+
+    // Create blob and download
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `fat-intake-results-${new Date().toISOString().split('T')[0]}.html`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   };
 
   const toggleFAQ = (index) => {
@@ -710,21 +1096,6 @@ export default function FatIntakeCalculatorPage() {
       question: "What about fat intake for brain health and cognitive function? Which fats are most important for the brain?",
       answer: "Brain is 60% fat - specific fats are critical: Omega-3 DHA: Most important brain fat. Comprises 30% of brain gray matter. Essential for neuron membrane fluidity, synaptic function, neuroprotection. Sources: Fatty fish (salmon, sardines), algae oil. Minimum: 500mg DHA+EPA daily, optimal: 1-2g. Cholesterol: Brain contains 25% of body's cholesterol. Essential for myelin sheath formation, synaptic function. Dietary cholesterol doesn't significantly impact brain cholesterol. Saturated fats: Provide stability to cell membranes. MCTs (coconut oil) provide ketones - alternative brain fuel, beneficial in Alzheimer's. Phospholipids: Choline (eggs, liver) for acetylcholine production. Critical for memory. Optimal brain fat intake: 1) Ensure adequate omega-3 (aim for 1g DHA+EPA daily), 2) Include cholesterol-rich foods (eggs, shellfish), 3) Use MCT oil for cognitive tasks, 4) Avoid trans fats completely (damage brain cells), 5) Balance omega-6 to omega-3 ratio (4:1 or lower)."
     }
-  ];
-
-  const healthCalculators = [
-    { name: "Carbohydrate Intake Calculator", link: "/carbohydrate-intake-calculator" },
-    { name: "Protein Intake Calculator", link: "/protein-intake-calculator" },
-    { name: "Macro Calculator", link: "/macro-calculator" },
-    { name: "Calorie Calculator", link: "/calorie-calculator" },
-    { name: "Cholesterol Calculator", link: "/cholesterol-calculator" },
-    { name: "Body Fat Calculator", link: "/body-fat-calculator" },
-    { name: "Metabolism Calculator", link: "/metabolism-calculator" },
-    { name: "Heart Health Calculator", link: "/heart-health-calculator" },
-    { name: "Omega-3 Calculator", link: "/omega3-calculator" },
-    { name: "Ketone Calculator", link: "/ketone-calculator" },
-    { name: "Hormone Balance Calculator", link: "/hormone-balance-calculator" },
-    { name: "Brain Health Calculator", link: "/brain-health-calculator" }
   ];
 
   return (
@@ -910,198 +1281,297 @@ export default function FatIntakeCalculatorPage() {
           <i className="fas fa-calculator"></i> Calculate Fat Intake Requirements
         </button>
 
-        {/* Results Display */}
+        {/* Results Display with Share/Download Buttons */}
         {results && (
-          <div style={resultsContainerStyle}>
-            <div style={{ ...resultCardStyle, ...fatCardStyle }}>
-              <h4 style={sectionTitleStyle}><i className="fas fa-calculator"></i> Fat Intake Requirements</h4>
-              <div style={{ margin: '20px 0' }}>
-                <div style={{ ...resultValueStyle, color: '#3498db' }}>
-                  {results.optimalFat}g
-                </div>
-                <div style={{ 
-                  fontSize: '1.2rem', 
-                  color: '#666',
-                  marginBottom: '15px'
-                }}>
-                  Optimal Daily Fat Intake
-                </div>
-                <div style={{ 
-                  padding: '15px', 
-                  background: results.riskLevel === 'High' ? '#f8d7da' : 
-                            results.riskLevel === 'Moderate' ? '#fff3cd' : '#d4edda',
-                  borderRadius: '8px',
-                  color: results.riskLevel === 'High' ? '#721c24' : 
-                        results.riskLevel === 'Moderate' ? '#856404' : '#155724',
-                  fontWeight: '600',
-                  marginBottom: '15px'
-                }}>
-                  {results.riskLevel} Risk Level | Range: {results.minFat}-{results.maxFat}g/day
-                </div>
-                <div style={{ 
-                  padding: '10px', 
-                  background: '#f8f9fa',
-                  borderRadius: '8px',
-                  color: '#666'
-                }}>
-                  <div><strong>Fat/kg:</strong> {results.fatPerKgMin}-{results.fatPerKgMax}g/kg body weight</div>
-                  <div><strong>Percentage:</strong> {results.fatPercentage}% of {results.tdee} calories</div>
-                  <div><strong>Omega-6:Omega-3:</strong> {results.omega6ToOmega3Ratio}</div>
-                  <div><strong>Macro Split:</strong> C{Math.round((results.carbGrams * 4 / results.tdee) * 100)}/P{Math.round((results.proteinGrams * 4 / results.tdee) * 100)}/F{results.fatPercentage}</div>
-                </div>
-              </div>
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                <div>Weight: {results.weight}kg | Body Fat: {results.bodyFat}% | Age: {results.age}</div>
-                <div>Goal: {results.goal} | Diet: {results.dietType} | Cholesterol: {results.cholesterol}</div>
-              </div>
-            </div>
-
-            <div style={{ ...resultCardStyle, ...distributionCardStyle }}>
-              <h4 style={sectionTitleStyle}><i className="fas fa-chart-pie"></i> Fatty Acid Distribution</h4>
-              <div style={{ margin: '20px 0' }}>
-                <div style={{ 
-                  padding: '15px', 
-                  background: '#f8f9fa',
-                  borderRadius: '8px',
-                  marginBottom: '15px'
-                }}>
-                  <div style={{ fontSize: '0.9rem', marginBottom: '10px' }}><strong>Optimal Fatty Acid Ratio:</strong></div>
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    padding: '8px 0',
-                    borderBottom: '1px solid #eee'
+          <>
+            <div style={resultsContainerStyle}>
+              <div style={{ ...resultCardStyle, ...fatCardStyle }}>
+                <h4 style={sectionTitleStyle}><i className="fas fa-calculator"></i> Fat Intake Requirements</h4>
+                <div style={{ margin: '20px 0' }}>
+                  <div style={{ ...resultValueStyle, color: '#3498db' }}>
+                    {results.optimalFat}g
+                  </div>
+                  <div style={{ 
+                    fontSize: '1.2rem', 
+                    color: '#666',
+                    marginBottom: '15px'
                   }}>
-                    <span style={{ fontSize: '0.9rem', width: '50%' }}>Saturated Fat</span>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#e74c3c', width: '25%', textAlign: 'center' }}>
-                      {results.saturatedFat}g
-                    </span>
-                    <span style={{ fontSize: '0.85rem', color: '#666', width: '25%', textAlign: 'right' }}>
-                      ≤30% of total fat
-                    </span>
+                    Optimal Daily Fat Intake
                   </div>
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    padding: '8px 0',
-                    borderBottom: '1px solid #eee'
+                  <div style={{ 
+                    padding: '15px', 
+                    background: results.riskLevel === 'High' ? '#f8d7da' : 
+                              results.riskLevel === 'Moderate' ? '#fff3cd' : '#d4edda',
+                    borderRadius: '8px',
+                    color: results.riskLevel === 'High' ? '#721c24' : 
+                          results.riskLevel === 'Moderate' ? '#856404' : '#155724',
+                    fontWeight: '600',
+                    marginBottom: '15px'
                   }}>
-                    <span style={{ fontSize: '0.9rem', width: '50%' }}>Monounsaturated</span>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#3498db', width: '25%', textAlign: 'center' }}>
-                      {results.monounsaturatedFat}g
-                    </span>
-                    <span style={{ fontSize: '0.85rem', color: '#666', width: '25%', textAlign: 'right' }}>
-                      40-50% of total fat
-                    </span>
+                    {results.riskLevel} Risk Level | Range: {results.minFat}-{results.maxFat}g/day
                   </div>
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    padding: '8px 0'
-                  }}>
-                    <span style={{ fontSize: '0.9rem', width: '50%' }}>Polyunsaturated</span>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#2ecc71', width: '25%', textAlign: 'center' }}>
-                      {results.polyunsaturatedFat}g
-                    </span>
-                    <span style={{ fontSize: '0.85rem', color: '#666', width: '25%', textAlign: 'right' }}>
-                      20-30% of total fat
-                    </span>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '15px' }}>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#3498db' }}>{results.targets.saturated}</div>
-                    <div style={{ fontSize: '0.8rem', color: '#666' }}>Saturated Fat Limit</div>
-                  </div>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#2ecc71' }}>{results.targets.omega3}</div>
-                    <div style={{ fontSize: '0.8rem', color: '#666' }}>Omega-3 Daily</div>
-                  </div>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#e74c3c' }}>0g</div>
-                    <div style={{ fontSize: '0.8rem', color: '#666' }}>Trans Fat Target</div>
-                  </div>
-                </div>
-              </div>
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                <div><strong>Key Principles:</strong></div>
-                <div>• Prioritize monounsaturated fats</div>
-                <div>• Include adequate omega-3</div>
-                <div>• Limit processed vegetable oils</div>
-              </div>
-            </div>
-
-            <div style={{ ...resultCardStyle, ...timingCardStyle }}>
-              <h4 style={sectionTitleStyle}><i className="fas fa-clock"></i> Timing Strategies</h4>
-              <div style={{ margin: '20px 0', maxHeight: '200px', overflowY: 'auto' }}>
-                <div style={{ fontSize: '0.9rem', marginBottom: '10px', color: '#666' }}>
-                  <strong>Critical Timing Recommendations:</strong>
-                </div>
-                {results.timingRecommendations.map((rec, index) => (
-                  <div key={index} style={{
-                    padding: '10px',
-                    background: '#f8f9fa',
-                    borderRadius: '6px',
-                    marginBottom: '8px',
-                    borderLeft: '4px solid #9b59b6'
-                  }}>
-                    <div style={{ fontSize: '0.9rem', color: '#2c3e50' }}>
-                      {rec}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                <div><strong>Hormone Support Status:</strong></div>
-                <div>• Testosterone: {results.hormoneSupport.testosterone}</div>
-                <div>• Estrogen: {results.hormoneSupport.estrogen}</div>
-                <div>• Cortisol: {results.hormoneSupport.cortisol}</div>
-                <div>• Leptin: {results.hormoneSupport.leptin}</div>
-              </div>
-            </div>
-
-            <div style={{ ...resultCardStyle, ...qualityCardStyle }}>
-              <h4 style={sectionTitleStyle}><i className="fas fa-star"></i> Quality Recommendations</h4>
-              <div style={{ margin: '20px 0' }}>
-                <div style={{ 
-                  padding: '15px', 
-                  background: '#f8f9fa',
-                  borderRadius: '8px',
-                  marginBottom: '15px'
-                }}>
-                  <div style={{ fontSize: '0.9rem', marginBottom: '10px' }}><strong>Fat Quality Strategies:</strong></div>
-                  {results.qualityStrategies.map((strategy, index) => (
-                    <div key={index} style={{
-                      padding: '5px 0',
-                      borderBottom: index < results.qualityStrategies.length - 1 ? '1px solid #eee' : 'none'
-                    }}>
-                      <span style={{ fontSize: '0.85rem' }}>• {strategy}</span>
-                    </div>
-                  ))}
-                </div>
-                {results.riskRecommendations.length > 0 && (
                   <div style={{ 
                     padding: '10px', 
-                    background: results.riskColor === '#e74c3c' ? '#f8d7da' : '#fff3cd',
+                    background: '#f8f9fa',
                     borderRadius: '8px',
-                    color: results.riskColor === '#e74c3c' ? '#721c24' : '#856404',
-                    fontSize: '0.85rem'
+                    color: '#666'
                   }}>
-                    <strong>Health Considerations:</strong>
-                    {results.riskRecommendations.map((rec, index) => (
-                      <div key={index} style={{ marginTop: '5px' }}>• {rec}</div>
+                    <div><strong>Fat/kg:</strong> {results.fatPerKgMin}-{results.fatPerKgMax}g/kg body weight</div>
+                    <div><strong>Percentage:</strong> {results.fatPercentage}% of {results.tdee} calories</div>
+                    <div><strong>Omega-6:Omega-3:</strong> {results.omega6ToOmega3Ratio}</div>
+                    <div><strong>Macro Split:</strong> C{Math.round((results.carbGrams * 4 / results.tdee) * 100)}/P{Math.round((results.proteinGrams * 4 / results.tdee) * 100)}/F{results.fatPercentage}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ ...resultCardStyle, ...distributionCardStyle }}>
+                <h4 style={sectionTitleStyle}><i className="fas fa-chart-pie"></i> Fatty Acid Distribution</h4>
+                <div style={{ margin: '20px 0' }}>
+                  <div style={{ 
+                    padding: '15px', 
+                    background: '#f8f9fa',
+                    borderRadius: '8px',
+                    marginBottom: '15px'
+                  }}>
+                    <div style={{ fontSize: '0.9rem', marginBottom: '10px' }}><strong>Optimal Fatty Acid Ratio:</strong></div>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      padding: '8px 0',
+                      borderBottom: '1px solid #eee'
+                    }}>
+                      <span style={{ fontSize: '0.9rem', width: '50%' }}>Saturated Fat</span>
+                      <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#e74c3c', width: '25%', textAlign: 'center' }}>
+                        {results.saturatedFat}g
+                      </span>
+                      <span style={{ fontSize: '0.85rem', color: '#666', width: '25%', textAlign: 'right' }}>
+                        ≤30% of total fat
+                      </span>
+                    </div>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      padding: '8px 0',
+                      borderBottom: '1px solid #eee'
+                    }}>
+                      <span style={{ fontSize: '0.9rem', width: '50%' }}>Monounsaturated</span>
+                      <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#3498db', width: '25%', textAlign: 'center' }}>
+                        {results.monounsaturatedFat}g
+                      </span>
+                      <span style={{ fontSize: '0.85rem', color: '#666', width: '25%', textAlign: 'right' }}>
+                        40-50% of total fat
+                      </span>
+                    </div>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      padding: '8px 0'
+                    }}>
+                      <span style={{ fontSize: '0.9rem', width: '50%' }}>Polyunsaturated</span>
+                      <span style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#2ecc71', width: '25%', textAlign: 'center' }}>
+                        {results.polyunsaturatedFat}g
+                      </span>
+                      <span style={{ fontSize: '0.85rem', color: '#666', width: '25%', textAlign: 'right' }}>
+                        20-30% of total fat
+                      </span>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '15px' }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#3498db' }}>{results.targets.saturated}</div>
+                      <div style={{ fontSize: '0.8rem', color: '#666' }}>Saturated Fat Limit</div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#2ecc71' }}>{results.targets.omega3}</div>
+                      <div style={{ fontSize: '0.8rem', color: '#666' }}>Omega-3 Daily</div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#e74c3c' }}>0g</div>
+                      <div style={{ fontSize: '0.8rem', color: '#666' }}>Trans Fat Target</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ ...resultCardStyle, ...timingCardStyle }}>
+                <h4 style={sectionTitleStyle}><i className="fas fa-clock"></i> Timing Strategies</h4>
+                <div style={{ margin: '20px 0' }}>
+                  <div style={{ fontSize: '0.9rem', marginBottom: '10px', color: '#666' }}>
+                    <strong>Critical Timing Recommendations:</strong>
+                  </div>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: '1fr', 
+                    gap: '10px' 
+                  }}>
+                    {results.timingRecommendations.map((rec, index) => (
+                      <div key={index} style={{
+                        padding: '12px',
+                        background: '#f8f9fa',
+                        borderRadius: '6px',
+                        borderLeft: '4px solid #9b59b6',
+                        fontSize: '0.9rem',
+                        color: '#2c3e50'
+                      }}>
+                        {rec}
+                      </div>
                     ))}
+                  </div>
+                </div>
+                <div style={{ fontSize: '0.9rem', color: '#666', marginTop: '15px' }}>
+                  <div><strong>Hormone Support Status:</strong></div>
+                  <div>• Testosterone: {results.hormoneSupport.testosterone}</div>
+                  <div>• Estrogen: {results.hormoneSupport.estrogen}</div>
+                  <div>• Cortisol: {results.hormoneSupport.cortisol}</div>
+                  <div>• Leptin: {results.hormoneSupport.leptin}</div>
+                </div>
+              </div>
+
+              <div style={{ ...resultCardStyle, ...qualityCardStyle }}>
+                <h4 style={sectionTitleStyle}><i className="fas fa-star"></i> Quality Recommendations</h4>
+                <div style={{ margin: '20px 0' }}>
+                  <div style={{ 
+                    padding: '15px', 
+                    background: '#f8f9fa',
+                    borderRadius: '8px',
+                    marginBottom: '15px'
+                  }}>
+                    <div style={{ fontSize: '0.9rem', marginBottom: '10px' }}><strong>Fat Quality Strategies:</strong></div>
+                    {results.qualityStrategies.map((strategy, index) => (
+                      <div key={index} style={{
+                        padding: '5px 0',
+                        borderBottom: index < results.qualityStrategies.length - 1 ? '1px solid #eee' : 'none'
+                      }}>
+                        <span style={{ fontSize: '0.85rem' }}>• {strategy}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {results.riskRecommendations.length > 0 && (
+                    <div style={{ 
+                      padding: '10px', 
+                      background: results.riskColor === '#e74c3c' ? '#f8d7da' : '#fff3cd',
+                      borderRadius: '8px',
+                      color: results.riskColor === '#e74c3c' ? '#721c24' : '#856404',
+                      fontSize: '0.85rem'
+                    }}>
+                      <strong>Health Considerations:</strong>
+                      {results.riskRecommendations.map((rec, index) => (
+                        <div key={index} style={{ marginTop: '5px' }}>• {rec}</div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Share and Download Buttons */}
+            <div style={actionButtonsStyle}>
+              <div style={{ position: 'relative' }} className="share-button-container">
+                <button
+                  style={shareButtonStyle}
+                  onClick={() => setShowShareMenu(!showShareMenu)}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#2980b9'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = '#3498db'}
+                >
+                  <i className="fas fa-share-alt"></i> Share Results
+                </button>
+                
+                {showShareMenu && (
+                  <div style={shareMenuStyle}>
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#4267B2', color: 'white' }}
+                      onClick={() => shareResults('facebook')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-facebook-f"></i> Facebook
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#1DA1F2', color: 'white' }}
+                      onClick={() => shareResults('twitter')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-twitter"></i> Twitter
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#0077B5', color: 'white' }}
+                      onClick={() => shareResults('linkedin')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-linkedin-in"></i> LinkedIn
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#25D366', color: 'white' }}
+                      onClick={() => shareResults('whatsapp')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-whatsapp"></i> WhatsApp
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#0088CC', color: 'white' }}
+                      onClick={() => shareResults('telegram')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-telegram"></i> Telegram
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#FF4500', color: 'white' }}
+                      onClick={() => shareResults('reddit')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-reddit-alien"></i> Reddit
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#E60023', color: 'white' }}
+                      onClick={() => shareResults('pinterest')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-pinterest-p"></i> Pinterest
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#666', color: 'white' }}
+                      onClick={() => shareResults('email')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fas fa-envelope"></i> Email
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#f8f9fa', color: '#333', border: '1px solid #ddd' }}
+                      onClick={() => shareResults('copy')}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#e9ecef'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = '#f8f9fa'}
+                    >
+                      <i className="fas fa-copy"></i> Copy to Clipboard
+                    </button>
                   </div>
                 )}
               </div>
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                <div><strong>Best Fat Sources:</strong></div>
-                <div>• Saturated: Coconut oil, grass-fed butter, eggs</div>
-                <div>• Monounsaturated: Avocado, olive oil, nuts</div>
-                <div>• Polyunsaturated: Salmon, walnuts, flaxseeds</div>
-              </div>
+              
+              <button
+                style={downloadButtonStyle}
+                onClick={downloadHTML}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#219150'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#27ae60'}
+              >
+                <i className="fas fa-file-code"></i> Download HTML Report
+              </button>
             </div>
-          </div>
+          </>
         )}
 
         <div
@@ -1121,9 +1591,11 @@ export default function FatIntakeCalculatorPage() {
         {/* Enhanced SEO Content with High-Value Long-Tail Keywords */}
         <div style={infoSectionStyle}>
           <h3 style={sectionTitleStyle}><i className="fas fa-question-circle"></i> Comprehensive Dietary Fat Intake Analysis: Advanced Lipid Biochemistry & Metabolic Health Optimization Protocol</h3>
-          <p style={paragraphStyle}><strong>Dietary fat intake calculation methodologies</strong> represent <strong>essential lipid biochemistry assessment tools</strong> for determining <strong>precise fatty acid requirement profiles, optimal lipid metabolism management, and evidence-based cardiovascular health enhancement strategies</strong>. These advanced calculations integrate <strong>sophisticated metabolic analysis, comprehensive physiological data parameters, and validated nutritional lipid science research models</strong> to provide <strong>individualized lipid optimization approaches</strong> that maximize <strong>hormonal balance effectiveness, cellular function enhancement, and informed dietary fat decision-making processes</strong> across diverse physiological scenarios requiring <strong>precision fatty acid requirement stratification protocols</strong>.</p>
+          
+          <p style={paragraphStyle}><strong>Dietary fat intake optimization methodologies</strong> represent <strong>essential lipid biochemistry assessment tools</strong> for determining <strong>precise fatty acid requirement profiles, optimal lipid metabolism management, and evidence-based cardiovascular health enhancement strategies</strong>. These advanced calculations integrate <strong>sophisticated metabolic analysis algorithms, comprehensive physiological data parameters, and validated nutritional lipid science research models</strong> to provide <strong>individualized lipid optimization approaches</strong> that maximize <strong>hormonal balance effectiveness, cellular function enhancement, and informed dietary fat decision-making processes</strong> across diverse physiological scenarios requiring <strong>precision fatty acid requirement stratification protocols</strong>.</p>
           
           <h3 style={sectionTitleStyle}><i className="fas fa-calculator"></i> Advanced Fat Requirement Algorithms - Comprehensive Lipid Biochemistry Analysis Formulae</h3>
+          
           <p style={paragraphStyle}>Multiple <strong>validated dietary fat requirement calculation equations</strong> exist for <strong>comprehensive metabolic optimization protocols</strong>, each demonstrating specific <strong>physiological applications and variable lipid response profiles</strong> influencing <strong>dietary intervention decision-making processes</strong>:</p>
           
           <div style={formulaBoxStyle}>
@@ -1136,7 +1608,9 @@ export default function FatIntakeCalculatorPage() {
           </div>
 
           <h3 style={sectionTitleStyle}><i className="fas fa-stethoscope"></i> Clinical Applications of Dietary Fat Optimization - Comprehensive Lipid Biochemistry Management Guidelines</h3>
+          
           <p style={paragraphStyle}>Accurate <strong>dietary fat intake optimization methodology implementation</strong> serves critical functions across multiple <strong>metabolic biochemistry specialties and cardiovascular health areas</strong> requiring <strong>precise lipid substrate delivery</strong>:</p>
+          
           <ul style={{ marginLeft: '20px', marginBottom: '15px', color: '#555' }}>
             <li style={{ marginBottom: '10px' }}><strong>Cardiovascular Health Protocol:</strong> Essential for <strong>lipid profile optimization strategies, arterial inflammation reduction, endothelial function enhancement, and atherosclerosis prevention interventions</strong> in cardiac risk populations</li>
             <li style={{ marginBottom: '10px' }}><strong>Hormonal Balance Management:</strong> Guides <strong>steroid hormone production optimization strategies, endocrine system regulation approaches, and reproductive health maintenance protocols</strong> in hormonal imbalance populations</li>
@@ -1148,7 +1622,9 @@ export default function FatIntakeCalculatorPage() {
           </ul>
           
           <h3 style={sectionTitleStyle}><i className="fas fa-balance-scale"></i> Key Factors in Dietary Fat Requirement Determination - Comprehensive Lipid Biochemistry Assessment Considerations</h3>
+          
           <p style={paragraphStyle}>Multiple <strong>significant physiological and lifestyle factors</strong> influence <strong>dietary fat requirement parameters</strong> and require consideration for appropriate clinical interpretation:</p>
+          
           <ul style={{ marginLeft: '20px', marginBottom: '15px', color: '#555' }}>
             <li style={{ marginBottom: '10px' }}><strong>Genetic Lipid Metabolism Variations:</strong> ApoE genotype patterns, LDL receptor polymorphisms, cholesterol synthesis genetic variants, and triglyceride metabolism heritability factors significantly affect <strong>dietary fat tolerance thresholds and lipid response profiles</strong></li>
             <li style={{ marginBottom: '10px' }}><strong>Hormonal Status Parameters:</strong> Testosterone and estrogen levels, thyroid function status, cortisol rhythm patterns, and insulin sensitivity profiles dramatically alter <strong>fat utilization efficiency and storage propensity characteristics</strong></li>
@@ -1160,7 +1636,9 @@ export default function FatIntakeCalculatorPage() {
           </ul>
 
           <h3 style={sectionTitleStyle}><i className="fas fa-exclamation-triangle"></i> Limitations of Dietary Fat Requirement Calculations - Advanced Lipid Biochemistry Assessment Methodologies</h3>
+          
           <p style={paragraphStyle}>While <strong>dietary fat requirement calculation methodologies</strong> provide valuable <strong>nutritional planning tools</strong>, specific clinical situations necessitate <strong>advanced assessment approaches</strong> and <strong>comprehensive metabolic evaluation protocols</strong>:</p>
+          
           <ul style={{ marginLeft: '20px', marginBottom: '15px', color: '#555' }}>
             <li style={{ marginBottom: '10px' }}><strong>Genetic Disorder Contexts:</strong> Familial hypercholesterolemia with LDL receptor defects, lipoprotein lipase deficiency with severe hypertriglyceridemia, and abetalipoproteinemia with fat malabsorption demonstrating <strong>specialized nutritional management needs beyond standard algorithms</strong></li>
             <li style={{ marginBottom: '10px' }}><strong>Severe Metabolic Conditions:</strong> Type 1 diabetes with ketoacidosis risk, advanced liver disease with fat processing impairment, and pancreatic insufficiency with digestive enzyme deficiency showing <strong>unique fat metabolism patterns requiring specialized approaches</strong></li>
@@ -1171,7 +1649,9 @@ export default function FatIntakeCalculatorPage() {
           </ul>
 
           <h3 style={sectionTitleStyle}><i className="fas fa-history"></i> Historical Development of Dietary Fat Science - Evolution of Lipid Biochemistry Understanding</h3>
+          
           <p style={paragraphStyle}>The progressive evolution of <strong>dietary fat requirement assessment and optimization methodologies</strong> reflects <strong>centuries of nutritional research advancement</strong> and <strong>scientific practice refinement trajectories</strong>:</p>
+          
           <ul style={{ marginLeft: '20px', marginBottom: '15px', color: '#555' }}>
             <li style={{ marginBottom: '10px' }}><strong>Early Lipid Discovery Era:</strong> Recognition of <strong>fats as concentrated energy sources, essential fatty acid identification, and cholesterol structure elucidation</strong> establishing foundational nutritional biochemistry knowledge</li>
             <li style={{ marginBottom: '10px' }}><strong>Cardiovascular Research Period:</strong> Development of <strong>lipid hypothesis frameworks, cholesterol-heart disease correlation studies, and saturated fat limitation guidelines</strong> revolutionizing cardiovascular nutrition science</li>
@@ -1182,7 +1662,9 @@ export default function FatIntakeCalculatorPage() {
           </ul>
 
           <h3 style={sectionTitleStyle}><i className="fas fa-user-md"></i> Practical Clinical Implementation Recommendations - Comprehensive Lipid Biochemistry Management Guidelines</h3>
+          
           <p style={paragraphStyle}>For optimal <strong>dietary fat intake optimization implementation</strong> in contemporary clinical and wellness practice environments and <strong>evidence-based lipid biochemistry protocols</strong>:</p>
+          
           <ul style={{ marginLeft: '20px', marginBottom: '15px', color: '#555' }}>
             <li style={{ marginBottom: '10px' }}><strong>Individualized Assessment Protocol:</strong> Implement <strong>comprehensive lipid profile evaluation, genetic risk assessment, metabolic health analysis, and dietary preference integration</strong> before fat prescription development</li>
             <li style={{ marginBottom: '10px' }}><strong>Validated Calculation Methods:</strong> Utilize <strong>activity-adjusted requirement equations, goal-specific modification factors, metabolic health correction algorithms, and genetic risk compensation formulas</strong> for accurate fat requirement determination</li>
@@ -1193,7 +1675,9 @@ export default function FatIntakeCalculatorPage() {
           </ul>
 
           <h3 style={sectionTitleStyle}><i className="fas fa-chart-line"></i> Future Directions in Dietary Fat Nutrition - Emerging Lipid Biochemistry Technologies</h3>
+          
           <p style={paragraphStyle}>Ongoing <strong>dietary fat nutrition research initiatives</strong> continue refining <strong>requirement assessment and optimization approaches</strong> with promising technological developments and <strong>innovative nutritional methodologies</strong>:</p>
+          
           <ul style={{ marginLeft: '20px', marginBottom: '15px', color: '#555' }}>
             <li style={{ marginBottom: '10px' }}><strong>Advanced Lipid Monitoring:</strong> Continuous ketone monitoring integration, real-time fatty acid profiling technologies, and dynamic cholesterol synthesis tracking tools for precise lipid status management</li>
             <li style={{ marginBottom: '10px' }}><strong>Artificial Intelligence Applications:</strong> Machine learning algorithm development for <strong>personalized fat requirement prediction models</strong> incorporating genetic data, microbiome profiles, and metabolic biomarkers</li>
@@ -1204,10 +1688,20 @@ export default function FatIntakeCalculatorPage() {
           </ul>
 
           <h3 style={sectionTitleStyle}><i className="fas fa-graduation-cap"></i> Educational Requirements and Professional Training Standards Implementation</h3>
+          
           <p style={paragraphStyle}>Proper <strong>dietary fat nutrition methodology education</strong> represents an <strong>essential clinical competency requirement</strong> for <strong>healthcare and nutrition professionals</strong> across multiple lipid biochemistry disciplines. Comprehensive training curricula should systematically include <strong>lipid metabolism principles, fatty acid biochemistry foundations, cardiovascular risk management strategies, and hormonal balance nutrition techniques</strong>. Continuing professional education programs must consistently address <strong>evolving lipid research findings, changing clinical practice standards, and emerging technological developments</strong> to ensure optimal patient and client outcomes and evidence-based practice implementation across diverse healthcare, wellness, and sports nutrition delivery settings and specialty practice areas.</p>
 
           <h3 style={sectionTitleStyle}><i className="fas fa-clipboard-check"></i> Quality Assurance and Protocol Standardization Implementation</h3>
+          
           <p style={paragraphStyle}>Implementation of <strong>rigorous quality assurance protocols</strong> ensures <strong>consistent lipid biochemistry management practices</strong> across diverse professional settings. These protocols encompass <strong>requirement calculation standardization methodologies, dietary intervention fidelity monitoring, metabolic outcome measurement systems, and clinical guideline implementation requirements</strong> that directly impact <strong>cardiovascular health outcomes and lipid optimization effectiveness</strong>. Professional organizations should develop <strong>standardized training materials, competency assessment tools, and practice guideline documents</strong> to guarantee consistent clinical application quality across diverse professional delivery settings and specialty practice areas, ensuring optimal outcomes through evidence-based lipid biochemistry management approaches.</p>
+
+          <h3 style={sectionTitleStyle}><i className="fas fa-flask"></i> Research Advancements in Nutritional Lipid Science and Future Clinical Applications</h3>
+          
+          <p style={paragraphStyle}>Emerging <strong>nutritional lipid science research initiatives</strong> are fundamentally transforming our understanding of <strong>dietary fat metabolism and its clinical implications</strong>. Cutting-edge studies investigating <strong>lipid droplet dynamics, membrane lipid composition regulation, and intracellular fat signaling pathways</strong> provide unprecedented insights into <strong>cellular fat handling mechanisms and metabolic disease pathogenesis</strong>. Advanced imaging technologies including <strong>magnetic resonance spectroscopy for intrahepatic lipid quantification, positron emission tomography for adipose tissue metabolism visualization, and confocal microscopy for cellular lipid droplet analysis</strong> enable precise <strong>fat distribution assessment and metabolic flux characterization</strong>. These technological innovations, combined with <strong>big data analytics and machine learning algorithms</strong>, promise to revolutionize <strong>personalized fat nutrition prescription and metabolic disease prevention strategies</strong> through unprecedented precision in <strong>lipid requirement determination and dietary intervention optimization</strong>.</p>
+
+          <h3 style={sectionTitleStyle}><i className="fas fa-handshake"></i> Holistic Health Integration and Comprehensive Wellness Program Implementation</h3>
+          
+          <p style={paragraphStyle}><strong>Dietary fat optimization strategies</strong> must be integrated within comprehensive <strong>holistic health frameworks and wellness program implementations</strong> for optimal clinical outcomes. Successful <strong>fat nutrition interventions</strong> require synergistic coordination with <strong>physical activity prescriptions, stress management techniques, sleep optimization strategies, and environmental toxin reduction approaches</strong>. This integrated methodology ensures <strong>balanced lipid metabolism support, optimized hormonal regulation, and enhanced cellular function maintenance</strong> across diverse physiological systems. Professional practitioners should implement <strong>comprehensive assessment protocols</strong> evaluating not only <strong>nutritional fat requirements</strong> but also <strong>lifestyle factors, environmental exposures, psychological stressors, and genetic predispositions</strong> that collectively influence <strong>lipid metabolism efficiency and cardiovascular health outcomes</strong>. This multidimensional approach enables truly personalized <strong>fat nutrition recommendations</strong> that address the complete spectrum of factors influencing <strong>individual lipid metabolism and metabolic health optimization</strong>.</p>
         </div>
 
         {/* Q&A Dropdown Section */}
@@ -1241,31 +1735,6 @@ export default function FatIntakeCalculatorPage() {
           ))}
         </div>
 
-        {/* Health Calculators Section */}
-        <div style={infoSectionStyle}>
-          <h3 style={sectionTitleStyle}><i className="fas fa-calculator"></i> Related Health & Nutrition Calculators</h3>
-          <p style={paragraphStyle}>Explore our comprehensive collection of <strong>lipid biochemistry calculation tools and wellness monitoring calculators</strong> for fat optimization and overall health management:</p>
-          <div style={calculatorsGridStyle}>
-            {healthCalculators.map((calculator, index) => (
-              <a
-                key={index}
-                href={calculator.link}
-                style={calculatorCardStyle}
-                onMouseEnter={(e) => Object.assign(e.currentTarget.style, hoverCalculatorCardStyle)}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = calculatorCardStyle.background;
-                  e.currentTarget.style.color = calculatorCardStyle.color;
-                  e.currentTarget.style.transform = 'none';
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.borderColor = calculatorCardStyle.borderColor;
-                }}
-              >
-                <i className="fas fa-calculator"></i> {calculator.name}
-              </a>
-            ))}
-          </div>
-        </div>
-
         {/* Medical Disclaimer */}
         <div style={medicalDisclaimerStyle}>
           <h4 style={disclaimerTitleStyle}><i className="fas fa-exclamation-triangle"></i> Important Medical & Nutritional Disclaimer</h4>
@@ -1280,78 +1749,106 @@ export default function FatIntakeCalculatorPage() {
         </div>
       </section>
 
-      {/* Sidebar with 3 Ads (3rd one sticky) */}
+      {/* Sidebar with 3 Ads (3rd one sticky) + Calculator Links */}
       {showSidebar && (
         <aside style={sidebarStyle}>
           <div style={sidebarContentStyle}>
-            <div style={{ ...adSlotStyle, ...sidebarAdStyle }}>
+            {/* Advertisement 1 */}
+            <div style={sidebarAdStyle}>
               <p><i className="fas fa-ad"></i> Advertisement 1</p>
               <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Sponsored Content</p>
               <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Premium omega-3 supplement guide</p>
               <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px height ad slot</p>
+              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
             </div>
             
-            <div style={{ ...adSlotStyle, ...sidebarAdStyle }}>
+            {/* Advertisement 2 */}
+            <div style={sidebarAdStyle}>
               <p><i className="fas fa-ad"></i> Advertisement 2</p>
               <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Featured Product</p>
               <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Advanced cholesterol testing kit</p>
               <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px height ad slot</p>
+              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
             </div>
             
-            <div style={{ ...adSlotStyle, ...stickyAdStyle }}>
+            {/* Sticky Advertisement 3 */}
+            <div style={stickyAdStyle}>
               <p><i className="fas fa-thumbtack"></i> Sticky Advertisement</p>
               <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Premium Content - Stays visible</p>
               <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Complete heart health optimization program</p>
               <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px sticky ad</p>
+              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px sticky ad</p>
+            </div>
+            
+            {/* Related Calculators Sidebar Section - Sorted by SEO Relevance */}
+            <div style={{ 
+              padding: '20px', 
+              background: 'white', 
+              borderRadius: '10px', 
+              boxShadow: '0 3px 10px rgba(0,0,0,0.05)' 
+            }}>
+              <h4 style={{ 
+                marginBottom: '15px', 
+                color: '#2c3e50', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '8px' 
+              }}>
+                <i className="fas fa-calculator"></i> Related Health Calculators
+              </h4>
+              <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '15px' }}>
+                Explore our comprehensive collection of health assessment tools sorted by relevance:
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '400px', overflowY: 'auto' }}>
+                {sortedCalculators.map((calculator, index) => (
+                  <a
+                    key={index}
+                    href={calculator.link}
+                    style={{
+                      padding: '12px',
+                      background: '#f8f9fa',
+                      borderRadius: '8px',
+                      textDecoration: 'none',
+                      color: '#2c3e50',
+                      fontSize: '0.9rem',
+                      transition: 'all 0.3s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      border: '2px solid transparent'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = '#3498db';
+                      e.currentTarget.style.color = 'white';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 3px 10px rgba(52, 152, 219, 0.2)';
+                      e.currentTarget.style.borderColor = '#3498db';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = '#f8f9fa';
+                      e.currentTarget.style.color = '#2c3e50';
+                      e.currentTarget.style.transform = 'none';
+                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.borderColor = 'transparent';
+                    }}
+                  >
+                    <i className="fas fa-calculator"></i> {calculator.name}
+                    <span style={{ 
+                      marginLeft: 'auto',
+                      fontSize: '0.7rem',
+                      background: calculator.relevance >= 9 ? '#27ae60' : calculator.relevance >= 8 ? '#3498db' : calculator.relevance >= 7 ? '#f39c12' : calculator.relevance >= 5 ? '#9b59b6' : '#95a5a6',
+                      color: 'white',
+                      padding: '2px 6px',
+                      borderRadius: '4px'
+                    }}>
+                      {calculator.relevance}/10
+                    </span>
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </aside>
-      )}
-
-      {/* Additional Ads when sidebar disappears (mobile) */}
-      {!showSidebar && (
-        <div style={{ ...mobileAdsStyle, display: 'grid' }}>
-          <div style={mobileAdStyle}>
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 1</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Optimized for mobile viewing</p>
-          </div>
-          <div style={mobileAdStyle}>
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 2</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Perfect for smaller screens</p>
-          </div>
-        </div>
-      )}
-      
-      {/* Sticky Footer Ad (Mobile) */}
-      {!showSidebar && (
-        <div style={stickyFooterAdStyle}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ textAlign: 'left', flex: 1 }}>
-              <p style={{ fontSize: '0.9rem', margin: 0, color: '#2c3e50' }}>
-                <i className="fas fa-mobile-alt"></i> Mobile Health Offer
-              </p>
-              <p style={{ fontSize: '0.8rem', margin: '5px 0 0 0', color: '#666' }}>
-                Get personalized fat intake coaching - 30% off
-              </p>
-            </div>
-            <button style={{
-              background: '#3498db',
-              color: 'white',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              fontSize: '0.8rem',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              marginLeft: '15px'
-            }}>
-              Learn More
-            </button>
-          </div>
-        </div>
       )}
     </main>
   );

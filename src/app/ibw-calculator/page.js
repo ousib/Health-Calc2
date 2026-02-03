@@ -13,13 +13,17 @@ export default function IBWCalculatorPage() {
     underweight: '--',
     overweight: '--',
     frameAdjustment: '',
-    formulaUsed: 'medium frame'
+    formulaUsed: 'medium frame',
+    ibwValue: 0,
+    unit: 'kg'
   });
   const [formulaComparison, setFormulaComparison] = useState([]);
   const [gender, setGender] = useState('male');
   const [height, setHeight] = useState(175);
   const [activeFAQ, setActiveFAQ] = useState(null);
   const [showSidebar, setShowSidebar] = useState(true);
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const [shareResultsData, setShareResultsData] = useState(null);
 
   // Styles
   const containerStyle = {
@@ -469,6 +473,72 @@ export default function IBWCalculatorPage() {
     borderLeft: '4px solid #27ae60'
   };
 
+  // New styles for share and download buttons
+  const actionButtonsStyle = {
+    display: 'flex',
+    gap: '10px',
+    marginTop: '20px',
+    flexWrap: 'wrap'
+  };
+
+  const shareButtonStyle = {
+    padding: '12px 20px',
+    background: '#3498db',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: '0.3s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  };
+
+  const downloadButtonStyle = {
+    padding: '12px 20px',
+    background: '#27ae60',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: '0.3s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  };
+
+  const shareMenuStyle = {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    background: 'white',
+    borderRadius: '10px',
+    boxShadow: '0 5px 20px rgba(0,0,0,0.15)',
+    padding: '15px',
+    zIndex: 1000,
+    minWidth: '200px',
+    marginTop: '10px'
+  };
+
+  const sharePlatformButtonStyle = {
+    width: '100%',
+    padding: '10px 15px',
+    marginBottom: '8px',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+    fontWeight: '500',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    transition: '0.2s'
+  };
+
   // ALL calculators from your list
   const healthCalculators = [
     { name: "BMI Calculator", link: "/bmi-calculator" },
@@ -548,15 +618,31 @@ export default function IBWCalculatorPage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Handle click outside share menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showShareMenu && !event.target.closest('.share-button-container')) {
+        setShowShareMenu(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showShareMenu]);
+
   const toggleUnits = (unit) => {
     setCurrentUnit(unit);
     setShowResults(false);
+    setShareResultsData(null);
   };
 
   const selectFrame = (size) => {
     setFrameSize(size);
     setShowWristGuide(size !== 'medium');
     setShowResults(false);
+    setShareResultsData(null);
   };
 
   const applyFrameAdjustment = (weight, frame) => {
@@ -625,16 +711,26 @@ export default function IBWCalculatorPage() {
     }
     
     // Set results
-    setResults({
+    const resultsData = {
       ibw: `${displayIBW.toLocaleString()} ${unit}`,
+      ibwValue: displayIBW,
+      unit: unit,
       underweight: `≤ ${displayUnder.toLocaleString()} ${unit}`,
       overweight: `≥ ${displayOver.toLocaleString()} ${unit}`,
       frameAdjustment: frameAdjustment !== 0 ? `Adjusted for ${frameText}` : 'Medium frame (no adjustment)',
-      formulaUsed: frameText
-    });
+      formulaUsed: frameText,
+      height: height,
+      heightUnit: currentUnit === 'metric' ? 'cm' : 'in',
+      gender: gender,
+      frameSize: frameSize
+    };
+    
+    setResults(resultsData);
+    setShareResultsData(resultsData);
     
     // Show results
     setShowResults(true);
+    setShowShareMenu(false);
     
     // Calculate and display formula comparison
     calculateFormulaComparison(gender, heightInCm, frameSize);
@@ -706,6 +802,395 @@ export default function IBWCalculatorPage() {
     });
     
     setFormulaComparison(comparison);
+  };
+
+  // Share function
+  const shareResults = (platform) => {
+    if (!shareResultsData) {
+      alert('Please calculate ideal body weight first before sharing.');
+      return;
+    }
+
+    const shareText = `My ideal body weight is ${shareResultsData.ibw} (${shareResultsData.frameSize} frame) - Check yours using this calculator!`;
+    const shareUrl = window.location.href;
+    const hashtags = 'IdealWeight,Health,Fitness,Wellness';
+
+    let shareUrlFull = '';
+    
+    switch(platform) {
+      case 'facebook':
+        shareUrlFull = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
+        break;
+      case 'twitter':
+        shareUrlFull = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}&hashtags=${hashtags}`;
+        break;
+      case 'linkedin':
+        shareUrlFull = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+        break;
+      case 'whatsapp':
+        shareUrlFull = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+        break;
+      case 'telegram':
+        shareUrlFull = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+        break;
+      case 'reddit':
+        shareUrlFull = `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`;
+        break;
+      case 'pinterest':
+        shareUrlFull = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&description=${encodeURIComponent(shareText)}`;
+        break;
+      case 'email':
+        shareUrlFull = `mailto:?subject=My Ideal Body Weight Results&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`;
+        break;
+      default:
+        // Web Share API for modern browsers
+        if (navigator.share) {
+          navigator.share({
+            title: 'My Ideal Body Weight Results',
+            text: shareText,
+            url: shareUrl,
+          });
+          return;
+        } else {
+          // Fallback: copy to clipboard
+          navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+          alert('Results copied to clipboard!');
+          return;
+        }
+    }
+
+    window.open(shareUrlFull, '_blank', 'noopener,noreferrer');
+    setShowShareMenu(false);
+  };
+
+  // Download as HTML file
+  const downloadHTML = () => {
+    if (!shareResultsData) {
+      alert('Please calculate ideal body weight first before downloading.');
+      return;
+    }
+
+    const date = new Date().toLocaleDateString();
+    const time = new Date().toLocaleTimeString();
+    
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ideal Body Weight Calculator Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #27ae60;
+        }
+        
+        .report-header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .report-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            border-top: 5px solid;
+        }
+        
+        .card-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            font-size: 1.2rem;
+        }
+        
+        .ibw-value {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 15px 0;
+            text-align: center;
+            color: #27ae60;
+        }
+        
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .comparison-card {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .method-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        
+        .method-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .disclaimer {
+            background: #f8d7da;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #721c24;
+            margin-top: 30px;
+        }
+        
+        .disclaimer h4 {
+            color: #721c24;
+            margin-bottom: 15px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 10px;
+            }
+            
+            .result-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="report-header">
+            <h1><i class="fas fa-balance-scale"></i> Ideal Body Weight Calculator Results</h1>
+            <p>Generated on ${date} at ${time}</p>
+        </div>
+        
+        <div class="results-grid">
+            <!-- Main Results Card -->
+            <div class="result-card" style="border-top-color: #27ae60;">
+                <h3 class="card-title"><i class="fas fa-balance-scale" style="color: #27ae60;"></i> Ideal Body Weight Analysis</h3>
+                <div class="ibw-value">${shareResultsData.ibw}</div>
+                <div class="info-box">
+                    <p><strong>Formula Used:</strong> Devine Formula with ${shareResultsData.frameSize} frame adjustment</p>
+                    <p><strong>Height:</strong> ${shareResultsData.height} ${shareResultsData.heightUnit}</p>
+                    <p><strong>Gender:</strong> ${shareResultsData.gender === 'male' ? 'Male' : 'Female'}</p>
+                    <p><strong>Frame Size:</strong> ${shareResultsData.frameSize.charAt(0).toUpperCase() + shareResultsData.frameSize.slice(1)}</p>
+                </div>
+            </div>
+            
+            <!-- Weight Ranges Card -->
+            <div class="result-card" style="border-top-color: #f39c12;">
+                <h3 class="card-title"><i class="fas fa-chart-line" style="color: #f39c12;"></i> Health Weight Ranges</h3>
+                <div class="info-box">
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #27ae60; margin-bottom: 5px;">Ideal Range</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #27ae60;">${shareResultsData.ibw}</div>
+                        <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">Optimal health weight</div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #f39c12; margin-bottom: 5px;">Underweight Range</div>
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #f39c12;">${shareResultsData.underweight}</div>
+                        <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">15% below ideal (increased risk)</div>
+                    </div>
+                    
+                    <div>
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #e67e22; margin-bottom: 5px;">Overweight Range</div>
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #e67e22;">${shareResultsData.overweight}</div>
+                        <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">15% above ideal (elevated risk)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Formula Comparison Card -->
+            <div class="result-card" style="border-top-color: #3498db;">
+                <h3 class="card-title"><i class="fas fa-calculator" style="color: #3498db;"></i> Formula Comparison</h3>
+                <div class="comparison-grid">
+                    ${formulaComparison.map(formula => `
+                    <div class="comparison-card">
+                        <div class="method-value">${formula.weight}</div>
+                        <div class="method-label">${formula.name}</div>
+                        <div style="font-size: 0.8rem; color: #888; margin-top: 8px;">${formula.description}</div>
+                    </div>
+                    `).join('')}
+                </div>
+            </div>
+        </div>
+        
+        <div class="disclaimer">
+            <h4><i class="fas fa-exclamation-circle"></i> Important Medical Disclaimer</h4>
+            <p>This ideal body weight calculation is for informational purposes only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. These calculations do not account for individual variations in muscle mass, bone density, body composition, age-related changes, ethnic differences, or athletic training status.</p>
+        </div>
+        
+        <div class="footer">
+            <p>Generated by Ideal Body Weight Calculator • ${window.location.href}</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">This report was generated on ${date} at ${time}</p>
+        </div>
+    </div>
+</body>
+</html>`;
+
+    // Create blob and download
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ideal-weight-results-${new Date().toISOString().split('T')[0]}.html`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  };
+
+  // Download as text file
+  const downloadText = () => {
+    if (!shareResultsData) {
+      alert('Please calculate ideal body weight first before downloading.');
+      return;
+    }
+
+    const date = new Date().toLocaleDateString();
+    const time = new Date().toLocaleTimeString();
+    
+    let content = `╔══════════════════════════════════════════════════════════════════════════════╗\n`;
+    content += `║                     IDEAL BODY WEIGHT CALCULATOR RESULTS                      ║\n`;
+    content += `║                    Generated: ${date} at ${time}                   ║\n`;
+    content += `╚══════════════════════════════════════════════════════════════════════════════╝\n\n`;
+    
+    // Personal Information
+    content += `PERSONAL INFORMATION:\n`;
+    content += `══════════════════════════════════════════════════════════════════════════════\n`;
+    content += `  Height: ${shareResultsData.height} ${shareResultsData.heightUnit}\n`;
+    content += `  Gender: ${shareResultsData.gender === 'male' ? 'Male' : 'Female'}\n`;
+    content += `  Frame Size: ${shareResultsData.frameSize.charAt(0).toUpperCase() + shareResultsData.frameSize.slice(1)}\n`;
+    content += `  Unit System: ${currentUnit === 'metric' ? 'Metric (cm/kg)' : 'Imperial (in/lbs)'}\n\n`;
+    
+    // Results
+    content += `IDEAL BODY WEIGHT RESULTS:\n`;
+    content += `══════════════════════════════════════════════════════════════════════════════\n`;
+    content += `  Ideal Body Weight: ${shareResultsData.ibw}\n`;
+    content += `  Formula Used: Devine Formula with ${shareResultsData.frameSize} frame adjustment\n`;
+    content += `  Underweight Range: ${shareResultsData.underweight} (15% below ideal)\n`;
+    content += `  Overweight Range: ${shareResultsData.overweight} (15% above ideal)\n\n`;
+    
+    // Formula Comparison
+    content += `FORMULA COMPARISON:\n`;
+    content += `══════════════════════════════════════════════════════════════════════════════\n`;
+    formulaComparison.forEach((formula, index) => {
+      content += `  ${index + 1}. ${formula.name}: ${formula.weight}\n`;
+      content += `     ${formula.description}\n`;
+    });
+    content += `\n`;
+    
+    // Health Recommendations
+    content += `HEALTH RECOMMENDATIONS:\n`;
+    content += `══════════════════════════════════════════════════════════════════════════════\n`;
+    content += `1. Ideal Range: ${shareResultsData.ibw} - Optimal for health and wellness\n`;
+    content += `2. Underweight Range: Below ${shareResultsData.underweight} - May indicate\n`;
+    content += `   nutritional deficiencies or underlying health concerns\n`;
+    content += `3. Overweight Range: Above ${shareResultsData.overweight} - May increase\n`;
+    content += `   risk of chronic diseases like diabetes and heart disease\n\n`;
+    
+    // Clinical Applications
+    content += `CLINICAL APPLICATIONS:\n`;
+    content += `══════════════════════════════════════════════════════════════════════════════\n`;
+    content += `• Ideal Body Weight calculations are used in clinical settings for:\n`;
+    content += `  - Medication dosing (chemotherapy, antibiotics, etc.)\n`;
+    content += `  - Nutritional planning and dietary recommendations\n`;
+    content += `  - Surgical risk assessment and anesthesia planning\n`;
+    content += `  - Renal function estimation (creatinine clearance)\n\n`;
+    
+    // Disclaimer
+    content += `IMPORTANT MEDICAL DISCLAIMER:\n`;
+    content += `══════════════════════════════════════════════════════════════════════════════\n`;
+    content += `This ideal body weight calculation is for informational purposes only.\n`;
+    content += `It is not a substitute for professional medical advice, diagnosis, or\n`;
+    content += `treatment. Always consult with healthcare professionals for personalized\n`;
+    content += `health advice. These calculations do not account for individual variations\n`;
+    content += `in muscle mass, bone density, body composition, age-related changes,\n`;
+    content += `ethnic differences, or athletic training status.\n\n`;
+    content += `Generated by Ideal Body Weight Calculator\n`;
+    content += `URL: ${window.location.href}\n`;
+    content += `Date: ${date} | Time: ${time}\n`;
+    content += `\n╔══════════════════════════════════════════════════════════════════════════════╗\n`;
+    content += `║                            END OF REPORT                              ║\n`;
+    content += `╚══════════════════════════════════════════════════════════════════════════════╝\n`;
+    
+    // Create blob and download
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ideal-weight-results-${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   };
 
   const toggleFAQ = (index) => {
@@ -879,118 +1364,240 @@ export default function IBWCalculatorPage() {
 
         {/* Results Display */}
         {showResults && (
-          <div style={resultsContainerStyle}>
-            <div style={{ ...resultCardStyle, ...healthyCardStyle }}>
-              <h4 style={sectionTitleStyle}><i className="fas fa-check-circle"></i> Ideal Weight Range</h4>
-              <div style={{ margin: '20px 0' }}>
-                <div style={{ ...resultValueStyle, color: '#27ae60' }}>
-                  {results.ibw}
+          <>
+            <div style={resultsContainerStyle}>
+              <div style={{ ...resultCardStyle, ...healthyCardStyle }}>
+                <h4 style={sectionTitleStyle}><i className="fas fa-check-circle"></i> Ideal Weight Range</h4>
+                <div style={{ margin: '20px 0' }}>
+                  <div style={{ ...resultValueStyle, color: '#27ae60' }}>
+                    {results.ibw}
+                  </div>
+                  <div style={{ 
+                    fontSize: '1.2rem', 
+                    color: '#666',
+                    marginBottom: '15px',
+                    fontWeight: 'bold'
+                  }}>
+                    Optimal Health Weight
+                  </div>
+                  <div style={{ 
+                    padding: '15px', 
+                    background: '#e8f5e9',
+                    borderRadius: '8px',
+                    color: '#27ae60',
+                    fontWeight: '600',
+                    marginBottom: '15px'
+                  }}>
+                    Based on Devine Formula
+                  </div>
+                  <div style={{ 
+                    padding: '10px', 
+                    background: '#f8f9fa',
+                    borderRadius: '8px',
+                    color: '#666'
+                  }}>
+                    <div><strong>Frame Adjustment:</strong> {results.frameAdjustment}</div>
+                    <div><strong>Clinical Use:</strong> Medication dosing, nutritional planning</div>
+                    <div><strong>Health Status:</strong> Optimal metabolic function</div>
+                  </div>
                 </div>
-                <div style={{ 
-                  fontSize: '1.2rem', 
-                  color: '#666',
-                  marginBottom: '15px',
-                  fontWeight: 'bold'
-                }}>
-                  Optimal Health Weight
+              </div>
+
+              <div style={{ ...resultCardStyle, ...underweightCardStyle }}>
+                <h4 style={sectionTitleStyle}><i className="fas fa-arrow-down"></i> Underweight Range</h4>
+                <div style={{ margin: '20px 0' }}>
+                  <div style={{ ...resultValueStyle, color: '#f39c12' }}>
+                    {results.underweight}
+                  </div>
+                  <div style={{ 
+                    fontSize: '1.2rem', 
+                    color: '#666',
+                    marginBottom: '15px',
+                    fontWeight: 'bold'
+                  }}>
+                    Increased Health Risks
+                  </div>
+                  <div style={{ 
+                    padding: '15px', 
+                    background: '#fef9e7',
+                    borderRadius: '8px',
+                    color: '#f39c12',
+                    fontWeight: '600',
+                    marginBottom: '15px'
+                  }}>
+                    15% Below Ideal Weight
+                  </div>
+                  <div style={{ 
+                    padding: '10px', 
+                    background: '#f8f9fa',
+                    borderRadius: '8px',
+                    color: '#666'
+                  }}>
+                    <div><strong>Health Risks:</strong> Nutritional deficiencies, osteoporosis</div>
+                    <div><strong>Considerations:</strong> Medical evaluation recommended</div>
+                    <div><strong>Action:</strong> Gradual weight gain with supervision</div>
+                  </div>
                 </div>
-                <div style={{ 
-                  padding: '15px', 
-                  background: '#e8f5e9',
-                  borderRadius: '8px',
-                  color: '#27ae60',
-                  fontWeight: '600',
-                  marginBottom: '15px'
-                }}>
-                  Based on Devine Formula
-                </div>
-                <div style={{ 
-                  padding: '10px', 
-                  background: '#f8f9fa',
-                  borderRadius: '8px',
-                  color: '#666'
-                }}>
-                  <div><strong>Frame Adjustment:</strong> {results.frameAdjustment}</div>
-                  <div><strong>Clinical Use:</strong> Medication dosing, nutritional planning</div>
-                  <div><strong>Health Status:</strong> Optimal metabolic function</div>
+              </div>
+
+              <div style={{ ...resultCardStyle, ...overweightCardStyle }}>
+                <h4 style={sectionTitleStyle}><i className="fas fa-arrow-up"></i> Overweight Range</h4>
+                <div style={{ margin: '20px 0' }}>
+                  <div style={{ ...resultValueStyle, color: '#e67e22' }}>
+                    {results.overweight}
+                  </div>
+                  <div style={{ 
+                    fontSize: '1.2rem', 
+                    color: '#666',
+                    marginBottom: '15px',
+                    fontWeight: 'bold'
+                  }}>
+                    Elevated Health Risks
+                  </div>
+                  <div style={{ 
+                    padding: '15px', 
+                    background: '#fdf2e9',
+                    borderRadius: '8px',
+                    color: '#e67e22',
+                    fontWeight: '600',
+                    marginBottom: '15px'
+                  }}>
+                    15% Above Ideal Weight
+                  </div>
+                  <div style={{ 
+                    padding: '10px', 
+                    background: '#f8f9fa',
+                    borderRadius: '8px',
+                    color: '#666'
+                  }}>
+                    <div><strong>Health Risks:</strong> Cardiovascular disease, diabetes</div>
+                    <div><strong>Considerations:</strong> Lifestyle modification needed</div>
+                    <div><strong>Action:</strong> Weight loss with medical guidance</div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div style={{ ...resultCardStyle, ...underweightCardStyle }}>
-              <h4 style={sectionTitleStyle}><i className="fas fa-arrow-down"></i> Underweight Range</h4>
-              <div style={{ margin: '20px 0' }}>
-                <div style={{ ...resultValueStyle, color: '#f39c12' }}>
-                  {results.underweight}
-                </div>
-                <div style={{ 
-                  fontSize: '1.2rem', 
-                  color: '#666',
-                  marginBottom: '15px',
-                  fontWeight: 'bold'
-                }}>
-                  Increased Health Risks
-                </div>
-                <div style={{ 
-                  padding: '15px', 
-                  background: '#fef9e7',
-                  borderRadius: '8px',
-                  color: '#f39c12',
-                  fontWeight: '600',
-                  marginBottom: '15px'
-                }}>
-                  15% Below Ideal Weight
-                </div>
-                <div style={{ 
-                  padding: '10px', 
-                  background: '#f8f9fa',
-                  borderRadius: '8px',
-                  color: '#666'
-                }}>
-                  <div><strong>Health Risks:</strong> Nutritional deficiencies, osteoporosis</div>
-                  <div><strong>Considerations:</strong> Medical evaluation recommended</div>
-                  <div><strong>Action:</strong> Gradual weight gain with supervision</div>
-                </div>
+            {/* Share and Download Buttons */}
+            <div style={actionButtonsStyle}>
+              <div style={{ position: 'relative' }} className="share-button-container">
+                <button
+                  style={shareButtonStyle}
+                  onClick={() => setShowShareMenu(!showShareMenu)}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#2980b9'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = '#3498db'}
+                >
+                  <i className="fas fa-share-alt"></i> Share Results
+                </button>
+                
+                {showShareMenu && (
+                  <div style={shareMenuStyle}>
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#4267B2', color: 'white' }}
+                      onClick={() => shareResults('facebook')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-facebook-f"></i> Facebook
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#1DA1F2', color: 'white' }}
+                      onClick={() => shareResults('twitter')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-twitter"></i> Twitter
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#0077B5', color: 'white' }}
+                      onClick={() => shareResults('linkedin')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-linkedin-in"></i> LinkedIn
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#25D366', color: 'white' }}
+                      onClick={() => shareResults('whatsapp')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-whatsapp"></i> WhatsApp
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#0088CC', color: 'white' }}
+                      onClick={() => shareResults('telegram')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-telegram"></i> Telegram
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#FF4500', color: 'white' }}
+                      onClick={() => shareResults('reddit')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-reddit-alien"></i> Reddit
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#E60023', color: 'white' }}
+                      onClick={() => shareResults('pinterest')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fab fa-pinterest-p"></i> Pinterest
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#666', color: 'white' }}
+                      onClick={() => shareResults('email')}
+                      onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                      onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                      <i className="fas fa-envelope"></i> Email
+                    </button>
+                    
+                    <button
+                      style={{ ...sharePlatformButtonStyle, background: '#f8f9fa', color: '#333', border: '1px solid #ddd' }}
+                      onClick={() => shareResults('copy')}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#e9ecef'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = '#f8f9fa'}
+                    >
+                      <i className="fas fa-copy"></i> Copy to Clipboard
+                    </button>
+                  </div>
+                )}
               </div>
+              
+              <button
+                style={downloadButtonStyle}
+                onClick={downloadHTML}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#219150'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#27ae60'}
+              >
+                <i className="fas fa-file-code"></i> Download HTML Report
+              </button>
+              
+              <button
+                style={{
+                  ...downloadButtonStyle,
+                  background: '#9b59b6'
+                }}
+                onClick={downloadText}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#8e44ad'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#9b59b6'}
+              >
+                <i className="fas fa-file-alt"></i> Download Text Report
+              </button>
             </div>
-
-            <div style={{ ...resultCardStyle, ...overweightCardStyle }}>
-              <h4 style={sectionTitleStyle}><i className="fas fa-arrow-up"></i> Overweight Range</h4>
-              <div style={{ margin: '20px 0' }}>
-                <div style={{ ...resultValueStyle, color: '#e67e22' }}>
-                  {results.overweight}
-                </div>
-                <div style={{ 
-                  fontSize: '1.2rem', 
-                  color: '#666',
-                  marginBottom: '15px',
-                  fontWeight: 'bold'
-                }}>
-                  Elevated Health Risks
-                </div>
-                <div style={{ 
-                  padding: '15px', 
-                  background: '#fdf2e9',
-                  borderRadius: '8px',
-                  color: '#e67e22',
-                  fontWeight: '600',
-                  marginBottom: '15px'
-                }}>
-                  15% Above Ideal Weight
-                </div>
-                <div style={{ 
-                  padding: '10px', 
-                  background: '#f8f9fa',
-                  borderRadius: '8px',
-                  color: '#666'
-                }}>
-                  <div><strong>Health Risks:</strong> Cardiovascular disease, diabetes</div>
-                  <div><strong>Considerations:</strong> Lifestyle modification needed</div>
-                  <div><strong>Action:</strong> Weight loss with medical guidance</div>
-                </div>
-              </div>
-            </div>
-          </div>
+          </>
         )}
 
         {/* Comparison Section */}
