@@ -8,6 +8,8 @@ export default function IBWCalculatorPage() {
   const [frameSize, setFrameSize] = useState('medium');
   const [showWristGuide, setShowWristGuide] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [feet, setFeet] = useState('');
+  const [inches, setInches] = useState('');
   const [results, setResults] = useState({
     ibw: '--',
     underweight: '--',
@@ -605,6 +607,8 @@ export default function IBWCalculatorPage() {
   // Initialize with sample data
   useEffect(() => {
     setHeight(175);
+    setFeet('5');    // Add this
+    setInches('9');  // Add this
   }, []);
 
   // Handle sidebar visibility on resize
@@ -636,6 +640,16 @@ export default function IBWCalculatorPage() {
     setCurrentUnit(unit);
     setShowResults(false);
     setShareResultsData(null);
+    // Clear height inputs when switching units
+    if (unit === 'metric') {
+      setHeight(175);
+      setFeet('');
+      setInches('');
+    } else {
+      setHeight('');
+      setFeet('5');
+      setInches('9');
+    }
   };
 
   const selectFrame = (size) => {
@@ -655,17 +669,35 @@ export default function IBWCalculatorPage() {
 
   const calculateIBW = () => {
     // Validate input
+    let heightInCm;
+  
+  // Calculate height based on unit system
+  if (currentUnit === 'metric') {
+    // Validate metric input
     if (!height || height <= 0) {
-      alert('Please enter a valid height.');
+      alert('Please enter a valid height in cm.');
+      return;
+    }
+    heightInCm = height;
+  } else {
+    // For imperial: convert feet and inches to total inches, then to cm
+    const feetVal = parseFloat(feet) || 0;
+    const inchesVal = parseFloat(inches) || 0;
+    const totalInches = (feetVal * 12) + inchesVal;
+    
+    // Validate imperial input
+    if (!feetVal || !inchesVal || totalInches <= 0) {
+      alert('Please enter a valid height in feet and inches.');
       return;
     }
     
-    // Convert imperial to metric if needed
-    let heightInCm = height;
-    if (currentUnit === 'imperial') {
-      // Assuming input is in inches (e.g., 69 for 5'9")
-      heightInCm = height * 2.54;
+    if (totalInches < 60) {
+      alert("Height must be at least 5 feet (60 inches) for accurate IBW calculation.");
+      return;
     }
+    
+    heightInCm = totalInches * 2.54;
+  }
     
     // Calculate base IBW using Devine formula
     if (heightInCm < 152.4) {
@@ -719,8 +751,11 @@ export default function IBWCalculatorPage() {
       overweight: `≥ ${displayOver.toLocaleString()} ${unit}`,
       frameAdjustment: frameAdjustment !== 0 ? `Adjusted for ${frameText}` : 'Medium frame (no adjustment)',
       formulaUsed: frameText,
-      height: height,
+      height: currentUnit === 'metric' ? height : (parseFloat(feet) * 12 + parseFloat(inches)),
       heightUnit: currentUnit === 'metric' ? 'cm' : 'in',
+      heightDisplay: currentUnit === 'metric' 
+        ? `${height} cm`
+        : `${Math.floor((parseFloat(feet) * 12 + parseFloat(inches)) / 12)}'${Math.round((parseFloat(feet) * 12 + parseFloat(inches)) % 12)}"`,
       gender: gender,
       frameSize: frameSize
     };
@@ -1037,7 +1072,7 @@ export default function IBWCalculatorPage() {
                 <div class="ibw-value">${shareResultsData.ibw}</div>
                 <div class="info-box">
                     <p><strong>Formula Used:</strong> Devine Formula with ${shareResultsData.frameSize} frame adjustment</p>
-                    <p><strong>Height:</strong> ${shareResultsData.height} ${shareResultsData.heightUnit}</p>
+                    <p><strong>Height:</strong> ${shareResultsData.heightDisplay || `${shareResultsData.height} ${shareResultsData.heightUnit}`}</p>
                     <p><strong>Gender:</strong> ${shareResultsData.gender === 'male' ? 'Male' : 'Female'}</p>
                     <p><strong>Frame Size:</strong> ${shareResultsData.frameSize.charAt(0).toUpperCase() + shareResultsData.frameSize.slice(1)}</p>
                 </div>
@@ -1223,11 +1258,11 @@ export default function IBWCalculatorPage() {
           <button 
             style={{
               ...unitButtonStyle,
-              ...(currentUnit === 'metric' ? activeUnitButtonStyle : {})
+              ...(currentUnit === 'imperial' ? activeUnitButtonStyle : {})
             }}
-            onClick={() => toggleUnits('metric')}
+            onClick={() => toggleUnits('imperial')}
           >
-            Metric (cm/kg)
+            Imperial (ft-in/lbs)
           </button>
           <button 
             style={{
@@ -1242,35 +1277,62 @@ export default function IBWCalculatorPage() {
 
         <div style={inputGridStyle}>
           <div style={inputGroupStyle}>
-            <label style={inputGroupLabelStyle}><i className="fas fa-venus-mars"></i> Gender *</label>
-            <select
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-              style={selectStyle}
-            >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
-          <div style={inputGroupStyle}>
             <label style={inputGroupLabelStyle}>
-              <i className="fas fa-ruler-vertical"></i> 
-              {currentUnit === 'metric' ? 'Height (cm) *' : 'Height (inches) *'}
+              <i className="fas fa-ruler-vertical"></i> Height *
             </label>
-            <input
-              type="number"
-              value={height}
-              onChange={(e) => setHeight(parseFloat(e.target.value) || 0)}
-              placeholder={currentUnit === 'metric' ? '175' : '69 (for 5\'9")'}
-              min="100"
-              max="250"
-              step="0.1"
-              style={inputStyle}
-              required
-            />
-            <small style={{ color: '#666', fontSize: '0.8rem' }}>
-              {currentUnit === 'metric' ? 'Centimeters (cm)' : 'Inches (in)'}
-            </small>
+            {currentUnit === 'metric' ? (
+              <>
+                <input
+                  type="number"
+                  value={height}
+                  onChange={(e) => setHeight(parseFloat(e.target.value) || 0)}
+                  placeholder="175"
+                  min="100"
+                  max="250"
+                  step="0.1"
+                  style={inputStyle}
+                  required
+                />
+                <small style={{ color: '#666', fontSize: '0.8rem' }}>
+                  Centimeters (cm)
+                </small>
+              </>
+            ) : (
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <div style={{ flex: 1 }}>
+                  <input
+                    type="number"
+                    value={feet}
+                    onChange={(e) => setFeet(e.target.value)}
+                    placeholder="5"
+                    min="3"
+                    max="8"
+                    step="1"
+                    style={inputStyle}
+                    required
+                  />
+                  <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                    Feet (ft)
+                  </small>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <input
+                    type="number"
+                    value={inches}
+                    onChange={(e) => setInches(e.target.value)}
+                    placeholder="9"
+                    min="0"
+                    max="11"
+                    step="0.1"
+                    style={inputStyle}
+                    required
+                  />
+                  <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                    Inches (in)
+                  </small>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
