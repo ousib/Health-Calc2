@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 
 export default function BMICalculatorPage() {
   const [height, setHeight] = useState('');
+  const [feet, setFeet] = useState('');
+  const [inches, setInches] = useState('');
   const [weight, setWeight] = useState('');
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('male');
@@ -448,7 +450,10 @@ export default function BMICalculatorPage() {
 
   // Sample data for demo
   useEffect(() => {
+    // For the demo: 5 feet 9 inches = 69 inches
     setHeight('175');
+    setFeet('5');
+    setInches('9');
     setWeight('75');
     setAge('30');
     setGender('male');
@@ -501,19 +506,22 @@ export default function BMICalculatorPage() {
 
   const calculateBMI = () => {
     // Validate inputs
-    if (!height || !weight) {
-      alert('Please fill in Height and Weight values.');
+    if (!weight) {
+      alert('Please fill in Weight value.');
       return;
     }
 
-    const heightVal = parseFloat(height);
     const weightVal = parseFloat(weight);
     const ageVal = age ? parseInt(age) : null;
     const waistVal = waist ? parseFloat(waist) : null;
     const hipVal = hip ? parseFloat(hip) : null;
 
-    // Validate ranges
+    // Calculate height based on unit system
+    let heightVal, heightMeters, weightKg;
+    
     if (unitSystem === 'metric') {
+      heightVal = parseFloat(height);
+      // Validate ranges for metric
       if (heightVal < 100 || heightVal > 250) {
         alert('Height should be between 100 and 250 cm.');
         return;
@@ -522,24 +530,23 @@ export default function BMICalculatorPage() {
         alert('Weight should be between 30 and 300 kg.');
         return;
       }
+      heightMeters = heightVal / 100;
+      weightKg = weightVal;
     } else {
+      // For imperial: convert feet and inches to total inches
+      const feetVal = parseFloat(feet) || 0;
+      const inchesVal = parseFloat(inches) || 0;
+      heightVal = (feetVal * 12) + inchesVal;
+      
+      // Validate ranges for imperial
       if (heightVal < 39 || heightVal > 98) {
-        alert('Height should be between 39 and 98 inches.');
+        alert('Height should be between 3\'3" (39") and 8\'2" (98").');
         return;
       }
       if (weightVal < 66 || weightVal > 661) {
         alert('Weight should be between 66 and 661 lbs.');
         return;
       }
-    }
-
-    // Convert to metric if imperial
-    let heightMeters, weightKg;
-    
-    if (unitSystem === 'metric') {
-      heightMeters = heightVal / 100;
-      weightKg = weightVal;
-    } else {
       heightMeters = heightVal * 0.0254;
       weightKg = weightVal * 0.453592;
     }
@@ -1216,20 +1223,59 @@ export default function BMICalculatorPage() {
         <div style={inputGridStyle}>
           <div style={inputGroupStyle}>
             <label style={inputGroupLabelStyle}><i className="fas fa-ruler-vertical"></i> Height *</label>
-            <input
-              type="number"
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-              placeholder={unitSystem === 'metric' ? '175' : '69'}
-              min={unitSystem === 'metric' ? '100' : '39'}
-              max={unitSystem === 'metric' ? '250' : '98'}
-              step="0.1"
-              style={inputStyle}
-              required
-            />
-            <small style={{ color: '#666', fontSize: '0.8rem' }}>
-              {unitSystem === 'metric' ? 'Centimeters (cm)' : 'Inches (in)'}
-            </small>
+            {unitSystem === 'metric' ? (
+              <>
+                <input
+                  type="number"
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                  placeholder="175"
+                  min="100"
+                  max="250"
+                  step="0.1"
+                  style={inputStyle}
+                  required
+                />
+                <small style={{ color: '#666', fontSize: '0.8rem' }}>
+                  Centimeters (cm)
+                </small>
+              </>
+            ) : (
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <div style={{ flex: 1 }}>
+                  <input
+                    type="number"
+                    value={feet}
+                    onChange={(e) => setFeet(e.target.value)}
+                    placeholder="5"
+                    min="3"
+                    max="8"
+                    step="1"
+                    style={inputStyle}
+                    required
+                  />
+                  <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                    Feet (ft)
+                  </small>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <input
+                    type="number"
+                    value={inches}
+                    onChange={(e) => setInches(e.target.value)}
+                    placeholder="9"
+                    min="0"
+                    max="11"
+                    step="0.1"
+                    style={inputStyle}
+                    required
+                  />
+                  <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                    Inches (in)
+                  </small>
+                </div>
+              </div>
+            )}
           </div>
 
           <div style={inputGroupStyle}>
@@ -1309,7 +1355,7 @@ export default function BMICalculatorPage() {
                 }}
                 onClick={() => setUnitSystem('imperial')}
               >
-                Imperial (lbs/in)
+                Imperial (lbs/ft/in)
               </button>
             </div>
           </div>
@@ -1418,7 +1464,11 @@ export default function BMICalculatorPage() {
                   </div>
                 </div>
                 <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                  <div>Height: {results.values.height} {results.values.unitSystem === 'metric' ? 'cm' : 'in'}</div>
+                  <div>Height: {
+                    results.values.unitSystem === 'metric' 
+                      ? `${results.values.height} cm`
+                      : `${Math.floor(results.values.height / 12)}'${Math.round(results.values.height % 12)}"`
+                  }</div>
                   <div>Weight: {results.values.weight} {results.values.unitSystem === 'metric' ? 'kg' : 'lbs'}</div>
                   <div>Age: {results.values.age || 'Not specified'} | Gender: {results.values.gender}</div>
                 </div>
