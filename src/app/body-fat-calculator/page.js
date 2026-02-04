@@ -17,6 +17,8 @@ export default function BodyFatPage() {
   const [activeFAQ, setActiveFAQ] = useState(null);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [results, setResults] = useState(null);
+  const [feet, setFeet] = useState('');
+  const [inches, setInches] = useState('');
 
   // Container style with more space for main content
   const containerStyle = {
@@ -235,6 +237,8 @@ export default function BodyFatPage() {
     setNeck('38');
     setWaist('85');
     setHips('95');
+    setFeet('5');        // Add this
+    setInches('9'); 
   }, []);
 
   // Handle sidebar visibility on resize
@@ -267,16 +271,50 @@ export default function BodyFatPage() {
     setBodyFatResult(null);
     setScalePosition(0);
     setResults(null);
+    // Clear height inputs when switching units
+    if (unit === 'metric') {
+      setHeight('');
+    } else {
+      setFeet('');
+      setInches('');
+    }
   };
 
   const calculateBodyFat = () => {
-    const heightVal = parseFloat(height);
+    
+    let heightVal;
+  
+    // Calculate height based on unit system
+    if (currentUnit === 'metric') {
+      heightVal = parseFloat(height);
+      // Validate height for metric
+      if (!heightVal || heightVal <= 0) {
+        alert('Please enter your height in cm.');
+        return;
+      }
+    } else {
+      // For imperial: convert feet and inches to total inches
+      const feetVal = parseFloat(feet) || 0;
+      const inchesVal = parseFloat(inches) || 0;
+      heightVal = (feetVal * 12) + inchesVal;
+      
+      // Validate height for imperial
+      if (!feetVal || !inchesVal || heightVal <= 0) {
+        alert('Please enter your height in feet and inches.');
+        return;
+      }
+      if (heightVal < 39 || heightVal > 98) {
+        alert('Height should be between 3\'3" (39") and 8\'2" (98").');
+        return;
+      }
+    }
+    
     const neckVal = parseFloat(neck);
     const waistVal = parseFloat(waist);
     const hipsVal = gender === 'female' ? parseFloat(hips) : 0;
     
-    // Validate inputs
-    if (!heightVal || !neckVal || !waistVal || heightVal <= 0 || neckVal <= 0 || waistVal <= 0) {
+    // Validate other inputs
+    if (!neckVal || !waistVal || neckVal <= 0 || waistVal <= 0) {
       alert('Please fill in all required fields with valid numbers.');
       return;
     }
@@ -952,7 +990,7 @@ export default function BodyFatPage() {
             }}
             onClick={() => toggleUnits('imperial')}
           >
-            Imperial (inches)
+            Imperial (ft/in)
           </button>
         </div>
 
@@ -1071,18 +1109,58 @@ export default function BodyFatPage() {
         </div>
 
         <div style={inputGridStyle}>
-          <div style={inputGroupStyle}>
-            <label style={inputGroupLabelStyle}><i className="fas fa-ruler-vertical"></i> {currentUnit === 'metric' ? 'Height (cm)' : 'Height (inches)'}</label>
-            <input 
-              type="number" 
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-              placeholder={currentUnit === 'metric' ? '175' : '69'}
-              min="100" 
-              max="250" 
-              step="0.1"
-              style={inputStyle}
-            />
+            <div style={inputGroupStyle}>
+            <label style={inputGroupLabelStyle}><i className="fas fa-ruler-vertical"></i> Height *</label>
+            {currentUnit === 'metric' ? (
+              <>
+                <input 
+                  type="number" 
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                  placeholder="175"
+                  min="100"
+                  max="250"
+                  step="0.1"
+                  style={inputStyle}
+                />
+                <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                  Centimeters (cm)
+                </small>
+              </>
+            ) : (
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <div style={{ flex: 1 }}>
+                  <input
+                    type="number"
+                    value={feet}
+                    onChange={(e) => setFeet(e.target.value)}
+                    placeholder="5"
+                    min="3"
+                    max="8"
+                    step="1"
+                    style={inputStyle}
+                  />
+                  <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                    Feet (ft)
+                  </small>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <input
+                    type="number"
+                    value={inches}
+                    onChange={(e) => setInches(e.target.value)}
+                    placeholder="9"
+                    min="0"
+                    max="11"
+                    step="0.1"
+                    style={inputStyle}
+                  />
+                  <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                    Inches (in)
+                  </small>
+                </div>
+              </div>
+            )}
           </div>
           
           <div style={inputGroupStyle}>
@@ -1208,7 +1286,10 @@ export default function BodyFatPage() {
               }}>
                 <div style={{ padding: '10px', background: '#f8f9fa', borderRadius: '6px' }}>
                   <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-                    {results.measurements.height} {results.measurements.unit === 'metric' ? 'cm' : 'in'}
+                    {results.measurements.unit === 'metric' 
+                      ? `${results.measurements.height} cm`
+                      : `${Math.floor(results.measurements.height / 12)}'${Math.round(results.measurements.height % 12)}"`
+                    }
                   </div>
                   <div style={{ fontSize: '0.85rem', color: '#666', marginTop: '5px' }}>Height</div>
                 </div>
