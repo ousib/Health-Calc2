@@ -960,39 +960,7 @@ export default function BodyFatPage() {
           Calculate your <strong>body fat percentage estimate</strong> using the validated <strong>U.S. Navy Method formula</strong> for accurate <strong>body composition assessment</strong> without expensive equipment like <strong>DEXA scans or hydrostatic weighing</strong>.
         </p>
 
-        {/* Units Toggle */}
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
-          <button 
-            style={{
-              padding: '8px 16px',
-              background: currentUnit === 'metric' ? '#27ae60' : '#f1f3f5',
-              color: currentUnit === 'metric' ? 'white' : '#333',
-              border: '2px solid #dfe6e9',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: currentUnit === 'metric' ? '600' : '500',
-              transition: 'all 0.3s'
-            }}
-            onClick={() => toggleUnits('metric')}
-          >
-            Metric (cm)
-          </button>
-          <button 
-            style={{
-              padding: '8px 16px',
-              background: currentUnit === 'imperial' ? '#27ae60' : '#f1f3f5',
-              color: currentUnit === 'imperial' ? 'white' : '#333',
-              border: '2px solid #dfe6e9',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: currentUnit === 'imperial' ? '600' : '500',
-              transition: 'all 0.3s'
-            }}
-            onClick={() => toggleUnits('imperial')}
-          >
-            Imperial (ft/in)
-          </button>
-        </div>
+        
 
         {/* Measurement Guide */}
         <div style={{ 
@@ -1092,6 +1060,39 @@ export default function BodyFatPage() {
             </div>
           </div>
         </div>
+         {/* Units Toggle */}
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
+          <button 
+            style={{
+              padding: '8px 16px',
+              background: currentUnit === 'metric' ? '#27ae60' : '#f1f3f5',
+              color: currentUnit === 'metric' ? 'white' : '#333',
+              border: '2px solid #dfe6e9',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: currentUnit === 'metric' ? '600' : '500',
+              transition: 'all 0.3s'
+            }}
+            onClick={() => toggleUnits('metric')}
+          >
+            Metric (cm)
+          </button>
+          <button 
+            style={{
+              padding: '8px 16px',
+              background: currentUnit === 'imperial' ? '#27ae60' : '#f1f3f5',
+              color: currentUnit === 'imperial' ? 'white' : '#333',
+              border: '2px solid #dfe6e9',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: currentUnit === 'imperial' ? '600' : '500',
+              transition: 'all 0.3s'
+            }}
+            onClick={() => toggleUnits('imperial')}
+          >
+            Imperial (ft/in)
+          </button>
+        </div>   
 
         {/* Input Fields */}
         <div style={inputGridStyle}>
