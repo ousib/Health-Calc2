@@ -29,12 +29,17 @@ export default function RootLayout({ children }) {
               <div className="footer-brand">
                 <div className="logo">
                   <i className="fas fa-calculator"></i>
-                  <h3>HealthCalc <span>Hub</span></h3>
+                  <h3>HealthCalculators <span>Online</span></h3>
                 </div>
                 <p className="tagline">
                   Scientific, research-backed health tools to track fitness and wellness.
                   Your health journey, calculated with precision.
                 </p>
+                {/* ADD THIS EMAIL SECTION */}
+                <div className="footer-email">
+                  <i className="fas fa-envelope"></i>
+                  <a href="mailto:ousceesay92@gmail.com">ousceesay92@gmail.com</a>
+                </div>
                 <div className="social-links">
                   <a href="#" aria-label="Facebook"><i className="fab fa-facebook-f"></i></a>
                   <a href="#" aria-label="Twitter"><i className="fab fa-twitter"></i></a>
@@ -97,7 +102,7 @@ export default function RootLayout({ children }) {
             {/* Bottom Section */}
             <div className="footer-bottom">
               <div className="copyright">
-                <p>&copy; {new Date().getFullYear()} HealthCalc Hub. All rights reserved.</p>
+                <p>&copy; {new Date().getFullYear()} HealthCalculatorsOnline. All rights reserved.</p>
                 <p className="disclaimer">
                   <i className="fas fa-exclamation-triangle"></i>
                   This tool provides health information for educational purposes only. 
@@ -107,8 +112,8 @@ export default function RootLayout({ children }) {
               
               <div className="badges">
                 <span className="badge"><i className="fas fa-lock"></i> Secure SSL</span>
-                <span className="badge"><i className="fas fa-user-md"></i> Medically Reviewed</span>
-                <span className="badge"><i className="fas fa-shield-alt"></i> GDPR Compliant</span>
+                {/* <span className="badge"><i className="fas fa-user-md"></i> Medically Reviewed</span>
+                <span className="badge"><i className="fas fa-shield-alt"></i> GDPR Compliant</span> */}
               </div>
             </div>
           </div>
