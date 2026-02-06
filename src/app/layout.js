@@ -38,7 +38,7 @@ export default function RootLayout({ children }) {
                 {/* ADD THIS EMAIL SECTION */}
                 <div className="footer-email">
                   <i className="fas fa-envelope"></i>
-                  <a href="mailto:ousceesay92@gmail.com">ousceesay92@gmail.com</a>
+                  <a href="mailto:ousceesay92@gmail.com">healthcalculatorsonline@gmail.com</a>
                 </div>
                 <div className="social-links">
                   <a href="#" aria-label="Facebook"><i className="fab fa-facebook-f"></i></a>
