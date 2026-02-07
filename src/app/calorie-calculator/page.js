@@ -17,6 +17,8 @@ export default function CaloriesPage() {
   const [activeFAQ, setActiveFAQ] = useState(null);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [shareResults, setShareResults] = useState(null);
+  const [feet, setFeet] = useState('');
+  const [inches, setInches] = useState('');
 
   // Styles for main container and layout
   const containerStyle = {
@@ -233,6 +235,8 @@ export default function CaloriesPage() {
     setAge('30');
     setWeight('70');
     setHeight('175');
+    setFeet('5');    // Add this
+    setInches('9');  // Add this
     setActivity('1.55');
   }, []);
 
@@ -267,6 +271,17 @@ export default function CaloriesPage() {
     setMacros(null);
     setShowMealExamples(false);
     setShareResults(null);
+    
+    // Clear height inputs when switching units
+    if (unit === 'metric') {
+      setHeight('175');
+      setFeet('');
+      setInches('');
+    } else {
+      setHeight('');
+      setFeet('5');
+      setInches('9');
+    }
   };
 
   const selectActivity = (multiplier) => {
@@ -280,18 +295,52 @@ export default function CaloriesPage() {
   const calculateCalories = () => {
     const ageVal = parseFloat(age);
     let weightVal = parseFloat(weight);
-    let heightVal = parseFloat(height);
+    let heightVal;
     
-    // Validate inputs
-    if (!ageVal || !weightVal || !heightVal || ageVal <= 0 || weightVal <= 0 || heightVal <= 0) {
-      alert('Please fill in all fields with valid numbers.');
+    // Calculate height based on unit system
+    if (currentUnit === 'metric') {
+      heightVal = parseFloat(height);
+      // Validate metric input
+      if (!heightVal || heightVal <= 0) {
+        alert('Please enter a valid height in cm.');
+        return;
+      }
+    } else {
+      // For imperial: convert feet and inches to total inches, then to cm
+      const feetVal = parseFloat(feet) || 0;
+      const inchesVal = parseFloat(inches) || 0;
+      const totalInches = (feetVal * 12) + inchesVal;
+      
+      // Validate imperial input
+      if (!feetVal || !inchesVal || totalInches <= 0) {
+        alert('Please enter a valid height in feet and inches.');
+        return;
+      }
+      
+      if (totalInches < 48) { // 4 feet minimum
+        alert("Height must be at least 4 feet (48 inches).");
+        return;
+      }
+      
+      // Store the original inches for display
+      const originalInches = totalInches;
+      
+      // Convert to cm for calculation
+      heightVal = totalInches * 2.54;
+      
+      // Also update the display height for imperial
+      setHeight(originalInches.toString());
+    }
+    
+    // Validate weight
+    if (!weightVal || weightVal <= 0) {
+      alert('Please enter a valid weight.');
       return;
     }
     
-    // Convert imperial to metric if needed
+    // Convert weight if imperial
     if (currentUnit === 'imperial') {
       weightVal = weightVal * 0.453592;
-      heightVal = heightVal * 2.54;
     }
     
     // Calculate BMR using Mifflin-St Jeor Formula
@@ -356,8 +405,8 @@ export default function CaloriesPage() {
       macros: calculatedMacros,
       measurements: {
         age: ageVal,
-        weight: weightVal,
-        height: heightVal,
+        weight: currentUnit === 'metric' ? weight : weightVal * 2.20462, // original weight in lbs for display
+        height: currentUnit === 'metric' ? height : `${Math.floor((parseFloat(feet) * 12 + parseFloat(inches)) / 12)}'${Math.round((parseFloat(feet) * 12 + parseFloat(inches)) % 12)}"`,
         unit: currentUnit,
         gender: gender,
         activity: activityLevels.find(a => a.multiplier === activity)?.name || activity,
@@ -485,7 +534,7 @@ export default function CaloriesPage() {
                 <div class="info-box">
                     <p><strong>Age:</strong> ${shareResults.measurements.age} years</p>
                     <p><strong>Weight:</strong> ${shareResults.measurements.weight} ${shareResults.measurements.unit === 'metric' ? 'kg' : 'lbs'}</p>
-                    <p><strong>Height:</strong> ${shareResults.measurements.height} ${shareResults.measurements.unit === 'metric' ? 'cm' : 'in'}</p>
+                    <p><strong>Height:</strong> ${shareResults.measurements.height} ${shareResults.measurements.unit === 'metric' ? 'cm' : ''}</p>
                     <p><strong>Gender:</strong> ${shareResults.measurements.gender}</p>
                     <p><strong>Activity Level:</strong> ${shareResults.measurements.activity}</p>
                     <p><strong>Goal:</strong> ${shareResults.measurements.goal}</p>
@@ -662,7 +711,7 @@ export default function CaloriesPage() {
             }}
             onClick={() => toggleUnits('imperial')}
           >
-            Imperial (lbs/in)
+            Imperial (lbs/ft-in)
           </button>
         </div>
 
@@ -710,17 +759,57 @@ export default function CaloriesPage() {
           </div>
           
           <div style={inputGroupStyle}>
-            <label style={inputGroupLabelStyle}><i className="fas fa-ruler-vertical"></i> {currentUnit === 'metric' ? 'Height (cm)' : 'Height (inches)'}</label>
-            <input 
-              type="number" 
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-              placeholder={currentUnit === 'metric' ? '175' : '69'}
-              min="100"
-              max="250"
-              step="0.1"
-              style={inputStyle}
-            />
+            <label style={inputGroupLabelStyle}><i className="fas fa-ruler-vertical"></i> Height</label>
+            {currentUnit === 'metric' ? (
+              <>
+                <input 
+                  type="number" 
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                  placeholder="175"
+                  min="100"
+                  max="250"
+                  step="0.1"
+                  style={inputStyle}
+                />
+                <small style={{ color: '#666', fontSize: '0.8rem' }}>
+                  Centimeters (cm)
+                </small>
+              </>
+            ) : (
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <div style={{ flex: 1 }}>
+                  <input
+                    type="number"
+                    value={feet}
+                    onChange={(e) => setFeet(e.target.value)}
+                    placeholder="5"
+                    min="3"
+                    max="8"
+                    step="1"
+                    style={inputStyle}
+                  />
+                  <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                    Feet (ft)
+                  </small>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <input
+                    type="number"
+                    value={inches}
+                    onChange={(e) => setInches(e.target.value)}
+                    placeholder="9"
+                    min="0"
+                    max="11"
+                    step="0.1"
+                    style={inputStyle}
+                  />
+                  <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                    Inches (in)
+                  </small>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
