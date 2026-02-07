@@ -15,6 +15,8 @@ export default function TDEEPage() {
   const [showSidebar, setShowSidebar] = useState(true);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [activeFAQ, setActiveFAQ] = useState(null);
+  const [feet, setFeet] = useState('');
+  const [inches, setInches] = useState('');
   // Container style
   const containerStyle = {
     width: '100%',
@@ -268,6 +270,16 @@ export default function TDEEPage() {
   const toggleUnits = (unit) => {
     setCurrentUnit(unit);
     setResults(null);
+    // Reset height inputs when switching units
+    if (unit === 'metric') {
+      setHeight('180');
+      setFeet('');
+      setInches('');
+    } else {
+      setHeight('');
+      setFeet('5');
+      setInches('11'); // 5'11" = 71 inches
+    }
   };
 
   const selectGoal = (goal) => {
@@ -277,20 +289,37 @@ export default function TDEEPage() {
 
   const calculateTDEE = () => {
     const ageValue = parseFloat(age);
-    let weightValue = parseFloat(weight);
-    let heightValue = parseFloat(height);
     const activityValue = parseFloat(activity);
+    let weightValue = parseFloat(weight);
+    let heightValue;
 
-    // Validate inputs
-    if (!ageValue || !weightValue || !heightValue || ageValue <= 0 || weightValue <= 0 || heightValue <= 0) {
-      alert('Please enter valid age, height, and weight values.');
-      return;
+    // Calculate height based on unit system
+    if (currentUnit === 'metric') {
+      heightValue = parseFloat(height);
+      
+      // Validate metric inputs
+      if (!ageValue || !weightValue || !heightValue || ageValue <= 0 || weightValue <= 0 || heightValue <= 0) {
+        alert('Please enter valid age, height, and weight values.');
+        return;
+      }
+    } else {
+      // For imperial: convert feet and inches to total inches, then to cm
+      const feetVal = parseFloat(feet) || 0;
+      const inchesVal = parseFloat(inches) || 0;
+      const totalInches = (feetVal * 12) + inchesVal;
+      
+      // Validate imperial inputs
+      if (!ageValue || !weightValue || !feetVal || !inchesVal || ageValue <= 0 || weightValue <= 0 || totalInches <= 0) {
+        alert('Please enter valid age, height (feet and inches), and weight values.');
+        return;
+      }
+      
+      heightValue = totalInches * 2.54;
     }
 
-    // Convert imperial to metric if needed
+    // Convert weight if needed (weightValue is in kg for metric, lbs for imperial)
     if (currentUnit === 'imperial') {
-      weightValue = weightValue * 0.453592;
-      heightValue = heightValue * 2.54;
+      weightValue = weightValue * 0.453592; // Convert lbs to kg
     }
 
     // Calculate BMR using Mifflin-St Jeor
@@ -358,8 +387,12 @@ export default function TDEEPage() {
       goalName: goalName,
       measurements: {
         age: ageValue,
-        weight: weightValue,
+        weight: parseFloat(weight),
+        weightKg: weightValue,
         height: heightValue,
+        heightDisplay: currentUnit === 'metric' 
+          ? `${parseFloat(height)} cm`
+          : `${Math.floor((parseFloat(feet) * 12 + parseFloat(inches)) / 12)}'${Math.round((parseFloat(feet) * 12 + parseFloat(inches)) % 12)}"`,
         unit: currentUnit,
         gender: gender,
         activity: activityValue
@@ -685,7 +718,7 @@ export default function TDEEPage() {
                     <p><strong>Age:</strong> ${results.measurements.age} years</p>
                     <p><strong>Gender:</strong> ${results.measurements.gender === 'male' ? 'Male' : 'Female'}</p>
                     <p><strong>Weight:</strong> ${results.measurements.weight.toFixed(1)} kg</p>
-                    <p><strong>Height:</strong> ${results.measurements.height.toFixed(1)} cm</p>
+                    <p><strong>Height:</strong> ${results.measurements.heightDisplay || `${results.measurements.height.toFixed(1)} cm`}</p>
                     <p><strong>Unit System:</strong> ${results.measurements.unit === 'metric' ? 'Metric' : 'Imperial'}</p>
                     <p><strong>Calculation Method:</strong> Mifflin-St Jeor Equation</p>
                 </div>
@@ -773,7 +806,7 @@ export default function TDEEPage() {
     content += `  Age: ${results.measurements.age} years\n`;
     content += `  Gender: ${results.measurements.gender === 'male' ? 'Male' : 'Female'}\n`;
     content += `  Weight: ${results.measurements.weight.toFixed(1)} kg\n`;
-    content += `  Height: ${results.measurements.height.toFixed(1)} cm\n`;
+    content += `  Height: ${results.measurements.heightDisplay || `${results.measurements.height.toFixed(1)} cm`}\n`;
     content += `  Unit System: ${results.measurements.unit === 'metric' ? 'Metric' : 'Imperial'}\n`;
     content += `  Calculation Method: Mifflin-St Jeor Equation\n\n`;
     
@@ -907,7 +940,7 @@ export default function TDEEPage() {
             }}
             onClick={() => toggleUnits('imperial')}
           >
-            Imperial (lbs/in)
+            Imperial (lbs/ft-in)
           </button>
         </div>
 
@@ -956,19 +989,57 @@ export default function TDEEPage() {
           </div>
           
           <div style={inputGroupStyle}>
-            <label style={inputGroupLabelStyle}><i className="fas fa-ruler-vertical"></i> 
-              {currentUnit === 'metric' ? 'Height (cm)' : 'Height (inches)'}
-            </label>
-            <input 
-              type="number" 
-              placeholder={currentUnit === 'metric' ? '180' : '71'}
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-              min="100" 
-              max="250" 
-              step="0.1"
-              style={inputStyle}
-            />
+            <label style={inputGroupLabelStyle}><i className="fas fa-ruler-vertical"></i> Height</label>
+              {currentUnit === 'metric' ? (
+                <>
+                  <input 
+                    type="number" 
+                    placeholder="180"
+                    value={height}
+                    onChange={(e) => setHeight(e.target.value)}
+                    min="100" 
+                    max="250" 
+                    step="0.1"
+                    style={inputStyle}
+                  />
+                  <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                    Centimeters (cm)
+                  </small>
+                </>
+              ) : (
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <div style={{ flex: 1 }}>
+                    <input
+                      type="number"
+                      value={feet}
+                      onChange={(e) => setFeet(e.target.value)}
+                      placeholder="5"
+                      min="3"
+                      max="8"
+                      step="1"
+                      style={inputStyle}
+                    />
+                    <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                      Feet (ft)
+                    </small>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <input
+                      type="number"
+                      value={inches}
+                      onChange={(e) => setInches(e.target.value)}
+                      placeholder="11"
+                      min="0"
+                      max="11"
+                      step="0.1"
+                      style={inputStyle}
+                    />
+                    <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                      Inches (in)
+                    </small>
+                  </div>
+                </div>
+              )}
           </div>
         </div>
 
