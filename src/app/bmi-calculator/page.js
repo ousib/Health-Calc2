@@ -963,6 +963,15 @@ export default function BMICalculatorPage() {
         }
     </style>
 </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E9W1HQGW35"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-E9W1HQGW35');
+</script>
 <body>
     <div class="container">
         <div class="report-header">

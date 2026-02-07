@@ -1,6 +1,7 @@
 // app/layout.jsx
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import Script from "next/script";
 
 export const metadata = {
   title: "Health Calculator",
@@ -12,20 +13,39 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        {/* Font Awesome */}
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-E9W1HQGW35"
+          strategy="afterInteractive"
+        />
+
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-E9W1HQGW35');
+          `}
+        </Script>
       </head>
+
       <body>
         <Navbar />
+
         <main className="container">
           {children}
         </main>
-        
-        {/* Enhanced Footer - included directly in layout */}
+
+        {/* Footer */}
         <footer className="footer">
           <div className="footer-container">
-            {/* Main Footer Content */}
             <div className="footer-main">
-              {/* Brand Section */}
               <div className="footer-brand">
                 <div className="logo">
                   <i className="fas fa-calculator"></i>
@@ -35,11 +55,14 @@ export default function RootLayout({ children }) {
                   Scientific, research-backed health tools to track fitness and wellness.
                   Your health journey, calculated with precision.
                 </p>
-                {/* ADD THIS EMAIL SECTION */}
+
                 <div className="footer-email">
                   <i className="fas fa-envelope"></i>
-                  <a href="mailto:ousceesay92@gmail.com">healthcalculatorsonline@gmail.com</a>
+                  <a href="mailto:healthcalculatorsonline@gmail.com">
+                    healthcalculatorsonline@gmail.com
+                  </a>
                 </div>
+
                 <div className="social-links">
                   <a href="#" aria-label="Facebook"><i className="fab fa-facebook-f"></i></a>
                   <a href="#" aria-label="Twitter"><i className="fab fa-twitter"></i></a>
@@ -48,7 +71,6 @@ export default function RootLayout({ children }) {
                 </div>
               </div>
 
-              {/* Quick Links - GOOD PRACTICE: Internal links for navigation */}
               <div className="footer-links">
                 <div className="link-column">
                   <h4><i className="fas fa-heartbeat"></i> Health Tools</h4>
@@ -96,24 +118,19 @@ export default function RootLayout({ children }) {
               </div>
             </div>
 
-            {/* Divider */}
             <div className="footer-divider"></div>
 
-            {/* Bottom Section */}
             <div className="footer-bottom">
               <div className="copyright">
                 <p>&copy; {new Date().getFullYear()} HealthCalculatorsOnline. All rights reserved.</p>
                 <p className="disclaimer">
                   <i className="fas fa-exclamation-triangle"></i>
-                  This tool provides health information for educational purposes only. 
-                  Always consult healthcare professionals for medical advice.
+                  Educational purposes only. Consult healthcare professionals for medical advice.
                 </p>
               </div>
-              
+
               <div className="badges">
                 <span className="badge"><i className="fas fa-lock"></i> Secure SSL</span>
-                {/* <span className="badge"><i className="fas fa-user-md"></i> Medically Reviewed</span>
-                <span className="badge"><i className="fas fa-shield-alt"></i> GDPR Compliant</span> */}
               </div>
             </div>
           </div>
