@@ -15,6 +15,8 @@ export default function FluidRequirementsPage() {
   const [activeFAQ, setActiveFAQ] = useState(null);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [results, setResults] = useState(null);
+  const [feet, setFeet] = useState('');
+  const [inches, setInches] = useState('');
 
   // Styles
   const containerStyle = {
@@ -527,6 +529,8 @@ export default function FluidRequirementsPage() {
     setAge('45');
     setWeight('70');
     setHeight('175');
+    setFeet('5');    // Add this
+    setInches('9');  // Add this
   }, []);
 
   // Handle sidebar visibility on resize
@@ -571,15 +575,38 @@ export default function FluidRequirementsPage() {
 
   const calculateFluidRequirements = () => {
     // Validate inputs
-    if (!age || !weight || !height || !temperature) {
+    // Validate inputs
+    if (!age || !weight || !temperature) {
       alert('Please fill in all required fields.');
       return;
     }
 
     const ageVal = parseFloat(age);
     const weightVal = parseFloat(weight);
-    const heightVal = parseFloat(height);
     const tempVal = parseFloat(temperature);
+
+    let heightVal;
+    
+    // Calculate height based on input format
+    if (height) {
+      // If height is entered directly (for backward compatibility)
+      heightVal = parseFloat(height);
+    } else {
+      // Try to calculate from feet and inches
+      const feetVal = parseFloat(feet) || 0;
+      const inchesVal = parseFloat(inches) || 0;
+      heightVal = (feetVal * 12) + inchesVal;
+      
+      // If we don't have height in either format
+      if (!height && (!feetVal || !inchesVal)) {
+        alert('Please enter height in either cm or feet/inches.');
+        return;
+      }
+      
+      // For calculations that need cm, convert if input was in feet/inches
+      // Note: BSA calculation uses cm
+      heightVal = heightVal * 2.54; // Convert inches to cm
+    }
 
     if (ageVal <= 0 || weightVal <= 0 || heightVal <= 0) {
       alert('Please enter valid positive numbers.');
@@ -672,7 +699,10 @@ export default function FluidRequirementsPage() {
       patient: {
         age: ageVal,
         weight: weightVal,
-        height: heightVal,
+        height: height, // Keep original input
+        heightDisplay: height 
+          ? `${height} cm`
+          : `${Math.floor((parseFloat(feet) * 12 + parseFloat(inches)) / 12)}'${Math.round((parseFloat(feet) * 12 + parseFloat(inches)) % 12)}"`,
         temperature: tempVal
       },
       conditions: selectedConditions.map(id => 
@@ -1051,7 +1081,7 @@ export default function FluidRequirementsPage() {
                         <div class="measurement-label">Weight</div>
                     </div>
                     <div class="measurement-item">
-                        <div class="measurement-value">${results.patient.height} cm</div>
+                        <div class="measurement-value">${results.patient.heightDisplay || `${results.patient.height} cm`}</div>
                         <div class="measurement-label">Height</div>
                     </div>
                     <div class="measurement-item">
@@ -1143,7 +1173,7 @@ export default function FluidRequirementsPage() {
     content += `══════════════════════════════════════════════════════════════════════════════\n`;
     content += `  Age: ${results.patient.age} years\n`;
     content += `  Weight: ${results.patient.weight} kg\n`;
-    content += `  Height: ${results.patient.height} cm\n`;
+    content += `  Height: ${results.patient.heightDisplay || `${results.patient.height} cm`}\n`;
     content += `  Temperature: ${results.patient.temperature}°C\n`;
     content += `  Calculation Method: ${results.method}\n`;
     if (results.conditions.length > 0) {
@@ -1349,18 +1379,62 @@ export default function FluidRequirementsPage() {
           </div>
 
           <div style={inputGroupStyle}>
-            <label style={inputGroupLabelStyle}><i className="fas fa-ruler-vertical"></i> Height (cm) *</label>
-            <input 
-              type="number" 
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-              placeholder="175"
-              min="50" 
-              max="250" 
-              step="0.1"
-              style={inputStyle}
-              required
-            />
+            <label style={inputGroupLabelStyle}><i className="fas fa-ruler-vertical"></i> Height *</label>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <div style={{ flex: 1 }}>
+                <input 
+                  type="number" 
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                  placeholder="175"
+                  min="50" 
+                  max="250" 
+                  step="0.1"
+                  style={inputStyle}
+                  required
+                />
+                <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                  Centimeters (cm)
+                </small>
+              </div>
+              <div style={{ flex: '0 0 auto', display: 'flex', alignItems: 'center', padding: '0 10px' }}>
+                <span style={{ color: '#666' }}>or</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <div style={{ flex: 1 }}>
+                    <input
+                      type="number"
+                      value={feet}
+                      onChange={(e) => setFeet(e.target.value)}
+                      placeholder="5"
+                      min="3"
+                      max="8"
+                      step="1"
+                      style={inputStyle}
+                    />
+                    <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                      Feet (ft)
+                    </small>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <input
+                      type="number"
+                      value={inches}
+                      onChange={(e) => setInches(e.target.value)}
+                      placeholder="9"
+                      min="0"
+                      max="11"
+                      step="0.1"
+                      style={inputStyle}
+                    />
+                    <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                      Inches (in)
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div style={inputGroupStyle}>

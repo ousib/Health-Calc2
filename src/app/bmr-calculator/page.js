@@ -15,6 +15,8 @@ export default function BMRPage() {
   const [activeFAQ, setActiveFAQ] = useState(null);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [results, setResults] = useState(null);
+  const [feet, setFeet] = useState('');
+  const [inches, setInches] = useState('');
 
   // Container style with sidebar
   const containerStyle = {
@@ -232,6 +234,8 @@ export default function BMRPage() {
     setAge('30');
     setWeight('70');
     setHeight('175');
+    setFeet('5');    // Add this
+    setInches('9');  // Add this
   }, []);
 
   // Handle sidebar visibility on resize
@@ -265,22 +269,49 @@ export default function BMRPage() {
     setSelectedActivity(null);
     setTdeeResult(null);
     setResults(null);
+    // Clear height inputs when switching units
+    if (unit === 'metric') {
+      setHeight('175');
+      setFeet('');
+      setInches('');
+    } else {
+      setHeight('');
+      setFeet('5');
+      setInches('9');
+    }
   };
 
   const calculateBMR = () => {
     const ageVal = parseFloat(age);
     let weightVal = parseFloat(weight);
-    let heightVal = parseFloat(height);
+    let heightVal;
     
-    if (!ageVal || !weightVal || !heightVal || ageVal <= 0 || weightVal <= 0 || heightVal <= 0) {
-      alert('Please fill in all fields with valid numbers.');
-      return;
+    // Calculate height based on unit system
+    if (currentUnit === 'metric') {
+      heightVal = parseFloat(height);
+      // Validate metric input
+      if (!ageVal || !weightVal || !heightVal || ageVal <= 0 || weightVal <= 0 || heightVal <= 0) {
+        alert('Please fill in all fields with valid numbers.');
+        return;
+      }
+    } else {
+      // For imperial: convert feet and inches to total inches, then to cm
+      const feetVal = parseFloat(feet) || 0;
+      const inchesVal = parseFloat(inches) || 0;
+      const totalInches = (feetVal * 12) + inchesVal;
+      
+      // Validate imperial input
+      if (!ageVal || !weightVal || !feetVal || !inchesVal || ageVal <= 0 || weightVal <= 0 || totalInches <= 0) {
+        alert('Please fill in all fields with valid numbers.');
+        return;
+      }
+      
+      heightVal = totalInches * 2.54;
     }
     
-    // Convert imperial to metric if needed
+    // Convert weight to metric if needed
     if (currentUnit === 'imperial') {
       weightVal = weightVal * 0.453592;
-      heightVal = heightVal * 2.54;
     }
     
     let bmr;
@@ -298,6 +329,10 @@ export default function BMRPage() {
     setShowShareMenu(false);
     
     // Store results for sharing/downloading
+    const displayHeight = currentUnit === 'metric' 
+    ? `${parseFloat(height)} cm`
+    : `${Math.floor((parseFloat(feet) * 12 + parseFloat(inches)) / 12)}'${Math.round((parseFloat(feet) * 12 + parseFloat(inches)) % 12)}"`;
+
     setResults({
       bmr: roundedBMR,
       tdee: null,
@@ -305,6 +340,7 @@ export default function BMRPage() {
         age: ageVal,
         weight: parseFloat(weight),
         height: parseFloat(height),
+        heightDisplay: displayHeight,
         unit: currentUnit,
         gender: gender
       },
@@ -610,8 +646,8 @@ export default function BMRPage() {
                         <div class="measurement-label">Weight</div>
                     </div>
                     <div class="measurement-item">
-                        <div class="measurement-value">${results.measurements.height} ${results.measurements.unit === 'metric' ? 'cm' : 'in'}</div>
-                        <div class="measurement-label">Height</div>
+                      <div class="measurement-value">${results.measurements.heightDisplay || `${results.measurements.height} ${results.measurements.unit === 'metric' ? 'cm' : 'in'}`}</div>
+                      <div class="measurement-label">Height</div>
                     </div>
                     <div class="measurement-item">
                         <div class="measurement-value">${results.measurements.gender === 'male' ? 'Male' : 'Female'}</div>
@@ -660,7 +696,7 @@ export default function BMRPage() {
 
     document.addEventListener('keypress', handleKeyPress);
     return () => document.removeEventListener('keypress', handleKeyPress);
-  }, [age, weight, height, gender, currentUnit]);
+  }, [age, weight, height, feet, inches, gender, currentUnit]); // Add feet and inches
 
   const toggleFAQ = (index) => {
     setActiveFAQ(activeFAQ === index ? null : index);
@@ -783,7 +819,7 @@ export default function BMRPage() {
             }}
             onClick={() => toggleUnits('imperial')}
           >
-            Imperial (lbs/in)
+            Imperial (lbs/ft-in)
           </button>
         </div>
 
@@ -831,18 +867,60 @@ export default function BMRPage() {
           </div>
           
           <div style={inputGroupStyle}>
-            <label style={inputGroupLabelStyle}><i className="fas fa-ruler-vertical"></i> {currentUnit === 'metric' ? 'Height (cm)' : 'Height (in)'}</label>
-            <input 
-              type="number" 
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-              placeholder={currentUnit === 'metric' ? '175' : '69'}
-              min="100" 
-              max="250" 
-              step="0.1"
-              style={inputStyle}
-            />
-          </div>
+          <label style={inputGroupLabelStyle}>
+            <i className="fas fa-ruler-vertical"></i> Height *
+          </label>
+          {currentUnit === 'metric' ? (
+            <>
+              <input 
+                type="number" 
+                value={height}
+                onChange={(e) => setHeight(e.target.value)}
+                placeholder="175"
+                min="100"
+                max="250"
+                step="0.1"
+                style={inputStyle}
+              />
+              <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                Centimeters (cm)
+              </small>
+            </>
+          ) : (
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <div style={{ flex: 1 }}>
+                <input
+                  type="number"
+                  value={feet}
+                  onChange={(e) => setFeet(e.target.value)}
+                  placeholder="5"
+                  min="3"
+                  max="8"
+                  step="1"
+                  style={inputStyle}
+                />
+                <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                  Feet (ft)
+                </small>
+              </div>
+              <div style={{ flex: 1 }}>
+                <input
+                  type="number"
+                  value={inches}
+                  onChange={(e) => setInches(e.target.value)}
+                  placeholder="9"
+                  min="0"
+                  max="11"
+                  step="0.1"
+                  style={inputStyle}
+                />
+                <small style={{ color: '#666', fontSize: '0.8rem', display: 'block', marginTop: '5px' }}>
+                  Inches (in)
+                </small>
+              </div>
+            </div>
+          )}
+        </div>
         </div>
 
         <button
@@ -926,7 +1004,8 @@ export default function BMRPage() {
                 </div>
                 <div style={{ padding: '10px', background: '#f8f9fa', borderRadius: '6px' }}>
                   <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-                    {results.measurements.height} {results.measurements.unit === 'metric' ? 'cm' : 'in'}
+                    {results.measurements.heightDisplay || 
+                      `${results.measurements.height} ${results.measurements.unit === 'metric' ? 'cm' : 'in'}`}
                   </div>
                   <div style={{ fontSize: '0.85rem', color: '#666', marginTop: '5px' }}>Height</div>
                 </div>
