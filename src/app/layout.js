@@ -3,11 +3,19 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Script from "next/script";
 
+// export const metadata = {
+//   title: "Health Calculator",
+//   description: "Know your health in seconds",
+//   icon: `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>`,
+// };
 export const metadata = {
-  title: "Health Calculator",
-  description: "Know your health in seconds",
-  icon: `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>`,
+  title: {
+    default: "Health Calculators Online",
+    template: "%s | Health Calculators Online",
+  },
+  description: "Free, accurate health calculators for BMI, calories, body fat, and more.",
 };
+
 
 export default function RootLayout({ children }) {
   return (
