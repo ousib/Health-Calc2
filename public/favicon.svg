@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Calculator body -->
+  <rect x="10" y="4" width="44" height="56" rx="8" fill="#000000"/>
+
+  <!-- Screen -->
+  <rect x="18" y="10" width="28" height="10" rx="2" fill="#ffffff"/>
+
+  <!-- Buttons -->
+  <g fill="#ffffff">
+    <rect x="18" y="26" width="8" height="8" rx="2"/>
+    <rect x="30" y="26" width="8" height="8" rx="2"/>
+    <rect x="42" y="26" width="8" height="8" rx="2"/>
+
+    <rect x="18" y="38" width="8" height="8" rx="2"/>
+    <rect x="30" y="38" width="8" height="8" rx="2"/>
+    <rect x="42" y="38" width="8" height="8" rx="2"/>
+  </g>
+</svg>

@@ -14,6 +14,9 @@ export const metadata = {
     template: "%s | Health Calculators Online",
   },
   description: "Free, accurate health calculators for BMI, calories, body fat, and more.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 
