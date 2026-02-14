@@ -95,7 +95,12 @@ export default function Navbar() {
                 <i className="fas fa-home"></i> Home
               </Link>
             </li>
-
+            {/* ADD THIS BLOG LINK */}
+            {/* <li style={styles.item}>
+            <Link href="/blog" style={styles.link} onClick={closeAll}>
+                <i className="fas fa-blog"></i> Blog
+            </Link>
+            </li> */}
             {/* BODY & WEIGHT */}
             <li style={styles.item}>
               <div style={styles.head} onClick={() => toggle("body")}>
