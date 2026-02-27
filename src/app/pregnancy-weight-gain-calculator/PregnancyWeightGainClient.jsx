@@ -417,10 +417,7 @@ export default function PregnancyWeightGainPage() {
     { name: "Lean Body Mass", link: "/lbm-calculator", relevance: 7 },
     { name: "Water Intake", link: "/water-intake-calculator", relevance: 7 },
     { name: "Heart Rate Calculator", link: "/heart-rate-calculator", relevance: 7 },
-    { name: "GFR Calculator", link: "/gfr-calculator", relevance: 6 },
-    { name: "Creatinine Clearance", link: "/creatinine-clearance", relevance: 6 },
     { name: "Fluid Requirements", link: "/fluid-requirement", relevance: 6 },
-    { name: "Medication Dosage", link: "/medication-dosage", relevance: 6 },
     { name: "Nutritional Needs", link: "/nutritional-needs", relevance: 6 },
     { name: "Cardiac Index", link: "/cardiac-index-calculator", relevance: 5 },
     { name: "Safe Period", link: "/safe-period-calculator", relevance: 5 },
@@ -430,7 +427,6 @@ export default function PregnancyWeightGainPage() {
     { name: "Heart Disease Risk", link: "/heart-disease-risk-calculator", relevance: 5 },
     { name: "Carbohydrate Intake", link: "/carbohydrate-intake-calculator", relevance: 4 },
     { name: "Fat Intake Calculator", link: "/fat-intake-calculator", relevance: 4 },
-    { name: "Anion Gap Calculator", link: "/anion-gap-calculator", relevance: 4 },
     { name: "Pregnancy Test", link: "/pregnancy-test", relevance: 4 },
     { name: "Blood Pressure Tracker", link: "/blood-pressure-tracker", relevance: 4 }
   ];

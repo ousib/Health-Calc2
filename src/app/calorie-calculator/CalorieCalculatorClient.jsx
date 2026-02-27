@@ -604,16 +604,10 @@ export default function CaloriesPage() {
   const healthCalculators = [
     { name: "TDEE Calculator", link: "/tdee-calculator", relevance: 10 },
     { name: "BMR Calculator", link: "/bmr-calculator", relevance: 9 },
-    { name: "Macro Calculator", link: "/macro-calculator", relevance: 9 },
     { name: "BMI Calculator", link: "/bmi-calculator", relevance: 8 },
     { name: "Body Fat Calculator", link: "/body-fat-calculator", relevance: 8 },
-    { name: "Weight Loss Calculator", link: "/weight-loss-calculator", relevance: 7 },
     { name: "Water Intake Calculator", link: "/water-intake-calculator", relevance: 6 },
-    { name: "Meal Planning Calculator", link: "/meal-planner", relevance: 6 },
-    { name: "Nutrition Calculator", link: "/nutrition-calculator", relevance: 5 },
-    { name: "Fitness Calculator", link: "/fitness-calculator", relevance: 5 },
     { name: "Health Calculator", link: "/health-calculator", relevance: 4 },
-    { name: "Weight Management Calculator", link: "/weight-management-calculator", relevance: 4 }
   ];
 
   // Sort by relevance

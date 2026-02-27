@@ -137,21 +137,7 @@ export default function Navbar() {
               )}
             </li>
 
-            {/* MEDICAL */}
-            <li style={styles.item}>
-              <div style={styles.head} onClick={() => toggle("medical")}>
-                Medical & Clinical
-                <i className={`fas fa-chevron-${active === "medical" ? "up" : "down"}`}></i>
-              </div>
-              {active === "medical" && (
-                <div style={styles.sub}>
-                  <Link href="/gfr-calculator" style={styles.subLink} onClick={closeAll}>GFR Calculator</Link>
-                  <Link href="/creatinine-clearance" style={styles.subLink} onClick={closeAll}>Creatinine Clearance</Link>
-                  <Link href="/medication-dosage" style={styles.subLink} onClick={closeAll}>Medication Dosage</Link>
-                  <Link href="/anion-gap-calculator" style={styles.subLink} onClick={closeAll}>Anion Gap</Link>
-                </div>
-              )}
-            </li>
+            
 
             {/* HEART */}
             <li style={styles.item}>

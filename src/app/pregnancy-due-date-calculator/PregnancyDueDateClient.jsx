@@ -756,13 +756,9 @@ export default function PregnancyPage() {
     { name: "BMR Calculator", link: "/bmr-calculator", relevance: 8 },
     { name: "Water Intake Calculator", link: "/water-intake-calculator", relevance: 7 },
     { name: "Heart Rate Calculator", link: "/heart-rate-calculator", relevance: 7 },
-    { name: "GFR Calculator", link: "/gfr-calculator", relevance: 6 },
-    { name: "Creatinine Clearance", link: "/creatinine-clearance", relevance: 6 },
     { name: "Body Surface Area Calculator", link: "/bsa-calculator", relevance: 6 },
     { name: "Lean Body Mass Calculator", link: "/lbm-calculator", relevance: 6 },
     { name: "Fluid Requirement Calculator", link: "/fluid-requirement", relevance: 5 },
-    { name: "Medication Dosage Calculator", link: "/medication-dosage", relevance: 5 },
-    { name: "Electrolyte Correction", link: "/electrolyte-correction", relevance: 5 },
     { name: "Nutritional Needs Calculator", link: "/nutritional-needs", relevance: 5 },
     { name: "Cardiac Index Calculator", link: "/cardiac-index-calculator", relevance: 4 },
     { name: "Blood Pressure Category Calculator", link: "/blood-pressure-category-calculator", relevance: 4 },
@@ -770,7 +766,6 @@ export default function PregnancyPage() {
     { name: "Heart Disease Risk Calculator", link: "/heart-disease-risk-calculator", relevance: 4 },
     { name: "Carbohydrate Intake Calculator", link: "/carbohydrate-intake-calculator", relevance: 3 },
     { name: "Fat Intake Calculator", link: "/fat-intake-calculator", relevance: 3 },
-    { name: "Anion Gap Calculator", link: "/anion-gap-calculator", relevance: 3 }
   ];
 
   // Sort by relevance

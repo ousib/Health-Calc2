@@ -479,11 +479,7 @@ export default function SafePeriodCalculatorPage() {
     { name: "LBM Calculator", link: "/lbm-calculator", relevance: 7 },
     { name: "Heart Rate Calculator", link: "/heart-rate-calculator", relevance: 7 },
     { name: "Water Intake Calculator", link: "/water-intake-calculator", relevance: 7 },
-    { name: "GFR Calculator", link: "/gfr-calculator", relevance: 6 },
-    { name: "Creatinine Clearance", link: "/creatinine-clearance", relevance: 6 },
     { name: "Fluid Requirement", link: "/fluid-requirement", relevance: 6 },
-    { name: "Medication Dosage", link: "/medication-dosage", relevance: 6 },
-    { name: "Electrolyte Correction", link: "/electrolyte-correction", relevance: 5 },
     { name: "Nutritional Needs", link: "/nutritional-needs", relevance: 5 },
     { name: "Cardiac Index Calculator", link: "/cardiac-index-calculator", relevance: 5 },
     { name: "Blood Pressure Category Calculator", link: "/blood-pressure-category-calculator", relevance: 5 },
@@ -491,7 +487,6 @@ export default function SafePeriodCalculatorPage() {
     { name: "Heart Disease Risk Calculator", link: "/heart-disease-risk-calculator", relevance: 5 },
     { name: "Carbohydrate Intake Calculator", link: "/carbohydrate-intake-calculator", relevance: 4 },
     { name: "Fat Intake Calculator", link: "/fat-intake-calculator", relevance: 4 },
-    { name: "Anion Gap Calculator", link: "/anion-gap-calculator", relevance: 4 },
     { name: "Pregnancy Test", link: "/pregnancy-test", relevance: 4 },
     { name: "Blood Pressure Tracker", link: "/blood-pressure-tracker", relevance: 4 }
   ];

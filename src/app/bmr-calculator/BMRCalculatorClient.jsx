@@ -753,13 +753,9 @@ export default function BMRPage() {
     { name: "Fertile Window Calculator", link: "/fertile-window-calculator", relevance: 4 },
     { name: "Safe Period Calculator", link: "/safe-period-calculator", relevance: 4 },
     { name: "Period Cycle Calculator", link: "/period-cycle-calculator", relevance: 4 },
-    { name: "GFR Calculator", link: "/gfr-calculator", relevance: 3 },
-    { name: "Creatinine Clearance", link: "/creatinine-clearance", relevance: 3 },
     { name: "Fluid Requirement Calculator", link: "/fluid-requirement", relevance: 3 },
     { name: "Medication Dosage Calculator", link: "/medication-dosage", relevance: 3 },
-    { name: "Electrolyte Correction Calculator", link: "/electrolyte-correction", relevance: 3 },
     { name: "Cardiac Index Calculator", link: "/cardiac-index-calculator", relevance: 3 },
-    { name: "Anion Gap Calculator", link: "/anion-gap-calculator", relevance: 3 },
     { name: "Pregnancy Test Calculator", link: "/pregnancy-test", relevance: 2 },
     { name: "Blood Pressure Tracker", link: "/blood-pressure-tracker", relevance: 2 }
   ];

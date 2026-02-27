@@ -522,10 +522,7 @@ const relatedCalculators = [
     { name: "Water Intake Calculator", link: "/water-intake-calculator" },
     { name: "Ovulation Tracker", link: "/ovulation-tracker" },
     { name: "Pregnancy Due Date", link: "/pregnancy-due-date-calculator" },
-    { name: "GFR Calculator", link: "/gfr-calculator" },
-    { name: "Creatinine Clearance", link: "/creatinine-clearance" },
     { name: "Fluid Requirement", link: "/fluid-requirement" },
-    { name: "Medication Dosage", link: "/medication-dosage" },
     { name: "Electrolyte Correction", link: "/electrolyte-correction" },
     { name: "Nutritional Needs", link: "/nutritional-needs" },
     { name: "Cardiac Index Calculator", link: "/cardiac-index-calculator" },
@@ -538,7 +535,6 @@ const relatedCalculators = [
     { name: "Heart Disease Risk", link: "/heart-disease-risk-calculator" },
     { name: "Carbohydrate Intake", link: "/carbohydrate-intake-calculator" },
     { name: "Fat Intake Calculator", link: "/fat-intake-calculator" },
-    { name: "Anion Gap Calculator", link: "/anion-gap-calculator" },
     { name: "Pregnancy Test", link: "/pregnancy-test" },
     { name: "Blood Pressure Tracker", link: "/blood-pressure-tracker" }
 ];
