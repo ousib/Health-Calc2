@@ -1,0 +1,6 @@
+{
+  "name": "Health Calculators Online",
+  "description": "Free, accurate health calculators for BMI, calories, body fat, and more.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
