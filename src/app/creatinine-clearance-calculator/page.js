@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import ClinicalSidebarCard from "@/components/ClinicalSidebarCard";
 
 export default function CreatinineClearancePage() {
   const [currentFormula, setCurrentFormula] = useState('cockcroft-gault');
@@ -1078,10 +1079,7 @@ export default function CreatinineClearancePage() {
             </div>
           </div>
 
-          <div className="ad-slot">
-            <p><i className="fas fa-ad"></i> Advertisement</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Your ad could be here</p>
-          </div>
+          
 
           {/* Clinical Applications */}
           <div className="clinical-apps">
@@ -1258,44 +1256,10 @@ export default function CreatinineClearancePage() {
 
         {/* Sidebar with 3 Ads (3rd one sticky) */}
         <aside className="sidebar">
-          <div className="sidebar-content">
-            <div className="ad-slot sidebar-ad">
-              <p><i className="fas fa-ad"></i> Advertisement 1</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Sponsored Content</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Renal health monitoring device</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px height ad slot</p>
-            </div>
-            
-            <div className="ad-slot sidebar-ad">
-              <p><i className="fas fa-ad"></i> Advertisement 2</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Featured Product</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Medication dosing reference guide</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px height ad slot</p>
-            </div>
-            
-            <div className="ad-slot sticky-ad">
-              <p><i className="fas fa-thumbtack"></i> Sticky Advertisement</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Premium Content - Stays visible</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Clinical pharmacology consultation</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px sticky ad</p>
-            </div>
-          </div>
+          <ClinicalSidebarCard />
         </aside>
 
-        {/* Additional Ads when sidebar disappears (mobile) */}
-        <div className="mobile-ads">
-          <div className="mobile-ad">
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 1</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Optimized for mobile viewing</p>
-          </div>
-          <div className="mobile-ad">
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 2</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Perfect for smaller screens</p>
-          </div>
-        </div>
+        
       </main>
     </>
   );

@@ -1314,50 +1314,15 @@ const relatedCalculators = [
       {showSidebar && (
         <aside style={sidebarStyle}>
           <div style={sidebarContentStyle}>
-            {/* Advertisement 1 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 1</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Sponsored Content</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Premium fitness tracking app</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
             
-            {/* Advertisement 2 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 2</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Featured Product</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Smart body composition scale</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
             
-            {/* Sticky Advertisement 3 */}
-            <div style={stickyAdStyle}>
-              <p><i className="fas fa-thumbtack"></i> Sticky Advertisement</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Premium Content - Stays visible</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Complete muscle building program</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px sticky ad</p>
-            </div>
             
-            {/* Advertisement 4 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 4</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>New Product</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Advanced protein supplements</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
             
-            {/* Advertisement 5 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 5</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Training Equipment</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Home gym strength equipment</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
+            
+            
+            
+            
+            
             
             {/* Related Calculators Sidebar Section - ALL Calculators */}
             <div style={{ 
@@ -1406,48 +1371,9 @@ const relatedCalculators = [
         </aside>
       )}
 
-      {/* Additional Ads when sidebar disappears (mobile) */}
-      {!showSidebar && (
-        <div style={{ ...mobileAdsStyle, display: 'grid' }}>
-          <div style={mobileAdStyle}>
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 1</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Optimized for mobile viewing</p>
-          </div>
-          <div style={mobileAdStyle}>
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 2</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Perfect for on-the-go tracking</p>
-          </div>
-        </div>
-      )}
       
-      {/* Sticky Footer Ad (Mobile) */}
-      {!showSidebar && (
-        <div style={stickyFooterAdStyle}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ textAlign: 'left', flex: 1 }}>
-              <p style={{ fontSize: '0.9rem', margin: 0, color: '#2c3e50' }}>
-                <i className="fas fa-mobile-alt"></i> Muscle Gain Tracker Pro
-              </p>
-              <p style={{ fontSize: '0.8rem', margin: '5px 0 0 0', color: '#666' }}>
-                Track your LBM and strength progress - Free download
-              </p>
-            </div>
-            <button style={{
-              background: '#2980b9',
-              color: 'white',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              fontSize: '0.8rem',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              marginLeft: '15px'
-            }}>
-              Get App
-            </button>
-          </div>
-        </div>
-      )}
+      
+      
     </main>
   );
 }

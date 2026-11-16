@@ -599,14 +599,7 @@ export default function WaterPage() {
               Imperial (lbs)
             </button>
           </div>
-          {/* Ad Section 1 - Below Unit Selection */}
-          <div className="ad-slot" style={{ marginTop: '15px', marginBottom: '15px' }}>
-            <div style={{ padding: '15px', background: '#f8f9fa', borderRadius: '8px', textAlign: 'center' }}>
-              <i className="fas fa-ad" style={{ fontSize: '1.2rem', marginBottom: '5px', color: '#7f8c8d' }}></i>
-              <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '5px' }}>Sponsored Content</p>
-              <p style={{ fontSize: '0.8rem', color: '#999' }}>Premium Hydration Products - Stay Hydrated Longer</p>
-            </div>
-          </div>
+          
           <div className="measurement-grid">
             <div className="input-group">
               <label><i className="fas fa-weight"></i> {unit === 'metric' ? 'Weight (kg)' : 'Weight (lbs)'}</label>
@@ -698,18 +691,7 @@ export default function WaterPage() {
             <p className="activity-desc">{getClimateDescription()}</p>
           </div>
 
-                    {/* Ad Section 2 - Before Calculate Button */}
-          <div className="ad-slot" style={{ marginTop: '10px', marginBottom: '10px' }}>
-            <div style={{ padding: '12px', background: '#f0f7ff', borderRadius: '8px', borderLeft: '3px solid #3498db' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <i className="fas fa-flask" style={{ color: '#3498db' }}></i>
-                <div>
-                  <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '2px' }}><strong>Advertisement:</strong> Smart Water Bottles</p>
-                  <p style={{ fontSize: '0.75rem', color: '#888' }}>Track your hydration with intelligent water tracking technology</p>
-                </div>
-              </div>
-            </div>
-          </div>
+                    
 
           <button className="calc-btn" onClick={calculateWater}>
             <i className="fas fa-calculator"></i> Calculate My Water Needs
@@ -788,31 +770,7 @@ export default function WaterPage() {
             </div>
           )}
 
-                    {/* Ad Section 3 - After Results/Hydration Tips */}
-          <div className="ad-slot" style={{ marginTop: '25px', marginBottom: '25px' }}>
-            <div style={{ 
-              padding: '20px', 
-              background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)', 
-              borderRadius: '10px',
-              textAlign: 'center',
-              border: '1px solid #dee2e6'
-            }}>
-              <div style={{ marginBottom: '10px' }}>
-                <i className="fas fa-star" style={{ fontSize: '1.5rem', color: '#f39c12', marginBottom: '8px' }}></i>
-                <p style={{ fontSize: '0.9rem', fontWeight: '600', color: '#2c3e50', marginBottom: '5px' }}>Premium Partner Advertisement</p>
-                <p style={{ fontSize: '0.8rem', color: '#666' }}>Discover our recommended hydration supplements for optimal performance</p>
-              </div>
-              <div style={{ 
-                padding: '10px', 
-                background: 'white', 
-                borderRadius: '6px',
-                marginTop: '10px',
-                border: '1px dashed #ddd'
-              }}>
-                <p style={{ fontSize: '0.75rem', color: '#888' }}>Advertisement Space - 728x90px</p>
-              </div>
-            </div>
-          </div>
+                    
                     {/* Related Calculators Section */}
           <div className="related-calculators" style={{ 
             margin: '30px 0', 
@@ -1122,16 +1080,7 @@ export default function WaterPage() {
         </section>
 
         <aside className="sidebar">
-          <div className="sidebar-widget">
-            <h4 style={{ marginBottom: '15px', color: '#2c3e50' }}>
-              <i className="fas fa-bullhorn"></i> Advertisement
-            </h4>
-            <div style={{ height: '600px', background: '#f8f9fa', border: '2px dashed #ddd', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#7f8c8d' }}>
-              <i className="fas fa-ad" style={{ fontSize: '2rem', marginBottom: '10px' }}></i>
-              <p>Advertisement Space</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>300x600px</p>
-            </div>
-          </div>
+          
           
           <div style={{ marginTop: '30px', padding: '20px', background: '#e8f7ff', borderRadius: '10px' }}>
             <h4 style={{ marginBottom: '10px', color: '#3498db' }}>

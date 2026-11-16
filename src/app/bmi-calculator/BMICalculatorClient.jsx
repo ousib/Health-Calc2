@@ -1757,19 +1757,7 @@ export default function BMICalculatorPage() {
           </>
         )}
 
-        <div
-          style={adSlotStyle}
-          onMouseEnter={(e) => Object.assign(e.currentTarget.style, hoverAdSlotStyle)}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = adSlotStyle.background;
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <p><i className="fas fa-ad"></i> Advertisement</p>
-          <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Your ad could be here</p>
-          <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Premium body composition analysis tool</p>
-        </div>
+        
 
         {/* Enhanced SEO Content */}
         <div style={infoSectionStyle}>
@@ -1939,32 +1927,11 @@ export default function BMICalculatorPage() {
       {showSidebar && (
         <aside style={sidebarStyle}>
           <div style={sidebarContentStyle}>
-            {/* Advertisement 1 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 1</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Sponsored Content</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Premium fitness tracking app</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
             
-            {/* Advertisement 2 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 2</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Featured Product</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Smart body composition scale</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
             
-            {/* Sticky Advertisement 3 */}
-            <div style={stickyAdStyle}>
-              <p><i className="fas fa-thumbtack"></i> Sticky Advertisement</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Premium Content - Stays visible</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Complete health assessment package</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px sticky ad</p>
-            </div>
+            
+            
+            
             
             {/* Related Calculators Sidebar Section */}
             <div style={{ padding: '20px', background: 'white', borderRadius: '10px', boxShadow: '0 3px 10px rgba(0,0,0,0.05)' }}>
@@ -1995,48 +1962,9 @@ export default function BMICalculatorPage() {
         </aside>
       )}
 
-      {/* Additional Ads when sidebar disappears (mobile) */}
-      {!showSidebar && (
-        <div style={{ ...mobileAdsStyle, display: 'grid' }}>
-          <div style={mobileAdStyle}>
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 1</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Optimized for mobile viewing</p>
-          </div>
-          <div style={mobileAdStyle}>
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 2</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Perfect for on-the-go tracking</p>
-          </div>
-        </div>
-      )}
       
-      {/* Sticky Footer Ad (Mobile) */}
-      {!showSidebar && (
-        <div style={stickyFooterAdStyle}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ textAlign: 'left', flex: 1 }}>
-              <p style={{ fontSize: '0.9rem', margin: 0, color: '#2c3e50' }}>
-                <i className="fas fa-mobile-alt"></i> Mobile Health Tracker
-              </p>
-              <p style={{ fontSize: '0.8rem', margin: '5px 0 0 0', color: '#666' }}>
-                Track your BMI and health metrics anytime - Free download
-              </p>
-            </div>
-            <button style={{
-              background: '#27ae60',
-              color: 'white',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              fontSize: '0.8rem',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              marginLeft: '15px'
-            }}>
-              Get App
-            </button>
-          </div>
-        </div>
-      )}
+      
+      
     </main>
   );
 }

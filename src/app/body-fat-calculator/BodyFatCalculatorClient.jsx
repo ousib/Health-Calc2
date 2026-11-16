@@ -2067,32 +2067,11 @@ export default function BodyFatPage() {
       {showSidebar && (
         <aside style={sidebarStyle}>
           <div style={sidebarContentStyle}>
-            {/* Advertisement 1 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 1</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Sponsored Content</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Try our premium fitness tracking app</p>
-              <div style={{ flexGrow: '1' }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
             
-            {/* Advertisement 2 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 2</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Featured Product</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>High-quality body fat calipers on sale</p>
-              <div style={{ flexGrow: '1' }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
             
-            {/* Sticky Advertisement 3 */}
-            <div style={stickyAdStyle}>
-              <p><i className="fas fa-thumbtack"></i> Sticky Advertisement</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Premium Content - Stays visible</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Join our personalized coaching program</p>
-              <div style={{ flexGrow: '1' }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px sticky ad</p>
-            </div>
+            
+            
+            
             
             {/* Related Calculators Sidebar Section - Sorted by SEO Relevance */}
             <div style={{ 

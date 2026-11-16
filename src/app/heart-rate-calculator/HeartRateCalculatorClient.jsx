@@ -1025,21 +1025,6 @@ export default function HeartRateCalculatorPage() {
           </div>
         )}
 
-        {/* Mid-page Ad */}
-        <div style={{
-          margin: '30px 0',
-          padding: '20px',
-          background: '#f8f9fa',
-          borderRadius: '10px',
-          textAlign: 'center',
-          color: '#7f8c8d',
-          border: '1px dashed #ddd'
-        }}>
-          <p><i className="fas fa-ad"></i> Advertisement</p>
-          <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Your ad could be here</p>
-          <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Premium heart rate monitoring device</p>
-        </div>
-
         {/* Enhanced SEO Content */}
         <div style={infoSectionStyle}>
           <h3 style={sectionTitleStyle}><i className="fas fa-question-circle"></i> Comprehensive Heart Rate Zone Analysis: Advanced Cardiovascular Training Intensity Quantification & Metabolic Adaptation Optimization Protocol</h3>
@@ -1214,50 +1199,15 @@ export default function HeartRateCalculatorPage() {
       {showSidebar && (
         <aside style={sidebarStyle}>
           <div style={sidebarContentStyle}>
-            {/* Advertisement 1 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 1</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Sponsored Content</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Premium heart rate monitor</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
             
-            {/* Advertisement 2 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 2</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Featured Product</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Advanced fitness tracker</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
             
-            {/* Sticky Advertisement 3 */}
-            <div style={stickyAdStyle}>
-              <p><i className="fas fa-thumbtack"></i> Sticky Advertisement</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Premium Content - Stays visible</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Personal training program</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px sticky ad</p>
-            </div>
             
-            {/* Advertisement 4 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 4</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>New Product</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Smart workout equipment</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
             
-            {/* Advertisement 5 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 5</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Training App</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Cardio training platform</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
+            
+            
+            
+            
+            
             
             {/* ALL Calculators Sidebar Section */}
             <div style={{ 
@@ -1306,48 +1256,9 @@ export default function HeartRateCalculatorPage() {
         </aside>
       )}
 
-      {/* Additional Ads when sidebar disappears (mobile) */}
-      {!showSidebar && (
-        <div style={{ ...mobileAdsStyle, display: 'grid' }}>
-          <div style={mobileAdStyle}>
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 1</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Optimized for mobile viewing</p>
-          </div>
-          <div style={mobileAdStyle}>
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 2</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Perfect for on-the-go training</p>
-          </div>
-        </div>
-      )}
       
-      {/* Sticky Footer Ad (Mobile) */}
-      {!showSidebar && (
-        <div style={stickyFooterAdStyle}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ textAlign: 'left', flex: 1 }}>
-              <p style={{ fontSize: '0.9rem', margin: 0, color: '#2c3e50' }}>
-                <i className="fas fa-mobile-alt"></i> Heart Rate Tracker Pro
-              </p>
-              <p style={{ fontSize: '0.8rem', margin: '5px 0 0 0', color: '#666' }}>
-                Track your heart rate zones in real-time - Free download
-              </p>
-            </div>
-            <button style={{
-              background: '#e74c3c',
-              color: 'white',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              fontSize: '0.8rem',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              marginLeft: '15px'
-            }}>
-              Get App
-            </button>
-          </div>
-        </div>
-      )}
+      
+      
 
       {/* Font Awesome CSS */}
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />

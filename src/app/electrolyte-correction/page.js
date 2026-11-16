@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import ClinicalSidebarCard from "@/components/ClinicalSidebarCard";
 
 export default function ElectrolyteCorrectionPage() {
   const [sodium, setSodium] = useState('');
@@ -783,18 +784,7 @@ export default function ElectrolyteCorrectionPage() {
           </div>
         )}
 
-        <div 
-          style={adSlotStyle}
-          onMouseEnter={(e) => Object.assign(e.currentTarget.style, hoverAdSlotStyle)}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = adSlotStyle.background;
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <p><i className="fas fa-ad"></i> Advertisement</p>
-          <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Your ad could be here</p>
-        </div>
+        
 
         {/* Enhanced SEO Content with High-Value Long-Tail Keywords */}
         <div style={infoSectionStyle}>
@@ -959,47 +949,11 @@ export default function ElectrolyteCorrectionPage() {
       {/* Sidebar with 3 Ads (3rd one sticky) */}
       {showSidebar && (
         <aside style={sidebarStyle}>
-          <div style={sidebarContentStyle}>
-            <div style={{ ...adSlotStyle, ...sidebarAdStyle }}>
-              <p><i className="fas fa-ad"></i> Advertisement 1</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Sponsored Content</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Electrolyte management training course</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px height ad slot</p>
-            </div>
-            
-            <div style={{ ...adSlotStyle, ...sidebarAdStyle }}>
-              <p><i className="fas fa-ad"></i> Advertisement 2</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Featured Product</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Point-of-care electrolyte analyzer</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px height ad slot</p>
-            </div>
-            
-            <div style={{ ...adSlotStyle, ...stickyAdStyle }}>
-              <p><i className="fas fa-thumbtack"></i> Sticky Advertisement</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Premium Content - Stays visible</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Advanced laboratory interpretation guide</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>300px sticky ad</p>
-            </div>
-          </div>
+          <ClinicalSidebarCard />
         </aside>
       )}
 
-      {/* Additional Ads when sidebar disappears (mobile) */}
-      {!showSidebar && (
-        <div style={{ ...mobileAdsStyle, display: 'grid' }}>
-          <div style={mobileAdStyle}>
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 1</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Optimized for mobile viewing</p>
-          </div>
-          <div style={mobileAdStyle}>
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 2</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Perfect for smaller screens</p>
-          </div>
-        </div>
-      )}
+      
     </main>
   );
 }

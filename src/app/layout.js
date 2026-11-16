@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 export const metadata = {
+  metadataBase: new URL("https://healthcalculatorsonline.com"),
   title: {
     default: "Health Calculators Online | Clinical & Wellness Suite",
     template: "%s | Health Calculators Online",
@@ -25,6 +26,9 @@ export const metadata = {
   description: "Free, clinically referenced health calculators for BMI, caloric needs, body composition, cardiovascular risk, and renal function.",
   icons: {
     icon: "/favicon.svg",
+  },
+  other: {
+    "google-adsense-account": "ca-pub-2129774584753444",
   },
 };
 
@@ -36,6 +40,13 @@ export default function RootLayout({ children }) {
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+
+        {/* Google AdSense */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2129774584753444"
+          crossOrigin="anonymous"
         />
 
         {/* Google Analytics */}
@@ -232,6 +243,16 @@ export default function RootLayout({ children }) {
                       About & Methodology
                     </Link>
                   </li>
+                  <li>
+                    <Link href="/editorial-policy" className="hover:text-emerald-400 transition font-medium text-slate-300">
+                      Editorial Policy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/contact" className="hover:text-emerald-400 transition font-medium text-slate-300">
+                      Contact Us
+                    </Link>
+                  </li>
                 </ul>
               </div>
 
@@ -252,9 +273,25 @@ export default function RootLayout({ children }) {
             <div className="mt-8 pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
               <p>&copy; {new Date().getFullYear()} HealthCalculators. All rights reserved. Peer-reviewed health algorithms.</p>
               
-              <div className="flex items-center gap-4 text-slate-400">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-slate-400">
                 <Link href="/about" className="hover:text-slate-300 transition">
                   About
+                </Link>
+                <span>•</span>
+                <Link href="/editorial-policy" className="hover:text-slate-300 transition">
+                  Editorial Policy
+                </Link>
+                <span>•</span>
+                <Link href="/privacy-policy" className="hover:text-slate-300 transition">
+                  Privacy Policy
+                </Link>
+                <span>•</span>
+                <Link href="/terms" className="hover:text-slate-300 transition">
+                  Terms of Use
+                </Link>
+                <span>•</span>
+                <Link href="/contact" className="hover:text-slate-300 transition">
+                  Contact
                 </Link>
                 <span>•</span>
                 <Link href="/blog" className="hover:text-slate-300 transition">

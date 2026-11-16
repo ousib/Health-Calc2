@@ -1480,19 +1480,7 @@ export default function PeriodCycleCalculatorPage() {
           </>
         )}
 
-        <div
-          style={adSlotStyle}
-          onMouseEnter={(e) => Object.assign(e.currentTarget.style, hoverAdSlotStyle)}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = adSlotStyle.background;
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <p><i className="fas fa-ad"></i> Advertisement</p>
-          <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Your ad could be here</p>
-          <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Premium menstrual health tracking app</p>
-        </div>
+        
 
         {/* Enhanced SEO Content with High-Value Long-Tail Keywords */}
         <div style={infoSectionStyle}>
@@ -1644,32 +1632,11 @@ export default function PeriodCycleCalculatorPage() {
       {showSidebar && (
         <aside style={sidebarStyle}>
           <div style={sidebarContentStyle}>
-            {/* Advertisement 1 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 1</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Sponsored Content</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Advanced menstrual cycle tracking app</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
             
-            {/* Advertisement 2 */}
-            <div style={sidebarAdStyle}>
-              <p><i className="fas fa-ad"></i> Advertisement 2</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Featured Product</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Premium ovulation prediction kits</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px height ad slot</p>
-            </div>
             
-            {/* Sticky Advertisement 3 */}
-            <div style={stickyAdStyle}>
-              <p><i className="fas fa-thumbtack"></i> Sticky Advertisement</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Premium Content - Stays visible</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '10px' }}>Comprehensive reproductive health guide</p>
-              <div style={{ flexGrow: 1 }}></div>
-              <p style={{ fontSize: '0.7rem', marginTop: 'auto' }}>250px sticky ad</p>
-            </div>
+            
+            
+            
             
             {/* Related Calculators Sidebar Section - Sorted by SEO Relevance */}
             <div style={{ 
@@ -1742,48 +1709,9 @@ export default function PeriodCycleCalculatorPage() {
         </aside>
       )}
 
-      {/* Additional Ads when sidebar disappears (mobile) */}
-      {!showSidebar && (
-        <div style={{ ...mobileAdsStyle, display: 'grid' }}>
-          <div style={mobileAdStyle}>
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 1</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Optimized for mobile viewing</p>
-          </div>
-          <div style={mobileAdStyle}>
-            <p><i className="fas fa-ad"></i> Mobile Advertisement 2</p>
-            <p style={{ fontSize: '0.8rem', marginTop: '5px' }}>Perfect for smaller screens</p>
-          </div>
-        </div>
-      )}
       
-      {/* Sticky Footer Ad (Mobile) */}
-      {!showSidebar && (
-        <div style={stickyFooterAdStyle}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ textAlign: 'left', flex: 1 }}>
-              <p style={{ fontSize: '0.9rem', margin: 0, color: '#2c3e50' }}>
-                <i className="fas fa-mobile-alt"></i> Mobile Exclusive Offer
-              </p>
-              <p style={{ fontSize: '0.8rem', margin: '5px 0 0 0', color: '#666' }}>
-                Download our menstrual health app - 30% off
-              </p>
-            </div>
-            <button style={{
-              background: '#9b59b6',
-              color: 'white',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              fontSize: '0.8rem',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              marginLeft: '15px'
-            }}>
-              Learn More
-            </button>
-          </div>
-        </div>
-      )}
+      
+      
     </main>
   );
 }

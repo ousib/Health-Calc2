@@ -1,48 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://healthcalculatorsonline.com/</loc><lastmod>2026-11-16</lastmod><changefreq>weekly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/about</loc><lastmod>2026-11-16</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/editorial-policy</loc><lastmod>2026-11-16</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/privacy-policy</loc><lastmod>2026-11-16</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/terms</loc><lastmod>2026-11-16</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/contact</loc><lastmod>2026-11-16</lastmod><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog</loc><lastmod>2026-11-16</lastmod><changefreq>weekly</changefreq></url>
 
-  <url>
-    <loc>https://healthcalculatorsonline.com/</loc>
-    <lastmod>2026-02-10</lastmod>
-    <changefreq>monthly</changefreq>
-  </url>
-
+  <!-- Health Calculators -->
   <url><loc>https://healthcalculatorsonline.com/bmi-calculator</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://healthcalculatorsonline.com/body-fat-calculator</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://healthcalculatorsonline.com/ibw-calculator</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/lbm-calculator</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://healthcalculatorsonline.com/waist-hip-ratio</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://healthcalculatorsonline.com/bsa-calculator</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://healthcalculatorsonline.com/calorie-calculator</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://healthcalculatorsonline.com/tdee-calculator</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://healthcalculatorsonline.com/bmr-calculator</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/lbm-calculator</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/heart-rate-calculator</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/protein-intake-calculator</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/carbohydrate-intake-calculator</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/fat-intake-calculator</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://healthcalculatorsonline.com/water-intake-calculator</loc><changefreq>monthly</changefreq></url>
-
-  <url><loc>https://healthcalculatorsonline.com/ovulation-tracker</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/pregnancy-due-date-calculator</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/gfr-calculator</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/creatinine-clearance</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/fluid-requirement</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/medication-dosage</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/electrolyte-correction</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/nutritional-needs</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/Nutritional-needs</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/heart-rate-calculator</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blood-pressure-category-calculator</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blood-pressure-tracker</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/heart-disease-risk-calculator</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/diabetes-risk-calculator</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://healthcalculatorsonline.com/cardiac-index-calculator</loc><changefreq>monthly</changefreq></url>
-
-  <url><loc>https://healthcalculatorsonline.com/pregnancy-weight-gain-calculator</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/gfr-calculator</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/creatinine-clearance-calculator</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/fluid-requirement</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/medication-dosage-calculator</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/electrolyte-correction</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/anion-gap-calculator</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/ovulation-tracker</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://healthcalculatorsonline.com/fertile-window-calculator</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://healthcalculatorsonline.com/safe-period-calculator</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://healthcalculatorsonline.com/period-cycle-calculator</loc><changefreq>monthly</changefreq></url>
-
-  <url><loc>https://healthcalculatorsonline.com/blood-pressure-category-calculator</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/diabetes-risk-calculator</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/heart-disease-risk-calculator</loc><changefreq>monthly</changefreq></url>
-
-  <url><loc>https://healthcalculatorsonline.com/carbohydrate-intake-calculator</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/fat-intake-calculator</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/anion-gap-calculator</loc><changefreq>monthly</changefreq></url>
-
+  <url><loc>https://healthcalculatorsonline.com/pregnancy-due-date-calculator</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/pregnancy-weight-gain-calculator</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://healthcalculatorsonline.com/pregnancy-test</loc><changefreq>monthly</changefreq></url>
-  <url><loc>https://healthcalculatorsonline.com/blood-pressure-tracker</loc><changefreq>monthly</changefreq></url>
 
+  <!-- Blog Guides -->
+  <url><loc>https://healthcalculatorsonline.com/blog/complete-guide-to-bmi</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/body-fat-percentage-guide</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/basal-metabolic-rate-guide</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/ideal-weight-calculator-guide</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/waist-to-hip-ratio-guide</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/heart-rate-zones-guide</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/water-intake-calculator-guide</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/tdee-complete-guide</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/diabetes-risk-assessment</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/macro-calculator-guide</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/pregnancy-weight-gain-guide</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/childrens-bmi-guide</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/heart-disease-risk-guide</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/body-type-calculator-guide</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://healthcalculatorsonline.com/blog/calorie-calculator-guide</loc><changefreq>monthly</changefreq></url>
 </urlset>
